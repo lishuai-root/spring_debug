@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   https://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context
+	   https://www.springframework.org/schema/context/spring-context.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+">
+
+	<context:component-scan base-package="com.shuai.beans,com.shuai"/>
+	<bean id="people" class="com.shuai.beans.People" init-method="customerInitMethod">
+		<property name="name" value="lishuai"/>
+		<property name="email" value="lishuai@spring.com"/>
+		<property name="password" value="password"/>
+	</bean>
+
+	<bean id="sourceClass" class="com.shuai.aop.SourceClass">
+		<property name="people" ref="people"/>
+	</bean>
+
+	<bean id="proxyClass" class="com.shuai.aop.ProxyClass"/>
+	<bean id="myBeanPostProcess" class="com.shuai.configuration.MyBeanPostProcess"/>
+<!--	<bean id="demo" class="com.shuai.configuration.Demo"/>-->
+
+<!--	<aop:config>-->
+<!--		<aop:pointcut id="myProxy" expression="execution( * com.shuai.aop.SourceClass.* (..))"/>-->
+<!--		<aop:aspect ref="proxyClass">-->
+<!--			<aop:before method="before" pointcut-ref="myProxy"/>-->
+<!--			<aop:after method="after" pointcut-ref="myProxy"/>-->
+<!--		</aop:aspect>-->
+<!--	</aop:config>-->
+<!--	<aop:aspectj-autoproxy/>-->
+</beans>

@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+}
+
+group 'org.springframework'
+version '6.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api(project(":spring-beans"))
+    api(project(":spring-core"))
+    api(project(":spring-context"))
+    api(project(":spring-webmvc"))
+    api(project(":spring-jdbc"))
+    api(project(":spring-orm"))
+    api(project(":spring-tx"))
+    api(project(":spring-web"))
+    api(project(":spring-context-indexer"))
+    api(project(":spring-context-support"))
+    api(project(":spring-expression"))
+    api(project(":spring-instrument"))
+    api(project(":spring-jcl"))
+    api(project(":spring-jms"))
+    api(project(":spring-messaging"))
+    api(project(":spring-oxm"))
+    api(project(":spring-test"))
+    api(project(":spring-webflux"))
+    api(project(":spring-websocket"))
+//    api(project(":spring-aop"))
+//    api("org.aspectj:aspectjweaver:1.9.6")
+
+//    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+//    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
