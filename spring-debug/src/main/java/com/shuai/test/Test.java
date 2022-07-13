@@ -18,7 +18,8 @@ public class Test {
 	public static void main(String[] args) {
 
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
-		
+
+
 		People people = context.getBean(People.class);
 		SourceClass bean = context.getBean(SourceClass.class);
 		System.out.println(bean.getPeople().getPassword());
