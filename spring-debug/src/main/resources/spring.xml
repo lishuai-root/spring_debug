@@ -2,28 +2,46 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xmlns:context="http://www.springframework.org/schema/context"
-	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
 	   https://www.springframework.org/schema/beans/spring-beans.xsd
 	   http://www.springframework.org/schema/context
 	   https://www.springframework.org/schema/context/spring-context.xsd
 	   http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop.xsd
-">
+       http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-	<context:component-scan base-package="com.shuai.beans,com.shuai"/>
-	<bean id="people" class="com.shuai.beans.People" init-method="customerInitMethod">
-		<property name="name" value="lishuai"/>
-		<property name="email" value="lishuai@spring.com"/>
-		<property name="password" value="password"/>
+<!--	<context:property-placeholder location="classpath:myConfig.properties"/>-->
+	<context:component-scan base-package="com.shuai.beans"/>
+<!--	<bean id="people" class="com.shuai.beans.People" init-method="customerInitMethod">-->
+<!--		<property name="name" value="lishuai"/>-->
+<!--		<property name="email" value="lishuai@spring.com"/>-->
+<!--		<property name="password" value="password"/>-->
+<!--	</bean>-->
+	<bean id="bigPeoples" class="com.shuai.beans.BigPeople">
+		<property name="nameStr" value="address"/>
+	</bean>
+	<context:property-placeholder location="classpath:myConfig.properties"/>
+
+	<bean id="address" class="com.shuai.beans.Address" parent="bigPeople">
+		<property name="name" value="${address.name}"/>
+		<property name="address" value="${address.address}"/>
+		<property name="age" value="${address.age}"/>
 	</bean>
 
-	<bean id="sourceClass" class="com.shuai.aop.SourceClass">
-		<property name="people" ref="people"/>
-	</bean>
+<!--	<bean id="sourceClass" class="com.shuai.aop.SourceClass">-->
+<!--		<property name="people" ref="people"/>-->
+<!--	</bean>-->
 
-	<bean id="proxyClass" class="com.shuai.aop.ProxyClass"/>
-	<bean id="myBeanPostProcess" class="com.shuai.configuration.MyBeanPostProcess"/>
+<!--	<bean id="proxyClass" class="com.shuai.aop.ProxyClass"/>-->
+<!--	<bean id="myBeanPostProcess" class="com.shuai.configuration.MyBeanPostProcess"/>-->
+<!--	<bean id="myInstantiationAwareBeanPostProcessor" class="com.shuai.configuration.MyInstantiationAwareBeanPostProcessor">-->
+<!--		<property name="bigPeople" ref="bigPeople"/>-->
+<!--	</bean>-->
+<!--	<bean id="autoDemo" class="com.shuai.configuration.AutoDemo"/>-->
+<!--	<bean id="apple" class="com.shuai.beans.Apple" scope="prototype"/>-->
+<!--	<bean id="fruit" class="com.shuai.beans.Fruit">-->
+<!--		<lookup-method name="getApple" bean="apple"/>-->
+<!--	</bean>-->
 <!--	<bean id="demo" class="com.shuai.configuration.Demo"/>-->
 
 <!--	<aop:config>-->

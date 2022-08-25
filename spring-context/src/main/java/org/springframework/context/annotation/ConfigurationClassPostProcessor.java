@@ -535,10 +535,24 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			this.beanFactory = beanFactory;
 		}
 
+		/**
+		 * 为因为是配置类而被代理的对象添加beanFactory
+		 *
+		 * @param pvs the property values that the factory is about to apply (never {@code null})
+		 * @param bean the bean instance created, but whose properties have not yet been set
+		 * @param beanName the name of the bean
+		 * @return
+		 */
 		@Override
 		public PropertyValues postProcessProperties(@Nullable PropertyValues pvs, Object bean, String beanName) {
 			// Inject the BeanFactory before AutowiredAnnotationBeanPostProcessor's
 			// postProcessProperties method attempts to autowire other configuration beans.
+			// 在AutowiredAnnotationBeanPostProcessor的postProcessProperties方法尝试自动连接其他配置bean之前注入BeanFactory。
+			/**
+			 * spring中所有配置类(带有@Configuration注解的类)都会被代理，所有被代理的配置类对象都会实现EnhancedConfiguration接口
+			 * EnhancedConfiguration接口就是因为是配置类而被代理的bean的标志
+			 * 此处只是给bean设置一下beanFactory
+			 */
 			if (bean instanceof EnhancedConfiguration) {
 				((EnhancedConfiguration) bean).setBeanFactory(this.beanFactory);
 			}

@@ -53,6 +53,7 @@ public interface SmartInstantiationAwareBeanPostProcessor extends InstantiationA
 
 	/**
 	 * Determine the candidate constructors to use for the given bean.
+	 * 确定为给定bean使用的候选构造函数。
 	 * <p>The default implementation returns {@code null}.
 	 * @param beanClass the raw class of the bean (never {@code null})
 	 * @param beanName the name of the bean
@@ -69,6 +70,9 @@ public interface SmartInstantiationAwareBeanPostProcessor extends InstantiationA
 	/**
 	 * Obtain a reference for early access to the specified bean,
 	 * typically for the purpose of resolving a circular reference.
+	 *
+	 * 获取对指定bean的早期访问的引用，通常用于解析循环引用。
+	 *
 	 * <p>This callback gives post-processors a chance to expose a wrapper
 	 * early - that is, before the target bean instance is fully initialized.
 	 * The exposed object should be equivalent to the what

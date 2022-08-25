@@ -1029,6 +1029,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			// 条件判断，抽象，单例，非懒加载
 			if (!bd.isAbstract() && bd.isSingleton() && !bd.isLazyInit()) {
 				if (isFactoryBean(beanName)) {
+					/**
+					 * 获取FactoryBean本身对象
+					 */
 					Object bean = getBean(FACTORY_BEAN_PREFIX + beanName);
 
 					// 判断是否实现了FactoryBean接口
@@ -1039,7 +1042,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 						boolean isEagerInit = (factory instanceof SmartFactoryBean &&
 								((SmartFactoryBean<?>) factory).isEagerInit());
 
-						//  如果希望急切的初始化，则通过beanName获取bean实例
+						/**
+						 * 如果希望急切的初始化，则通过beanName获取bean实例
+						 * 获取FactoryBean将创建的bean对象
+						 */
 						if (isEagerInit) {
 							getBean(beanName);
 						}

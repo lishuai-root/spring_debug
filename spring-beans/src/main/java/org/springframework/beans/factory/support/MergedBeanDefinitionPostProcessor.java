@@ -39,6 +39,8 @@ public interface MergedBeanDefinitionPostProcessor extends BeanPostProcessor {
 
 	/**
 	 * Post-process the given merged bean definition for the specified bean.
+	 * 对指定bean的给定合并bean定义进行后处理。
+	 *
 	 * @param beanDefinition the merged bean definition for the bean
 	 * @param beanType the actual type of the managed bean instance
 	 * @param beanName the name of the bean
@@ -49,6 +51,9 @@ public interface MergedBeanDefinitionPostProcessor extends BeanPostProcessor {
 	/**
 	 * A notification that the bean definition for the specified name has been reset,
 	 * and that this post-processor should clear any metadata for the affected bean.
+	 *
+	 * 通知指定名称的bean定义已重置，此后处理器应清除受影响bean的任何元数据。
+	 *
 	 * <p>The default implementation is empty.
 	 * @param beanName the name of the bean
 	 * @since 5.1

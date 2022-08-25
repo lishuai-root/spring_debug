@@ -144,6 +144,8 @@ class ConfigurationClassEnhancer {
 
 	/**
 	 * Marker interface to be implemented by all @Configuration CGLIB subclasses.
+	 * 标记接口由所有@Configuration CGLIB子类实现。
+	 *
 	 * Facilitates idempotent behavior for {@link ConfigurationClassEnhancer#enhance}
 	 * through checking to see if candidate classes are already assignable to it, e.g.
 	 * have already been enhanced.

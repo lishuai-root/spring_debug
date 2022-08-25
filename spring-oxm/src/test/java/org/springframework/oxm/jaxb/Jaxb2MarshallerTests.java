@@ -38,6 +38,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.oxm.xstream.Flights;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;

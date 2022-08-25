@@ -166,17 +166,25 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	/**
 	 * Add the given singleton factory for building the specified singleton
 	 * if necessary.
+	 * 如果需要，添加给定的单例工厂来构建指定的单例。
+	 *
 	 * <p>To be called for eager registration of singletons, e.g. to be able to
 	 * resolve circular references.
+	 * 用于快速注册单例对象，例如能够解析循环引用。
+	 *
 	 * @param beanName the name of the bean
 	 * @param singletonFactory the factory for the singleton object
 	 */
 	protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
 		Assert.notNull(singletonFactory, "Singleton factory must not be null");
 		synchronized (this.singletonObjects) {
+			// 如果单例对象的高速缓存【beam名称-bean实例】没有beanName的对象
 			if (!this.singletonObjects.containsKey(beanName)) {
+				// 将beanName,singletonFactory放到单例工厂的缓存【bean名称 - ObjectFactory】
 				this.singletonFactories.put(beanName, singletonFactory);
+				// 从早期单例对象的高速缓存【bean名称-bean实例】 移除beanName的相关缓存对象
 				this.earlySingletonObjects.remove(beanName);
+				// 将beanName添加已注册的单例集中
 				this.registeredSingletons.add(beanName);
 			}
 		}
@@ -217,8 +225,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		 */
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 
-			//从早期单例对象缓存中获取单例对象（之所称成为早期单例对象，是因为earlySingletonObjects里
-			// 的对象的都是通过提前曝光的ObjectFactory创建出来的，还未进行属性填充等操作）
+			/**
+			 * 从早期单例对象缓存中获取单例对象（之所称成为早期单例对象，是因为earlySingletonObjects里
+			 * 的对象的都是通过提前曝光的ObjectFactory创建出来的，只进行了实例化，还未进行属性填充等操作）
+			 * earlySingletonObjects 用于解决循环依赖
+			 *
+			 */
 			singletonObject = this.earlySingletonObjects.get(beanName);
 
 			// 如果在早期对象单例缓存中没有，并且允许创建早期单例对象引用
@@ -274,6 +286,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		synchronized (this.singletonObjects) {
 			Object singletonObject = this.singletonObjects.get(beanName);
 			if (singletonObject == null) {
+				/**
+				 * 判断当前bean是否正在被销毁，防止在destroy方法中调用getBean()
+				 *
+				 * 当该工厂的单例被销毁时，不允许创建单例bean
+				 * (不要在destroy方法实现中从BeanFactory请求bean !)
+				 */
 				if (this.singletonsCurrentlyInDestruction) {
 					throw new BeanCreationNotAllowedException(beanName,
 							"Singleton bean creation not allowed while singletons of this factory are in destruction " +
@@ -433,6 +451,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 		// 如果当前在创建检查中的排除bean名列表中不包含该beanName且将beanName添加到当前正在创建的bean名称列表后，出现
 		// beanName已经在当前正在创建的bean名称列表中添加过
+		// 被请求的bean目前正在创建中:是否存在不可解析的循环引用?
 		if (!this.inCreationCheckExclusions.contains(beanName) && !this.singletonsCurrentlyInCreation.add(beanName)) {
 
 			// 抛出当前正在创建的Bean异常

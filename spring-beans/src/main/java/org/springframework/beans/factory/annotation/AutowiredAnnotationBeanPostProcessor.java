@@ -137,7 +137,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 
 	private final Set<Class<? extends Annotation>> autowiredAnnotationTypes = new LinkedHashSet<>(4);
 
-	private String requiredParameterName = "required";
+	private String requiredParameterName = "rautowiredAnnotationTypes = {LinkedHashSet@2762}  size = 2equired";
 
 	private boolean requiredParameterValue = true;
 
@@ -150,6 +150,10 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 
 	private final Map<Class<?>, Constructor<?>[]> candidateConstructorsCache = new ConcurrentHashMap<>(256);
 
+	/**
+	 * beanName对应的注入元数据缓存
+	 * 注入元数据：类中带有@Autowired和@Value的字段或注解
+	 */
 	private final Map<String, InjectionMetadata> injectionMetadataCache = new ConcurrentHashMap<>(256);
 
 
@@ -253,6 +257,14 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 	}
 
 
+	/**
+	 * 解析 {@param beanType}中需要注入的字段和方法并缓存到RootBeanDefinition的externallyManagedConfigMembers中
+	 * 需要注入的：带有@Autowired或者@Value注解的字段和方法
+	 *
+	 * @param beanDefinition the merged bean definition for the bean
+	 * @param beanType the actual type of the managed bean instance
+	 * @param beanName the name of the bean
+	 */
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, beanType, null);
@@ -271,6 +283,12 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 			throws BeanCreationException {
 
 		// Let's check for lookup methods here...
+		/**
+		 * 处理带有@Lookup注解的方法，如果lookupMethodsChecked集合中没有beanName，则检查beanClass中所有方法，检查是否存在带有@Lookup注解
+		 * 的方法，如果有把beanName添加到lookupMethodsChecked中缓存，并将所有带有@Lookup注解的方法添加到mbd.methodOverrides中
+		 *
+		 * 循环遍历父类方法
+		 */
 		if (!this.lookupMethodsChecked.contains(beanName)) {
 			if (AnnotationUtils.isCandidateClass(beanClass, Lookup.class)) {
 				try {
@@ -305,6 +323,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 		}
 
 		// Quick check on the concurrent map first, with minimal locking.
+		// 首先快速检查并发映射，使用最少的锁。
 		Constructor<?>[] candidateConstructors = this.candidateConstructorsCache.get(beanClass);
 		if (candidateConstructors == null) {
 			// Fully synchronized resolution now...
@@ -404,10 +423,19 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 		return (candidateConstructors.length > 0 ? candidateConstructors : null);
 	}
 
+	/**
+	 * 解析bean需要注入的字段值，并注入
+	 *
+	 * @param pvs the property values that the factory is about to apply (never {@code null})
+	 * @param bean the bean instance created, but whose properties have not yet been set
+	 * @param beanName the name of the bean
+	 * @return
+	 */
 	@Override
 	public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
 		try {
+			// 为bean注入字段和方法值
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (BeanCreationException ex) {
@@ -451,10 +479,19 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 	}
 
 
+	/**
+	 * 查找类中需要注入的字段和方法，带有@Autowired或者@Value注解的字段和方法
+	 * @param beanName
+	 * @param clazz
+	 * @param pvs
+	 * @return
+	 */
 	private InjectionMetadata findAutowiringMetadata(String beanName, Class<?> clazz, @Nullable PropertyValues pvs) {
 		// Fall back to class name as cache key, for backwards compatibility with custom callers.
+		// 回退到类名作为缓存键，以便向后兼容自定义调用方。
 		String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
-		// Quick check on the concurrent map first, with minimal locking.
+		// Quick check on the concurrent map first, with minimal locking.	首先快速检查并发映射，使用最少的锁。
+		// 首先从缓存中取需要注入的字段和方法，如果没有，继续解析并缓存
 		InjectionMetadata metadata = this.injectionMetadataCache.get(cacheKey);
 		if (InjectionMetadata.needsRefresh(metadata, clazz)) {
 			synchronized (this.injectionMetadataCache) {
@@ -463,7 +500,15 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 					if (metadata != null) {
 						metadata.clear(pvs);
 					}
+
+					/**
+					 * 遍历{@param clazz}中所有字段和方法，获取带有@Autowired或者@Value注解的字段和方法
+					 * 会循环遍历父类
+					 */
 					metadata = buildAutowiringMetadata(clazz);
+					/**
+					 * 把当前类中需要自动注入的字段和方法缓存
+					 */
 					this.injectionMetadataCache.put(cacheKey, metadata);
 				}
 			}
@@ -471,7 +516,16 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 		return metadata;
 	}
 
+	/**
+	 * 获取指定类中所有带有@Autowired或者@Value注解的字段和方法，封装成InjectedElement类型添加到集合
+	 * @param clazz
+	 * @return
+	 */
 	private InjectionMetadata buildAutowiringMetadata(final Class<?> clazz) {
+
+		/**
+		 * 检查clazz中是否存在带有@Autowired或者@Value注解，如果没有返回空集合
+		 */
 		if (!AnnotationUtils.isCandidateClass(clazz, this.autowiredAnnotationTypes)) {
 			return InjectionMetadata.EMPTY;
 		}
@@ -482,6 +536,9 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 		do {
 			final List<InjectionMetadata.InjectedElement> currElements = new ArrayList<>();
 
+			/**
+			 * 获取所有带有@Autowired或者@Value注解的字段
+			 */
 			ReflectionUtils.doWithLocalFields(targetClass, field -> {
 				MergedAnnotation<?> ann = findAutowiredAnnotation(field);
 				if (ann != null) {
@@ -496,6 +553,10 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 				}
 			});
 
+
+			/**
+			 * 获取所有带有@Autowired或者@Value注解的方法
+			 */
 			ReflectionUtils.doWithLocalMethods(targetClass, method -> {
 				Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(method);
 				if (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) {
@@ -584,7 +645,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 	}
 
 	/**
-	 * Register the specified bean as dependent on the autowired beans.
+	 * Register the specified bean as dependent on the autowired beans. 将指定的bean注册为依赖于自动连接的bean。
 	 */
 	private void registerDependentBeans(@Nullable String beanName, Set<String> autowiredBeanNames) {
 		if (beanName != null) {
@@ -601,7 +662,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 	}
 
 	/**
-	 * Resolve the specified cached method argument or field value.
+	 * Resolve the specified cached method argument or field value. 解析指定的缓存方法参数或字段值。
 	 */
 	@Nullable
 	private Object resolvedCachedArgument(@Nullable String beanName, @Nullable Object cachedArgument) {
@@ -633,28 +694,49 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 			this.required = required;
 		}
 
+		/**
+		 * 解析字段对应的值，如果获取到则通过反射注入
+		 *
+		 * @param bean
+		 * @param beanName
+		 * @param pvs
+		 * @throws Throwable
+		 */
 		@Override
 		protected void inject(Object bean, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
 			Field field = (Field) this.member;
 			Object value;
 			if (this.cached) {
 				try {
+					// 如果已经解析过字段值，则从缓存中获取
 					value = resolvedCachedArgument(beanName, this.cachedFieldValue);
 				}
 				catch (NoSuchBeanDefinitionException ex) {
 					// Unexpected removal of target bean for cached argument -> re-resolve
+					// 意外删除了缓存参数的目标bean ->重新解析
 					value = resolveFieldValue(field, bean, beanName);
 				}
 			}
 			else {
 				value = resolveFieldValue(field, bean, beanName);
 			}
+			/**
+			 * 如果获取到字段对应的值，通过反射注入
+			 */
 			if (value != null) {
 				ReflectionUtils.makeAccessible(field);
 				field.set(bean, value);
 			}
 		}
 
+		/**
+		 * 解析字段对应的值，如果字段是引用类型，会先创建字段类型的bean
+		 *
+		 * @param field
+		 * @param bean
+		 * @param beanName
+		 * @return
+		 */
 		@Nullable
 		private Object resolveFieldValue(Field field, Object bean, @Nullable String beanName) {
 			DependencyDescriptor desc = new DependencyDescriptor(field, this.required);
@@ -664,11 +746,13 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 			TypeConverter typeConverter = beanFactory.getTypeConverter();
 			Object value;
 			try {
+				// 解析依赖的值，可能引起其他bean的创建
 				value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
 			}
 			catch (BeansException ex) {
 				throw new UnsatisfiedDependencyException(null, beanName, new InjectionPoint(field), ex);
 			}
+			// 记录依赖关系
 			synchronized (this) {
 				if (!this.cached) {
 					Object cachedFieldValue = null;

@@ -70,6 +70,9 @@ public class InjectionMetadata {
 
 	private final Collection<InjectedElement> injectedElements;
 
+	/**
+	 * 记录当前注入元数据中需要注入的字段和方法
+	 */
 	@Nullable
 	private volatile Set<InjectedElement> checkedElements;
 
@@ -98,6 +101,10 @@ public class InjectionMetadata {
 		return this.targetClass != clazz;
 	}
 
+	/**
+	 * 记录需要注入的字段和方法
+	 * @param beanDefinition
+	 */
 	public void checkConfigMembers(RootBeanDefinition beanDefinition) {
 		Set<InjectedElement> checkedElements = new LinkedHashSet<>(this.injectedElements.size());
 		for (InjectedElement element : this.injectedElements) {
@@ -110,11 +117,19 @@ public class InjectionMetadata {
 		this.checkedElements = checkedElements;
 	}
 
+	/**
+	 * 注入字段值
+	 * @param target
+	 * @param beanName
+	 * @param pvs
+	 * @throws Throwable
+	 */
 	public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
 		Collection<InjectedElement> checkedElements = this.checkedElements;
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);
 		if (!elementsToIterate.isEmpty()) {
+			// 遍历需要注入的字段和方法，解析值并注入
 			for (InjectedElement element : elementsToIterate) {
 				element.inject(target, beanName, pvs);
 			}
@@ -122,7 +137,7 @@ public class InjectionMetadata {
 	}
 
 	/**
-	 * Clear property skipping for the contained elements.
+	 * Clear property skipping for the contained elements.	清除所包含元素的属性跳过。
 	 * @since 3.2.13
 	 */
 	public void clear(@Nullable PropertyValues pvs) {

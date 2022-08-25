@@ -150,6 +150,18 @@ public class InitDestroyAnnotationBeanPostProcessor
 		metadata.checkConfigMembers(beanDefinition);
 	}
 
+	/**
+	 * 查找并执行带有@PostConstruct注解的初始化方法，该方法默认在CommonAnnotationBeanPostProcessor.java类型的实例中调用
+	 * CommonAnnotationBeanPostProcessor继承了当前类
+	 *
+	 * 带有@PostConstruct和@PreDestroy注解的方法会在doCreateBean()方法中调用applyMergedBeanDefinitionPostProcessors()时，
+	 * 调用CommonAnnotationBeanPostProcessor::postProcessMergedBeanDefinition()方法查找并缓存在this.lifecycleMetadataCache中
+	 *
+	 * @param bean the new bean instance
+	 * @param beanName the name of the bean
+	 * @return
+	 * @throws BeansException
+	 */
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		LifecycleMetadata metadata = findLifecycleMetadata(bean.getClass());
@@ -170,6 +182,14 @@ public class InitDestroyAnnotationBeanPostProcessor
 		return bean;
 	}
 
+	/**
+	 * 执行带有@PreDestroy注解的销毁方法，该方法默认在CommonAnnotationBeanPostProcessor.java类型的实例中调用
+	 * CommonAnnotationBeanPostProcessor继承了当前类
+	 *
+	 * @param bean the bean instance to be destroyed
+	 * @param beanName the name of the bean
+	 * @throws BeansException
+	 */
 	@Override
 	public void postProcessBeforeDestruction(Object bean, String beanName) throws BeansException {
 		LifecycleMetadata metadata = findLifecycleMetadata(bean.getClass());
@@ -216,6 +236,12 @@ public class InitDestroyAnnotationBeanPostProcessor
 		return metadata;
 	}
 
+	/**
+	 * 查找clazz中所有带有@PostConstruct和@PreDestroy注解的初始化和销毁方法
+	 *
+	 * @param clazz
+	 * @return
+	 */
 	private LifecycleMetadata buildLifecycleMetadata(final Class<?> clazz) {
 		if (!AnnotationUtils.isCandidateClass(clazz, Arrays.asList(this.initAnnotationType, this.destroyAnnotationType))) {
 			return this.emptyLifecycleMetadata;

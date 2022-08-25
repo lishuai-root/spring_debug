@@ -1,5 +1,8 @@
 package com.shuai.beans;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 /**
  * @description:
  * @author: LISHUAI
@@ -7,6 +10,7 @@ package com.shuai.beans;
  * @version: 1.0
  */
 
+@Service
 public class People {
 
 	String name;
@@ -15,7 +19,18 @@ public class People {
 
 	String password;
 
-	public People(){}
+	@Autowired
+	Driver driverCar;
+
+	@Autowired
+	Apple apple;
+
+	@Autowired
+	Address address;
+
+	public People(){
+		System.out.println("people Instantiation.");
+	}
 
 	public Object customerInitMethod(){
 		System.out.println("people init method execute.");
@@ -44,5 +59,25 @@ public class People {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Driver getDriverCar() {
+		return driverCar;
+	}
+
+	public void setDriverCar(Driver driverCar) {
+		this.driverCar = driverCar;
+	}
+
+	public Apple getApple() {
+		return apple;
+	}
+
+	public void setApple(Apple apple) {
+		this.apple = apple;
+	}
+
+	public Address getAddress() {
+		return address;
 	}
 }

@@ -350,14 +350,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				// 此处要做类型转换，如果是子类bean的话，会合并父类的相关属性
 				RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 
-				// 检查合并 Bean 定义，不合格会引发验证异常
+				// 检查合并 Bean 定义，不合格会引发验证异常。只检查了是否抽象类
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				// Guarantee initialization of beans that the current bean depends on.保证当前 bean 所依赖的 bean 的初始化。
 				// 如果存在依赖的bean的话，那么则优先实例化依赖的bean
 				String[] dependsOn = mbd.getDependsOn();
 
-				//	如果当前bean存在依赖
+				/**
+				 * 优先递归实例化依赖bean
+				 */
 				if (dependsOn != null) {
 
 					// 如果存在依赖，则需要递归实例化依赖的bean
@@ -1481,7 +1483,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		//去除name开头的'&'字符,获取name最终的规范名称【最终别名或者是全类名】：
 		String beanName = transformedBeanName(name);
 
-		// 获取beanName注册的（原始）单例对象（如果单例对象不存在，且处于正在创建状态）
+		/**
+		 * 获取beanName注册的（原始）单例对象（如果单例对象不存在，且处于正在创建状态）
+		 * 1.如果单例对象已经创建完成，返回bean
+		 * 2.如果单例对象正在创建：
+		 * 		2.1.如果对象已经放到二级缓存，返回实例完但是没有填充属性的bean
+		 * 		2.2.如果对象没有放到二级缓存，返回null
+		 */
 		Object beanInstance = getSingleton(beanName, false);
 
 		// 如果beanName对应的单例对象不为空，
@@ -1800,6 +1808,24 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 *
 	 *  获取beanName对应的合并后的RootBeanDefinition
+	 *  spring中用户自定义的的beanDefinition大致分为三种：GenericBeanDefinition， AnnotatedBeanDefinition， RootBeanDefinition
+	 *  GenericBeanDefinition：从配置文件中解析到的beanDifinition
+	 *  AnnotatedBeanDefinition：被注解扫描到的beanDefinition
+	 *  RootBeanDefinition：解析后的beanDefinition
+	 *
+	 *  GenericBeanDefinition和AnnotatedBeanDefinition都是在解析配置文件或者扫描component-scan时创建的原始beanDifinition，此时的
+	 *  beanDifinition完全是按照配置文件或者class定义生成的，并未做任何解析工作，只是记录的bean的基本定义信息，可以称之为原始定义(源信息)
+	 *
+	 *  RootBeanDefinition：是被解析后的GenericBeanDefinition或AnnotatedBeanDefinition，RootBeanDefinition中不仅包含了bean的原始定义信息，还包含了解析后的bean定义信息
+	 *  比如：bean的类型，bean是否工厂方法，bean的具体工厂方法等
+	 *
+	 *  GenericBeanDefinition和AnnotatedBeanDefinition只是bean定义信息暂时的形态，RootBeanDefinition是最终的目标形态，RootBeanDefinition包含了创建实例所需的所有信息
+	 *
+	 *  RootBeanDefinition可以理解为GenericBeanDefinition或者AnnotatedBeanDefinition更详细的描述(最终形态)
+	 *
+	 *  根据给定beanDefinition创建RootBeanDifiniition
+	 *  	1.如果没有父类，则用当前beanDefinition创建RootBeanDefinition
+	 *  	2.如果有父类，则用父类的beanDefinition创建RootBeanDefinition，并用当前beanDefinition信息覆盖部分父类beanDefinition定义信息
 	 *
 	 * Return a RootBeanDefinition for the given bean, by merging with the
 	 * parent if the given bean's definition is a child bean definition.
@@ -2422,9 +2448,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Mark the specified bean as already created (or about to be created).
+	 * Mark the specified bean as already created (or about to be created). 将指定的bean标记为已经创建(或即将创建)。
 	 * <p>This allows the bean factory to optimize its caching for repeated
-	 * creation of the specified bean.
+	 * creation of the specified bean. 这允许bean工厂优化其缓存，以重复创建指定的bean。
 	 * @param beanName the name of the bean
 	 */
 	protected void markBeanAsCreated(String beanName) {
@@ -2818,7 +2844,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 
 	/**
-	 * Internal cache of pre-filtered post-processors.
+	 * Internal cache of pre-filtered post-processors.	预过滤后处理器的内部缓存。
 	 *
 	 * @since 5.3
 	 */

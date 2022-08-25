@@ -373,10 +373,12 @@ class ConfigurationClassBeanDefinitionReader {
 					//设置工厂方法不唯一，说明有重载
 					ccbd.setNonUniqueFactoryMethodName(ccbd.getFactoryMethodMetadata().getMethodName());
 				}
-				return true;	// 不覆盖
+				// 不覆盖
+				return true;
 			}
 			else {
-				return false;	// 覆盖
+				// 覆盖
+				return false;
 			}
 		}
 
