@@ -50,6 +50,8 @@ import org.springframework.util.StringUtils;
  * resolving values contained in bean definition objects
  * into the actual values applied to the target bean instance.
  *
+ * 用于 bean 工厂实现的帮助类，将 bean 定义对象中包含的值解析为应用于目标 bean 实例的实际值。
+ *
  * <p>Operates on an {@link AbstractBeanFactory} and a plain
  * {@link org.springframework.beans.factory.config.BeanDefinition} object.
  * Used by {@link AbstractAutowireCapableBeanFactory}.
@@ -71,6 +73,8 @@ class BeanDefinitionValueResolver {
 
 	/**
 	 * Create a BeanDefinitionValueResolver for the given BeanFactory and BeanDefinition.
+	 * 为给定的 BeanFactory 和 BeanDefinition 创建一个 BeanDefinitionValueResolver。
+	 *
 	 * @param beanFactory the BeanFactory to resolve against
 	 * @param beanName the name of the bean that we work on
 	 * @param beanDefinition the BeanDefinition of the bean that we work on

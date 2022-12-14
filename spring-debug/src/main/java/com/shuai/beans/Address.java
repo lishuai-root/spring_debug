@@ -16,6 +16,8 @@ public class Address {
 
 	String address;
 
+	BigPeople bigPeople;
+
 	public String getName() {
 		return name;
 	}
@@ -38,5 +40,13 @@ public class Address {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public BigPeople getBigPeople() {
+		return bigPeople;
+	}
+
+	public void setBigPeople(BigPeople bigPeople) {
+		this.bigPeople = bigPeople;
 	}
 }

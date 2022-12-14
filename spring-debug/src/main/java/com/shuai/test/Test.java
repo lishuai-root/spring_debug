@@ -3,6 +3,7 @@ package com.shuai.test;
 
 import com.shuai.aop.ProxyClass;
 import com.shuai.aop.SourceClass;
+import com.shuai.beans.Apple;
 import com.shuai.beans.People;
 import com.shuai.configuration.AutoDemo;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -19,13 +20,21 @@ import java.util.PriorityQueue;
 public class Test {
 
 	public static void main(String[] args) {
+		System.out.println(Runtime.getRuntime().maxMemory() >> 20);
+		System.out.println(Runtime.getRuntime().totalMemory() >> 20);
+		System.out.println(Runtime.getRuntime().freeMemory() >> 20);
 
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
-
-		People bean = context.getBean(People.class);
-		System.out.println(bean.getDriverCar());
-		bean.getDriverCar().driver();
-		System.out.println(bean.getAddress().getName());
+//		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+//
+//		People bean = context.getBean(People.class);
+//		System.out.println(bean.getDriverCar());
+//		bean.getDriverCar().driver();
+//		System.out.println(bean.getAddress().getName());
+//		Apple bean1 = context.getBean(Apple.class);
+//		Apple bean2 = context.getBean(Apple.class);
+//		System.out.println(bean1);
+//		System.out.println(bean2);
+//		System.out.println(bean1==bean2);
 //		People people = context.getBean(People.class);
 //		System.out.println(people.getName());
 //		SourceClass bean = context.getBean(SourceClass.class);

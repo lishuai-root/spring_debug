@@ -23,6 +23,8 @@ import org.springframework.util.Assert;
  * {@link Task} implementation defining a {@code Runnable} to be executed
  * according to a given {@link Trigger}.
  *
+ * {@link Task}实现定义了一个{@code Runnable}，根据给定的{@link触发器}执行。
+ *
  * @author Chris Beams
  * @since 3.2
  * @see ScheduledTaskRegistrar#addTriggerTask(TriggerTask)

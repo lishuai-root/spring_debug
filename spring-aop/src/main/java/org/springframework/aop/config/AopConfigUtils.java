@@ -46,7 +46,7 @@ import org.springframework.util.Assert;
 public abstract class AopConfigUtils {
 
 	/**
-	 * The bean name of the internally managed auto-proxy creator.
+	 * The bean name of the internally managed auto-proxy creator. 内部管理的自动代理创建者的 bean 名称。
 	 */
 	public static final String AUTO_PROXY_CREATOR_BEAN_NAME =
 			"org.springframework.aop.config.internalAutoProxyCreator";
@@ -81,6 +81,13 @@ public abstract class AopConfigUtils {
 		return registerAspectJAutoProxyCreatorIfNecessary(registry, null);
 	}
 
+	/**
+	 * 给spring容器中注入AspectJAwareAdvisorAutoProxyCreator类型的beanDefinition
+	 *
+	 * @param registry
+	 * @param source
+	 * @return
+	 */
 	@Nullable
 	public static BeanDefinition registerAspectJAutoProxyCreatorIfNecessary(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
@@ -114,6 +121,13 @@ public abstract class AopConfigUtils {
 		}
 	}
 
+	/**
+	 * 注入org.springframework.aop.config.internalAutoProxyCreator 名称的beanDefinition
+	 * @param cls
+	 * @param registry
+	 * @param source
+	 * @return
+	 */
 	@Nullable
 	private static BeanDefinition registerOrEscalateApcAsRequired(
 			Class<?> cls, BeanDefinitionRegistry registry, @Nullable Object source) {

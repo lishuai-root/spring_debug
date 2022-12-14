@@ -158,11 +158,20 @@ public abstract class AnnotationUtils {
 	/**
 	 * Determine whether the given class is a candidate for carrying the specified annotation
 	 * (at type, method or field level).
+	 *
+	 * 确定给定的类是否是承载指定注释的候选者(在类型、方法或字段级别)。
+	 *
+	 * 个人理解：{@param annotationName}}注解能否使用在{@param clazz}类或者其方法上
+	 *
 	 * @param clazz the class to introspect
 	 * @param annotationName the fully-qualified name of the searchable annotation type
 	 * @return {@code false} if the class is known to have no such annotations at any level;
 	 * {@code true} otherwise. Callers will usually perform full method/field introspection
 	 * if {@code true} is being returned here.
+	 *
+	 * {@code false}如果已知该类在任何级别上都没有这样的注释;{@code true}否则。
+	 * 如果在这里返回{@code true}，调用者通常会执行完整的方法字段自省。
+	 *
 	 * @since 5.2
 	 * @see #isCandidateClass(Class, Class)
 	 */

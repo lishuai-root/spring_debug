@@ -49,8 +49,12 @@ public abstract class DomUtils {
 
 	/**
 	 * Retrieves all child elements of the given DOM element that match any of the given element names.
+	 * 检索与任何给定元素名称匹配的给定 DOM 元素的所有子元素。
+	 *
 	 * Only looks at the direct child level of the given element; do not go into further depth
 	 * (in contrast to the DOM API's {@code getElementsByTagName} method).
+	 * 只查看给定元素的直接子级；不要进一步深入（与 DOM API 的 {@code getElementsByTagName} 方法相反）。
+	 *
 	 * @param ele the DOM element to analyze
 	 * @param childEleNames the child element names to look for
 	 * @return a List of child {@code org.w3c.dom.Element} instances
@@ -74,8 +78,12 @@ public abstract class DomUtils {
 
 	/**
 	 * Retrieves all child elements of the given DOM element that match the given element name.
+	 * 检索与给定元素名称匹配的给定 DOM 元素的所有子元素。
+	 *
 	 * Only look at the direct child level of the given element; do not go into further depth
 	 * (in contrast to the DOM API's {@code getElementsByTagName} method).
+	 * 只看给定元素的直接子级；不要进一步深入（与 DOM API 的 {@code getElementsByTagName} 方法相反）。
+	 *
 	 * @param ele the DOM element to analyze
 	 * @param childEleName the child element name to look for
 	 * @return a List of child {@code org.w3c.dom.Element} instances

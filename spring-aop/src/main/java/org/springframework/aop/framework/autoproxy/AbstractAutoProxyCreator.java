@@ -318,6 +318,8 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 
 	/**
 	 * Wrap the given bean if necessary, i.e. if it is eligible for being proxied.
+	 *
+	 * 如果需要，包装给定的bean，即如果它有资格被代理.
 	 * @param bean the raw bean instance
 	 * @param beanName the name of the bean
 	 * @param cacheKey the cache key for metadata access
@@ -335,7 +337,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			return bean;
 		}
 
-		// Create proxy if we have advice.
+		// Create proxy if we have advice. 如果我们有建议，请创建代理.
+		/**
+		 * 实例化所有AspectJ对象
+		 */
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
@@ -352,8 +357,14 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	/**
 	 * Return whether the given bean class represents an infrastructure class
 	 * that should never be proxied.
+	 * 返回给定的 bean 类是否代表一个不应该被代理的基础设施类。
+	 *
 	 * <p>The default implementation considers Advices, Advisors and
 	 * AopInfrastructureBeans as infrastructure classes.
+	 * 默认实现将 Advices、Advisors 和 AopInfrastructureBeans 视为基础设施类。
+	 *
+	 * 默认实现将 Advice、Pointcut、Advisor 和 AopInfrastructureBean 视为基础设施类。
+	 *
 	 * @param beanClass the class of the bean
 	 * @return whether the bean represents an infrastructure class
 	 * @see org.aopalliance.aop.Advice
@@ -375,10 +386,15 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	/**
 	 * Subclasses should override this method to return {@code true} if the
 	 * given bean should not be considered for auto-proxying by this post-processor.
+	 * 如果给定的 bean 不应该被这个后处理器考虑自动代理，子类应该重写这个方法以返回 {@code true}。
+	 *
 	 * <p>Sometimes we need to be able to avoid this happening, e.g. if it will lead to
 	 * a circular reference or if the existing target instance needs to be preserved.
 	 * This implementation returns {@code false} unless the bean name indicates an
 	 * "original instance" according to {@code AutowireCapableBeanFactory} conventions.
+	 * 有时我们需要能够避免这种情况发生，例如如果它会导致循环引用或者是否需要保留现有的目标实例。
+	 * 此实现返回 {@code false} 除非 bean 名称根据 {@code AutowireCapableBeanFactory} 约定指示“原始实例”。
+	 *
 	 * @param beanClass the class of the bean
 	 * @param beanName the name of the bean
 	 * @return whether to skip the given bean

@@ -46,12 +46,18 @@ public final class MethodIntrospector {
 
 	/**
 	 * Select methods on the given target type based on the lookup of associated metadata.
+	 * 根据相关元数据的查找，在给定的目标类型上选择方法。
+	 *
 	 * <p>Callers define methods of interest through the {@link MetadataLookup} parameter,
 	 * allowing to collect the associated metadata into the result map.
+	 * 调用者通过{@link MetadataLookup}参数定义感兴趣的方法，允许将相关的元数据收集到结果映射中。
+	 *
 	 * @param targetType the target type to search methods on
 	 * @param metadataLookup a {@link MetadataLookup} callback to inspect methods of interest,
 	 * returning non-null metadata to be associated with a given method if there is a match,
 	 * or {@code null} for no match
+	 * {@link MetadataLookup}回调来检查感兴趣的方法，如果有匹配则返回与给定方法相关联的非空元数据，如果没有匹配则返回{@code null}
+	 *
 	 * @return the selected methods associated with their metadata (in the order of retrieval),
 	 * or an empty map in case of no match
 	 */
@@ -69,10 +75,22 @@ public final class MethodIntrospector {
 		for (Class<?> currentHandlerType : handlerTypes) {
 			final Class<?> targetClass = (specificHandlerType != null ? specificHandlerType : currentHandlerType);
 
+			/**
+			 * 遍历类中所有方法，筛选符合要求的方法集合 {@link MetadataLookup#inspect(Method)}
+			 */
 			ReflectionUtils.doWithMethods(currentHandlerType, method -> {
+				/**
+				 * 获取targetClass类中的method方法的具体实现
+				 */
 				Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
+				/**
+				 * 筛选具体结果
+				 */
 				T result = metadataLookup.inspect(specificMethod);
 				if (result != null) {
+					/**
+					 * 查找桥接方法的原始方法
+					 */
 					Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
 					if (bridgedMethod == specificMethod || metadataLookup.inspect(bridgedMethod) == null) {
 						methodMap.put(specificMethod, result);

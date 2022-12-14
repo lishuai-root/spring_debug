@@ -334,6 +334,8 @@ public abstract class MethodMatchers {
 	/**
 	 * MethodMatcher implementation for an intersection of two given MethodMatchers
 	 * of which at least one is an IntroductionAwareMethodMatcher.
+	 * MethodMatcher 实现，用于两个给定 MethodMatcher 的交集，其中至少一个是 IntroductionAwareMethodMatcher。
+	 *
 	 * @since 5.1
 	 */
 	@SuppressWarnings("serial")

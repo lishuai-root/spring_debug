@@ -73,6 +73,9 @@ public abstract class AopProxyUtils {
 	 * Determine the ultimate target class of the given bean instance, traversing
 	 * not only a top-level proxy but any number of nested proxies as well &mdash;
 	 * as long as possible without side effects, that is, just for singleton targets.
+	 *
+	 * 确定给定bean实例的最终目标类，不仅要遍历顶级代理，还要遍历任意数量的嵌套代理。尽可能没有副作用，也就是说，只针对单例目标。
+	 *
 	 * @param candidate the instance to check (might be an AOP proxy)
 	 * @return the ultimate target class (or the plain class of the given
 	 * object as fallback; never {@code null})

@@ -24,6 +24,8 @@ import org.springframework.lang.Nullable;
  * Common interface for trigger objects that determine the next execution time
  * of a task that they get associated with.
  *
+ * 触发器对象的通用接口，用于确定与其关联的任务的下一次执行时间。
+ *
  * @author Juergen Hoeller
  * @since 3.0
  * @see TaskScheduler#schedule(Runnable, Trigger)

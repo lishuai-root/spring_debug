@@ -139,6 +139,8 @@ public class XmlReaderContext extends ReaderContext {
 	/**
 	 * Call the bean name generator for the given bean definition
 	 * and register the bean definition under the generated name.
+	 * 为给定的 bean 定义调用 bean 名称生成器，并在生成的名称下注册 bean 定义。
+	 *
 	 * @see XmlBeanDefinitionReader#getBeanNameGenerator()
 	 * @see org.springframework.beans.factory.support.BeanNameGenerator#generateBeanName
 	 * @see BeanDefinitionRegistry#registerBeanDefinition

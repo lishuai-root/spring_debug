@@ -351,11 +351,14 @@ public class ScheduledTaskRegistrar implements ScheduledTaskHolder, Initializing
 
 	/**
 	 * Schedule all registered tasks against the underlying
+	 * 根据底层调度所有已注册的任务
+	 *
 	 * {@linkplain #setTaskScheduler(TaskScheduler) task scheduler}.
 	 */
 	@SuppressWarnings("deprecation")
 	protected void scheduleTasks() {
 		if (this.taskScheduler == null) {
+			// 创建单线程的线程池
 			this.localExecutor = Executors.newSingleThreadScheduledExecutor();
 			this.taskScheduler = new ConcurrentTaskScheduler(this.localExecutor);
 		}

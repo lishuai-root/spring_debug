@@ -601,6 +601,10 @@ public abstract class ClassUtils {
 	/**
 	 * Resolve the given class if it is a primitive class,
 	 * returning the corresponding primitive wrapper type instead.
+	 *
+	 * 解析给定的类(如果它是基元类)，而是返回相应的基元包装器类型。
+	 * 获取基本数据类型的包装类型
+	 *
 	 * @param clazz the class to check
 	 * @return the original class, or a primitive wrapper for the original primitive type
 	 */
@@ -994,6 +998,8 @@ public abstract class ClassUtils {
 	/**
 	 * Return the user-defined class for the given class: usually simply the given
 	 * class, but the original class in case of a CGLIB-generated subclass.
+	 * 返回给定类的用户定义类:通常只返回给定类，但如果是cglib生成的子类，则返回原始类。
+	 *
 	 * @param clazz the class to check
 	 * @return the user-defined class
 	 */
@@ -1353,11 +1359,19 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 该方法尝试在{@param targetClass}类及其父类中查找{@param method}方法的具体实现，
+	 * 如果{@param method}就是具体实现则返回{@param method},否则在父类中查找。
+	 * 如果{@param method}是桥接方法，不会对桥接方法进行解析，返回桥接方法。
+	 *
 	 * Given a method, which may come from an interface, and a target class used
 	 * in the current reflective invocation, find the corresponding target method
 	 * if there is one. E.g. the method may be {@code IFoo.bar()} and the
 	 * target class may be {@code DefaultFoo}. In this case, the method may be
 	 * {@code DefaultFoo.bar()}. This enables attributes on that method to be found.
+	 * 给定一个方法(可能来自接口)和当前反射调用中使用的目标类，如果有相应的目标方法，请找到对应的目标方法。
+	 * 例如，方法可以是{@code IFoo.bar()}，目标类可以是{@code DefaultFoo}。在这种情况下，方法可以是{@code DefaultFoo.bar()}。
+	 * 这样就可以找到该方法上的属性。
+	 *
 	 * <p><b>NOTE:</b> In contrast to {@link org.springframework.aop.support.AopUtils#getMostSpecificMethod},
 	 * this method does <i>not</i> resolve Java 5 bridge methods automatically.
 	 * Call {@link org.springframework.core.BridgeMethodResolver#findBridgedMethod}
@@ -1374,6 +1388,9 @@ public abstract class ClassUtils {
 	 * @see #getInterfaceMethodIfPossible
 	 */
 	public static Method getMostSpecificMethod(Method method, @Nullable Class<?> targetClass) {
+		/**
+		 * 如果方法所属类不是当前类，且当前方法可重新，在当前类及其父类中查找具体实现方法
+		 */
 		if (targetClass != null && targetClass != method.getDeclaringClass() && isOverridable(method, targetClass)) {
 			try {
 				if (Modifier.isPublic(method.getModifiers())) {
@@ -1385,6 +1402,7 @@ public abstract class ClassUtils {
 					}
 				}
 				else {
+					// 在当前类及其父类中查找
 					Method specificMethod =
 							ReflectionUtils.findMethod(targetClass, method.getName(), method.getParameterTypes());
 					return (specificMethod != null ? specificMethod : method);
@@ -1392,6 +1410,7 @@ public abstract class ClassUtils {
 			}
 			catch (SecurityException ex) {
 				// Security settings are disallowing reflective access; fall back to 'method' below.
+				// 安全设置不允许反射访问;回到下面的'method'。
 			}
 		}
 		return method;
@@ -1450,6 +1469,8 @@ public abstract class ClassUtils {
 
 	/**
 	 * Determine whether the given method is overridable in the given target class.
+	 * 确定给定的方法在给定的目标类中是否可重写。
+	 *
 	 * @param method the method to check
 	 * @param targetClass the target class to check against
 	 */

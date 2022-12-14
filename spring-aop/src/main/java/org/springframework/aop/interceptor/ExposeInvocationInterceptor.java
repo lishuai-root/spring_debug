@@ -38,6 +38,14 @@ import org.springframework.lang.Nullable;
  *
  * <p>If used, this interceptor will normally be the first in the interceptor chain.
  *
+ * 公开当前｛@linkorg.aopalliance.incept.MethodInvocation｝的侦听器
+ * 作为线程本地对象。我们偶尔需要这样做；例如，当切入点
+ * （例如AspectJ表达式切入点）需要知道完整的调用上下文。
+ * 除非确有必要，否则不要使用此拦截器。目标对象应
+ * 通常不了解SpringAOP，因为这会创建对SpringAPI的依赖。
+ * 目标对象应尽可能是普通POJO。
+ * 如果使用，该拦截器通常是拦截器链中的第一个
+ *
  * @author Rod Johnson
  * @author Juergen Hoeller
  */

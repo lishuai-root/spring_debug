@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.aop.Advisor;
+import org.springframework.aop.aspectj.AbstractAspectJAdvice;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanCurrentlyInCreationException;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -61,15 +62,26 @@ public class BeanFactoryAdvisorRetrievalHelper {
 	/**
 	 * Find all eligible Advisor beans in the current bean factory,
 	 * ignoring FactoryBeans and excluding beans that are currently in creation.
+	 * 在当前 bean 工厂中查找所有符合条件的 Advisor bean，忽略 FactoryBeans 并排除当前正在创建的 bean。
+	 *
+	 * 查找并实例化所有{@link Advisor}类型的beanDefinition
+	 *
 	 * @return the list of {@link org.springframework.aop.Advisor} beans
 	 * @see #isEligibleBean
 	 */
 	public List<Advisor> findAdvisorBeans() {
 		// Determine list of advisor bean names, if not cached already.
+		/**
+		 * 确定顾问 bean 名称列表（如果尚未缓存）。
+		 */
 		String[] advisorNames = this.cachedAdvisorBeanNames;
 		if (advisorNames == null) {
 			// Do not initialize FactoryBeans here: We need to leave all regular beans
 			// uninitialized to let the auto-proxy creator apply to them!
+			/**
+			 * 不要在这里初始化 FactoryBeans：我们需要让所有常规 bean 保持未初始化状态，让自动代理创建者应用到它们！
+			 * 获取所有{@link Advisor}类型的beanDefinition，并缓存到当前helper的advisorNames中
+			 */
 			advisorNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 					this.beanFactory, Advisor.class, true, false);
 			this.cachedAdvisorBeanNames = advisorNames;
@@ -78,9 +90,15 @@ public class BeanFactoryAdvisorRetrievalHelper {
 			return new ArrayList<>();
 		}
 
+		/**
+		 * 遍历创建所有{@link Advisor}类型的beanDefinition
+		 */
 		List<Advisor> advisors = new ArrayList<>();
 		for (String name : advisorNames) {
 			if (isEligibleBean(name)) {
+				/**
+				 * 检查当前Advisor是否正在创建，如果正在创建则跳过
+				 */
 				if (this.beanFactory.isCurrentlyInCreation(name)) {
 					if (logger.isTraceEnabled()) {
 						logger.trace("Skipping currently created advisor '" + name + "'");
@@ -88,6 +106,14 @@ public class BeanFactoryAdvisorRetrievalHelper {
 				}
 				else {
 					try {
+						/**
+						 * 实例化Advisor并添加到集合中
+						 *
+						 * {@link org.springframework.aop.aspectj.AspectJPointcutAdvisor}没有默认构造函数，
+						 * 只有一个{@link org.springframework.aop.aspectj.AspectJPointcutAdvisor#AspectJPointcutAdvisor(AbstractAspectJAdvice)}构造函数
+						 * 所以，解析Advisor构造函数参数时，会引起{@link org.springframework.aop.aspectj.AspectJPointcutAdvisor#advice}属性的实例化
+						 *
+						 */
 						advisors.add(this.beanFactory.getBean(name, Advisor.class));
 					}
 					catch (BeanCreationException ex) {
@@ -102,6 +128,7 @@ public class BeanFactoryAdvisorRetrievalHelper {
 								}
 								// Ignore: indicates a reference back to the bean we're trying to advise.
 								// We want to find advisors other than the currently created bean itself.
+								// Ignore：表示对我们试图建议的 bean 的引用。我们希望找到除当前创建的 bean 本身之外的顾问。
 								continue;
 							}
 						}
@@ -116,6 +143,8 @@ public class BeanFactoryAdvisorRetrievalHelper {
 	/**
 	 * Determine whether the aspect bean with the given name is eligible.
 	 * <p>The default implementation always returns {@code true}.
+	 * 确定具有给定名称的方面 bean 是否符合条件。 <p>默认实现总是返回 {@code true}。
+	 *
 	 * @param beanName the name of the aspect bean
 	 * @return whether the bean is eligible
 	 */

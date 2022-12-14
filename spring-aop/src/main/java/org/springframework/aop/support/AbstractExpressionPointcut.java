@@ -23,6 +23,7 @@ import org.springframework.lang.Nullable;
 /**
  * Abstract superclass for expression pointcuts,
  * offering location and expression properties.
+ * 表达式切入点的抽象超类，提供位置和表达式属性。
  *
  * @author Rod Johnson
  * @author Rob Harrop

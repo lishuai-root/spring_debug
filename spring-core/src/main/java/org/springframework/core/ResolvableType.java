@@ -899,6 +899,8 @@ public class ResolvableType implements Serializable {
 	 * Resolve this type by a single level, returning the resolved value or {@link #NONE}.
 	 * <p>Note: The returned {@link ResolvableType} should only be used as an intermediary
 	 * as it cannot be serialized.
+	 *
+	 * 通过单个级别解析此类型，返回已解析的值或{@link NONE}。注意:返回的{@link ResolvableType}不能被序列化，只能用作中介。
 	 */
 	ResolvableType resolveType() {
 		if (this.type instanceof ParameterizedType) {
@@ -1358,6 +1360,8 @@ public class ResolvableType implements Serializable {
 
 	/**
 	 * Return a {@link ResolvableType} for the specified {@link MethodParameter}.
+	 * 为指定的{@link MethodParameter}返回一个{@link ResolvableType}。
+	 *
 	 * @param methodParameter the source method parameter (must not be {@code null})
 	 * @return a {@link ResolvableType} for the specified method parameter
 	 * @see #forMethodParameter(Method, int)

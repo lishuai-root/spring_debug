@@ -228,6 +228,8 @@ public abstract class ReflectionUtils {
 	/**
 	 * Attempt to find a {@link Method} on the supplied class with the supplied name
 	 * and parameter types. Searches all superclasses up to {@code Object}.
+	 * 尝试在提供的类上用提供的名称和参数类型找到一个{@link Method}。搜索{@code Object}之前的所有超类。
+	 *
 	 * <p>Returns {@code null} if no {@link Method} can be found.
 	 * @param clazz the class to introspect
 	 * @param name the name of the method
@@ -352,15 +354,19 @@ public abstract class ReflectionUtils {
 	/**
 	 * Perform the given callback operation on all matching methods of the given
 	 * class and superclasses (or given interface and super-interfaces).
+	 * 对给定类和超类(或给定接口和超接口)的所有匹配方法执行给定回调操作。
+	 *
 	 * <p>The same named method occurring on subclass and superclass will appear
 	 * twice, unless excluded by the specified {@link MethodFilter}.
+	 * 在子类和超类上出现的同名方法将出现两次，除非被指定的{@link MethodFilter}排除
+	 *
 	 * @param clazz the class to introspect
 	 * @param mc the callback to invoke for each method
 	 * @param mf the filter that determines the methods to apply the callback to
 	 * @throws IllegalStateException if introspection fails
 	 */
 	public static void doWithMethods(Class<?> clazz, MethodCallback mc, @Nullable MethodFilter mf) {
-		// Keep backing up the inheritance hierarchy.
+		// Keep backing up the inheritance hierarchy. 继续备份继承层次结构。
 		Method[] methods = getDeclaredMethods(clazz, false);
 		for (Method method : methods) {
 			if (mf != null && !mf.matches(method)) {

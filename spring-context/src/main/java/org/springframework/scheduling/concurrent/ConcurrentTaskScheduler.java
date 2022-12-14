@@ -197,6 +197,10 @@ public class ConcurrentTaskScheduler extends ConcurrentTaskExecutor implements T
 			else {
 				ErrorHandler errorHandler =
 						(this.errorHandler != null ? this.errorHandler : TaskUtils.getDefaultErrorHandler(true));
+				/**
+				 * {@link ReschedulingRunnable}类的主要作用是在延迟任务执行完成后，重新加到线程池中
+				 * {@link ReschedulingRunnable#run()}
+				 */
 				return new ReschedulingRunnable(task, trigger, this.clock, this.scheduledExecutor, errorHandler).schedule();
 			}
 		}

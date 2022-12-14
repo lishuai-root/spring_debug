@@ -1,5 +1,6 @@
 package com.shuai.beans;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DriverCar implements Driver{
+
+	@Autowired
+	Apple apple;
 
 	@Override
 	public Object driver() {

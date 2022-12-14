@@ -236,6 +236,9 @@ public class ScheduledAnnotationBeanPostProcessor
 			// Running in an ApplicationContext -> register tasks this late...
 			// giving other ContextRefreshedEvent listeners a chance to perform
 			// their work at the same time (e.g. Spring Batch's job registration).
+			/**
+			 * 让其他ContextRefreshedEvent监听器有机会同时执行它们的工作(例如Spring Batch的作业注册)。
+			 */
 			finishRegistration();
 		}
 	}
@@ -246,10 +249,17 @@ public class ScheduledAnnotationBeanPostProcessor
 		}
 
 		if (this.beanFactory instanceof ListableBeanFactory) {
+			/**
+			 * 获取所有实现了 {@link SchedulingConfigurer} 类的bean
+			 */
 			Map<String, SchedulingConfigurer> beans =
 					((ListableBeanFactory) this.beanFactory).getBeansOfType(SchedulingConfigurer.class);
 			List<SchedulingConfigurer> configurers = new ArrayList<>(beans.values());
 			AnnotationAwareOrderComparator.sort(configurers);
+			/**
+			 * 遍历执行 {@link SchedulingConfigurer#configureTasks(ScheduledTaskRegistrar)}方法
+			 * 可以对手动注入任务，或者手动替换线程池
+			 */
 			for (SchedulingConfigurer configurer : configurers) {
 				configurer.configureTasks(this.registrar);
 			}
@@ -285,7 +295,15 @@ public class ScheduledAnnotationBeanPostProcessor
 							ex.getMessage());
 				}
 				// Search for ScheduledExecutorService bean next...
+				/**
+				 * 搜索ScheduledExecutorService bean next…
+				 *
+				 * 这里一般都找不到执行器，在{@method afterPropertiesSet()}中设置
+				 */
 				try {
+					/**
+					 * 通过类型查找工厂中已经存在的定时任务执行器
+					 */
 					this.registrar.setScheduler(resolveSchedulerBean(this.beanFactory, ScheduledExecutorService.class, false));
 				}
 				catch (NoUniqueBeanDefinitionException ex2) {
@@ -294,6 +312,9 @@ public class ScheduledAnnotationBeanPostProcessor
 								ex2.getMessage());
 					}
 					try {
+						/**
+						 * 通过名称查找工厂中已经存在的定时任务执行器
+						 */
 						this.registrar.setScheduler(resolveSchedulerBean(this.beanFactory, ScheduledExecutorService.class, true));
 					}
 					catch (NoSuchBeanDefinitionException ex3) {
@@ -317,6 +338,7 @@ public class ScheduledAnnotationBeanPostProcessor
 			}
 		}
 
+		// 发布定时任务
 		this.registrar.afterPropertiesSet();
 	}
 
@@ -351,19 +373,32 @@ public class ScheduledAnnotationBeanPostProcessor
 		return bean;
 	}
 
+	/**
+	 * 遍历当前bean中所有带有Scheduled.class, Schedules.class注解的方法，并创建定时任务注册到任务队列
+	 *
+	 * @param bean the new bean instance
+	 * @param beanName the name of the bean
+	 * @return
+	 */
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) {
 		if (bean instanceof AopInfrastructureBean || bean instanceof TaskScheduler ||
 				bean instanceof ScheduledExecutorService) {
-			// Ignore AOP infrastructure such as scoped proxies.
+			// Ignore AOP infrastructure such as scoped proxies. 忽略AOP基础设施，例如作用域代理。
 			return bean;
 		}
 
 		Class<?> targetClass = AopProxyUtils.ultimateTargetClass(bean);
 		if (!this.nonAnnotatedClasses.contains(targetClass) &&
 				AnnotationUtils.isCandidateClass(targetClass, Arrays.asList(Scheduled.class, Schedules.class))) {
+			/**
+			 * 查找bean中所有带有Scheduled.class, Schedules.class注解的方法，如果是桥接方法，需要找到原始方法
+			 */
 			Map<Method, Set<Scheduled>> annotatedMethods = MethodIntrospector.selectMethods(targetClass,
 					(MethodIntrospector.MetadataLookup<Set<Scheduled>>) method -> {
+						/**
+						 * 在当method上查找Scheduled.class, Schedules.class注解
+						 */
 						Set<Scheduled> scheduledAnnotations = AnnotatedElementUtils.getMergedRepeatableAnnotations(
 								method, Scheduled.class, Schedules.class);
 						return (!scheduledAnnotations.isEmpty() ? scheduledAnnotations : null);
@@ -376,6 +411,9 @@ public class ScheduledAnnotationBeanPostProcessor
 			}
 			else {
 				// Non-empty set of methods
+				/**
+				 * 如果有定时任务，注册到任务队列
+				 */
 				annotatedMethods.forEach((method, scheduledAnnotations) ->
 						scheduledAnnotations.forEach(scheduled -> processScheduled(scheduled, method, bean)));
 				if (logger.isTraceEnabled()) {
@@ -389,6 +427,16 @@ public class ScheduledAnnotationBeanPostProcessor
 
 	/**
 	 * Process the given {@code @Scheduled} method declaration on the given bean.
+	 * 在给定bean上处理给定的{@code @Scheduled}方法声明。
+	 *
+	 *
+	 * 一.对于使用了cron表达式的定时任务，spring使用schedule(Runnable command, long delay, TimeUnit unit)方法循环调用
+	 * 		每次执行完成之后，再加入到线程队列
+	 * 二.对于使用了fixedDelay，fixedRate属性的任务，spring使用scheduleAtFixedRate(Runnable command,
+	 *                                                   long initialDelay,
+	 *                                                   long period,
+	 *                                                   TimeUnit unit)
+	 *
 	 * @param scheduled the {@code @Scheduled} annotation
 	 * @param method the method that the annotation has been declared on
 	 * @param bean the target bean instance
@@ -404,9 +452,15 @@ public class ScheduledAnnotationBeanPostProcessor
 			Set<ScheduledTask> tasks = new LinkedHashSet<>(4);
 
 			// Determine initial delay
+			/**
+			 * 解析定时任务的第一次执行延迟时间
+			 */
 			long initialDelay = convertToMillis(scheduled.initialDelay(), scheduled.timeUnit());
 			String initialDelayString = scheduled.initialDelayString();
 			if (StringUtils.hasText(initialDelayString)) {
+				/**
+				 * initialDelay属性和initialDelayString属性不能同时存在
+				 */
 				Assert.isTrue(initialDelay < 0, "Specify 'initialDelay' or 'initialDelayString', not both");
 				if (this.embeddedValueResolver != null) {
 					initialDelayString = this.embeddedValueResolver.resolveStringValue(initialDelayString);
@@ -422,7 +476,7 @@ public class ScheduledAnnotationBeanPostProcessor
 				}
 			}
 
-			// Check cron expression
+			// Check cron expression 检查cron表达式
 			String cron = scheduled.cron();
 			if (StringUtils.hasText(cron)) {
 				String zone = scheduled.zone();
@@ -431,6 +485,7 @@ public class ScheduledAnnotationBeanPostProcessor
 					zone = this.embeddedValueResolver.resolveStringValue(zone);
 				}
 				if (StringUtils.hasLength(cron)) {
+					// 'initialDelay'不支持cron触发器
 					Assert.isTrue(initialDelay == -1, "'initialDelay' not supported for cron triggers");
 					processedSchedule = true;
 					if (!Scheduled.CRON_DISABLED.equals(cron)) {
@@ -447,13 +502,15 @@ public class ScheduledAnnotationBeanPostProcessor
 			}
 
 			// At this point we don't need to differentiate between initial delay set or not anymore
+			// 在这一点上，我们不再需要区分初始延迟集与否
 			if (initialDelay < 0) {
 				initialDelay = 0;
 			}
 
-			// Check fixed delay
+			// Check fixed delay 检查固定延迟
 			long fixedDelay = convertToMillis(scheduled.fixedDelay(), scheduled.timeUnit());
 			if (fixedDelay >= 0) {
+				// 'cron'， 'fixedDelay(String)'，或'fixedRate(String)'属性中的一个是必需的
 				Assert.isTrue(!processedSchedule, errorMessage);
 				processedSchedule = true;
 				tasks.add(this.registrar.scheduleFixedDelayTask(new FixedDelayTask(runnable, fixedDelay, initialDelay)));
@@ -465,6 +522,7 @@ public class ScheduledAnnotationBeanPostProcessor
 					fixedDelayString = this.embeddedValueResolver.resolveStringValue(fixedDelayString);
 				}
 				if (StringUtils.hasLength(fixedDelayString)) {
+					// 'cron'， 'fixedDelay(String)'，或'fixedRate(String)'属性中的一个是必需的
 					Assert.isTrue(!processedSchedule, errorMessage);
 					processedSchedule = true;
 					try {
@@ -478,9 +536,10 @@ public class ScheduledAnnotationBeanPostProcessor
 				}
 			}
 
-			// Check fixed rate
+			// Check fixed rate 检查固定时间间隔
 			long fixedRate = convertToMillis(scheduled.fixedRate(), scheduled.timeUnit());
 			if (fixedRate >= 0) {
+				// 'cron'， 'fixedDelay(String)'，或'fixedRate(String)'属性中的一个是必需的
 				Assert.isTrue(!processedSchedule, errorMessage);
 				processedSchedule = true;
 				tasks.add(this.registrar.scheduleFixedRateTask(new FixedRateTask(runnable, fixedRate, initialDelay)));
@@ -504,10 +563,10 @@ public class ScheduledAnnotationBeanPostProcessor
 				}
 			}
 
-			// Check whether we had any attribute set
+			// Check whether we had any attribute set 检查是否有任何属性集
 			Assert.isTrue(processedSchedule, errorMessage);
 
-			// Finally register the scheduled tasks
+			// Finally register the scheduled tasks 最后注册计划任务
 			synchronized (this.scheduledTasks) {
 				Set<ScheduledTask> regTasks = this.scheduledTasks.computeIfAbsent(bean, key -> new LinkedHashSet<>(4));
 				regTasks.addAll(tasks);

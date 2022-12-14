@@ -249,6 +249,19 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 *
 	 * 返回指定 bean 的一个实例，该实例可以是共享的，也可以是独立的。
 	 *
+	 * 1.通过缓存获取bean实例，解决循环依赖问题
+	 * 2.检查bean是否原型模式，并且正在创建，如果是，抛出异常
+	 * 		如果bean是原型模式，且正在创建，会无休止的递归创建
+	 * 3.如果当前工厂不存在bean定义信息，且存在夫工厂，则委托给夫工厂创建
+	 * 4.合并bean定义信息，并检查是否抽象类
+	 * 5.如果bean存在前置依赖bean，递归创建依赖bean
+	 * 6.根据不同模式创建bean实例
+	 *   6.1.单例模式：调用getSingleton(String beanName, ObjectFactory<?> singletonFactory)方法创建
+	 *   6.2.原型模式：调用createBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)方法创建
+	 *   6.3.Scope：根据不同的作用域采用不同的策略创建实例
+	 * 7.对bean实例进行类型转换，转换成需要的类型返回
+	 *
+	 *
 	 * @param name the name of the bean to retrieve
 	 * @param requiredType the required type of the bean to retrieve
 	 * @param args arguments to use when creating a bean instance using explicit arguments
@@ -267,8 +280,35 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		String beanName = transformedBeanName(name);
 		Object beanInstance;
 
+		if ("org.springframework.aop.aspectj.AspectJPointcutAdvisor#0".equals(beanName)){
+			System.out.println(beanName);
+		}
+
 		// Eagerly check singleton cache for manually registered singletons.
 		// 提前检查单例缓存中是否有手动注册的单例对象，跟循环依赖有关联
+		/**
+		 * 此处主要用来解决循环依赖问题，
+		 * eg：
+		 *
+		 * class A{
+		 * 		@Autowired
+		 * 	 	B b;
+		 * }
+		 *
+		 * class B{
+		 *     @Autowired
+		 *     A a;
+		 * }
+		 * 假设先创建了A实例，A实例中引用了B实例，在A实例填充属性时，会引起B实例的创建(递归创建)，但是在填充B实例的属性时，
+		 * 又会引起A实例的创建，从而进入死循环。
+		 *
+		 * spirng使用earlySingletonObjects(俗称二级缓存)保存了已经实例化但是并未初始化的bean实例。
+		 *
+		 * 假设先创建了A实例，并把A实例保存在earlySingletonObjects中，并标记A实例正在创建，A实例中引用了B实例，在A实例填充属性时，
+		 * 会引起B实例的创建(递归创建)，但是在填充B实例的属性时，又会引起A实例的创建，此时getSingleton(beanName);可以从earlySingletonObjects
+		 * 中已经实例化的A实例对象(此时的A实例并未初始化)，从而避免循环依赖问题。
+		 *
+		 */
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isTraceEnabled()) {
@@ -386,10 +426,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 
 				// Create bean instance.
-				// 创建bean的实例对象
+				// 创建单例bean的实例对象
 				if (mbd.isSingleton()) {
 
-					// 返回以beanName的(原始)单例对象，如果尚未注册，则使用singletonFactory创建并注册一个对象
+					/**
+					 * 返回以beanName的(原始)单例对象，如果尚未注册，则使用singletonFactory创建并注册一个对象
+					 */
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
 
@@ -414,7 +456,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					beanInstance = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
 
-				// 原型模式的bean对象创建
+				// 原型模式(非单例)的bean对象创建
 				else if (mbd.isPrototype()) {
 					// It's a prototype -> create a new instance.这是一个原型 -> 创建一个新实例。
 					Object prototypeInstance = null;
@@ -436,7 +478,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					// FactoryBean会直接返回beanInstance实例
 					beanInstance = getObjectForBeanInstance(prototypeInstance, name, beanName, mbd);
 				}
-
+				// 自定义Scope创建bean实例
 				else {
 
 					// 指定的scope上实例化bean
@@ -1181,7 +1223,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Return the custom TypeConverter to use, if any.
+	 * Return the custom TypeConverter to use, if any.返回要使用的自定义 TypeConverter（如果有）。
 	 * @return the custom TypeConverter, or {@code null} if none specified
 	 */
 	@Nullable
@@ -2736,7 +2778,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * Create a bean instance for the given merged bean definition (and arguments).
 	 * The bean definition will already have been merged with the parent definition
 	 * in case of a child definition.
+	 * 为给定的合并 bean 定义（和参数）创建一个 bean 实例。如果是子定义，bean 定义将已经与父定义合并。
+	 *
 	 * <p>All bean retrieval methods delegate to this method for actual bean creation.
+	 * 所有 bean 检索方法都委托给此方法以进行实际的 bean 创建。
+	 *
 	 * @param beanName the name of the bean
 	 * @param mbd the merged bean definition for the bean
 	 * @param args explicit arguments to use for constructor or factory method invocation

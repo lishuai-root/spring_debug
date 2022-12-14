@@ -29,6 +29,8 @@ import org.springframework.aop.support.DelegatingIntroductionInterceptor;
  * Introduction advisor delegating to the given object.
  * Implements AspectJ annotation-style behavior for the DeclareParents annotation.
  *
+ * 委托给给定对象的介绍顾问。为 DeclareParents 注释实现 AspectJ 注释样式的行为。
+ *
  * @author Rod Johnson
  * @author Ramnivas Laddad
  * @since 2.0

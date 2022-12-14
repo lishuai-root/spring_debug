@@ -38,6 +38,8 @@ import org.springframework.util.ClassUtils;
  * subclass that exposes AspectJ's invocation context and understands AspectJ's rules
  * for advice precedence when multiple pieces of advice come from the same aspect.
  *
+ *公开AspectJ的调用上下文并理解AspectJ规则的子类, 当多条建议来自同一方面时，建议优先
+ *
  * @author Adrian Colyer
  * @author Juergen Hoeller
  * @author Ramnivas Laddad
@@ -89,6 +91,10 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 	 * Add an {@link ExposeInvocationInterceptor} to the beginning of the advice chain.
 	 * <p>This additional advice is needed when using AspectJ pointcut expressions
 	 * and when using AspectJ-style advice.
+	 *
+	 * 将｛@link ExposeInvocationInterceptor｝添加到建议链的开头。
+	 * 使用AspectJ切入点表达式以及使用AspectJ风格建议时需要此附加建议
+	 *
 	 */
 	@Override
 	protected void extendAdvisors(List<Advisor> candidateAdvisors) {
@@ -98,6 +104,9 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 	@Override
 	protected boolean shouldSkip(Class<?> beanClass, String beanName) {
 		// TODO: Consider optimization by caching the list of the aspect names
+		/**
+		 * 查找并实例化所有{@link Advisor}定义信息
+		 */
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
 		for (Advisor advisor : candidateAdvisors) {
 			if (advisor instanceof AspectJPointcutAdvisor &&
@@ -111,6 +120,9 @@ public class AspectJAwareAdvisorAutoProxyCreator extends AbstractAdvisorAutoProx
 
 	/**
 	 * Implements AspectJ's {@link PartialComparable} interface for defining partial orderings.
+	 * 实现 AspectJ 的 {@link PartialComparable} 接口以定义部分排序。
+	 *
+	 * 用于对用户定义的切点进行排序(拓扑序)
 	 */
 	private static class PartiallyComparableAdvisorHolder implements PartialComparable {
 

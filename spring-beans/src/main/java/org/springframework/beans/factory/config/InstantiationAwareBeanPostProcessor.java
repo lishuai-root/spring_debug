@@ -176,6 +176,8 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 	 * @param beanName the name of the bean
 	 * @return the actual property values to apply to the given bean (can be the passed-in
 	 * PropertyValues instance), or {@code null} to skip property population
+	 * 应用于给定 bean 的实际属性值（可以是传入的 PropertyValues 实例），或 {@code null} 跳过属性填充
+	 *
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 * @see #postProcessProperties
 	 * @see org.springframework.beans.MutablePropertyValues

@@ -37,6 +37,8 @@ import org.springframework.util.StringUtils;
  * {@link ParameterNameDiscoverer} implementation that tries to deduce parameter names
  * for an advice method from the pointcut expression, returning, and throwing clauses.
  * If an unambiguous interpretation is not available, it returns {@code null}.
+ * {@link ParameterNameDiscoverer} 实现，它尝试从切入点表达式、返回和抛出子句中推断出通知方法的参数名称。
+ * 如果没有明确的解释，则返回 {@code null}。
  *
  * <p>This class interprets arguments in the following way:
  * <ol>
@@ -189,6 +191,8 @@ public class AspectJAdviceParameterNameDiscoverer implements ParameterNameDiscov
 	/**
 	 * Indicate whether {@link IllegalArgumentException} and {@link AmbiguousBindingException}
 	 * must be thrown as appropriate in the case of failing to deduce advice parameter names.
+	 * 指示在无法推断出通知参数名称的情况下是否必须适当地抛出 {@link IllegalArgumentException} 和 {@link AmbiguousBindingException}。
+	 *
 	 * @param raiseExceptions {@code true} if exceptions are to be thrown
 	 */
 	public void setRaiseExceptions(boolean raiseExceptions) {

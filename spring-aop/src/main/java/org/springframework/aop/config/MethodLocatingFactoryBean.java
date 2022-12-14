@@ -28,11 +28,16 @@ import org.springframework.util.StringUtils;
 /**
  * {@link FactoryBean} implementation that locates a {@link Method} on a specified bean.
  *
+ * 通过bean和方法名定位到一个指定的方法
+ *
  * @author Rob Harrop
  * @since 2.0
  */
 public class MethodLocatingFactoryBean implements FactoryBean<Method>, BeanFactoryAware {
 
+	/**
+	 * 方法所在bean实例的名称
+	 */
 	@Nullable
 	private String targetBeanName;
 

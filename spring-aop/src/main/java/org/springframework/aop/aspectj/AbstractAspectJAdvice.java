@@ -184,7 +184,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 	}
 
 	/**
-	 * Return the AspectJ expression pointcut.
+	 * Return the AspectJ expression pointcut. 返回 AspectJ 表达式切入点。
 	 */
 	public final AspectJExpressionPointcut getPointcut() {
 		calculateArgumentBindings();
@@ -193,6 +193,8 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 
 	/**
 	 * Build a 'safe' pointcut that excludes the AspectJ advice method itself.
+	 * 构建一个不包括 AspectJ 建议方法本身的“安全”切入点。
+	 *
 	 * @return a composable pointcut that builds on the original AspectJ expression pointcut
 	 * @see #getPointcut()
 	 */
@@ -358,15 +360,23 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 	/**
 	 * Do as much work as we can as part of the set-up so that argument binding
 	 * on subsequent advice invocations can be as fast as possible.
+	 * 作为设置的一部分，尽可能多地做工作，以便在后续通知调用上绑定参数尽可能快。
+	 *
 	 * <p>If the first argument is of type JoinPoint or ProceedingJoinPoint then we
 	 * pass a JoinPoint in that position (ProceedingJoinPoint for around advice).
+	 * 如果第一个参数是 JoinPoint 或 ProceedingJoinPoint 类型，那么我们在该位置传递一个 JoinPoint（ProceedingJoinPoint 用于环绕建议）。
+	 *
 	 * <p>If the first argument is of type {@code JoinPoint.StaticPart}
 	 * then we pass a {@code JoinPoint.StaticPart} in that position.
+	 * 如果第一个参数是 {@code JoinPoint.StaticPart} 类型，那么我们在该位置传递一个 {@code JoinPoint.StaticPart}。
+	 *
 	 * <p>Remaining arguments have to be bound by pointcut evaluation at
 	 * a given join point. We will get back a map from argument name to
 	 * value. We need to calculate which advice parameter needs to be bound
 	 * to which argument name. There are multiple strategies for determining
 	 * this binding, which are arranged in a ChainOfResponsibility.
+	 * 剩余的参数必须受给定连接点处的切入点评估约束。我们将得到一个从参数名称到值的映射。
+	 * 我们需要计算哪个通知参数需要绑定到哪个参数名称。确定这种绑定有多种策略，它们排列在一个 ChainOfResponsibility 中。
 	 */
 	public final synchronized void calculateArgumentBindings() {
 		// The simple case... nothing to bind.
@@ -382,7 +392,7 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 		}
 
 		if (numUnboundArgs > 0) {
-			// need to bind arguments by name as returned from the pointcut match
+			// need to bind arguments by name as returned from the pointcut match 需要按从切入点匹配返回的名称绑定参数
 			bindArgumentsByName(numUnboundArgs);
 		}
 
@@ -428,10 +438,18 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 
 	private void bindArgumentsByName(int numArgumentsExpectingToBind) {
 		if (this.argumentNames == null) {
+			/**
+			 * 通过反射，asm或者解析切点表达式获取方法参数名称(源码里写的那个名称)
+			 */
 			this.argumentNames = createParameterNameDiscoverer().getParameterNames(this.aspectJAdviceMethod);
 		}
 		if (this.argumentNames != null) {
 			// We have been able to determine the arg names.
+			/**
+			 * 我们已经能够确定 arg 名称。
+			 *
+			 * 根据参数名称计算参数类型
+			 */
 			bindExplicitArguments(numArgumentsExpectingToBind);
 		}
 		else {
@@ -443,18 +461,35 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 
 	/**
 	 * Create a ParameterNameDiscoverer to be used for argument binding.
+	 * 创建一个 ParameterNameDiscoverer 用于参数绑定。
+	 *
 	 * <p>The default implementation creates a {@link DefaultParameterNameDiscoverer}
 	 * and adds a specifically configured {@link AspectJAdviceParameterNameDiscoverer}.
+	 * 默认实现创建一个 {@link DefaultParameterNameDiscoverer} 并添加一个专门配置的 {@link AspectJAdviceParameterNameDiscoverer}。
+	 *
 	 */
 	protected ParameterNameDiscoverer createParameterNameDiscoverer() {
 		// We need to discover them, or if that fails, guess,
 		// and if we can't guess with 100% accuracy, fail.
+		/**
+		 * 我们需要发现它们，或者如果失败，猜测，如果我们不能 100% 准确猜测，失败。
+		 *
+		 * 创建一个默认参数名称发现器，默认使用asm和反射分析局部变量表和内省名称
+		 */
 		DefaultParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
+
+		/**
+		 * 创建一个{@link AspectJAdviceParameterNameDiscoverer}类型的名称发现器，用于尝试从切入点表达式、返回和抛出子句中推断出通知方法的参数名称。
+		 */
 		AspectJAdviceParameterNameDiscoverer adviceParameterNameDiscoverer =
 				new AspectJAdviceParameterNameDiscoverer(this.pointcut.getExpression());
 		adviceParameterNameDiscoverer.setReturningName(this.returningName);
 		adviceParameterNameDiscoverer.setThrowingName(this.throwingName);
 		// Last in chain, so if we're called and we fail, that's bad...
+		/**
+		 * 最后在链中，所以如果我们被调用并且我们失败了，那很糟糕......
+		 * 表示如果没有解析出参数名称，是否抛出异常
+		 */
 		adviceParameterNameDiscoverer.setRaiseExceptions(true);
 		discoverer.addDiscoverer(adviceParameterNameDiscoverer);
 		return discoverer;

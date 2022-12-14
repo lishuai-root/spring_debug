@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<context:component-scan base-package="com.shuai.aop"/>
+<!--	<task:annotation-driven/>-->
+<!--	<context:annotation-config/>-->
+<!--	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>-->
+
+	<bean id="proxyClass" class="com.shuai.aop.ProxyClass"/>
+	<bean id="sourceClass" class="com.shuai.aop.SourceClass"/>
+<!--	<bean id="noProxyClass" class="com.shuai.aop.NoProxyClass"/>-->
+<!--	<task:scheduled-tasks>-->
+<!--		<task:scheduled ref="noProxyClass" method="toString" fixed-delay="5000"/>-->
+<!--	</task:scheduled-tasks>-->
+
+<!--	<bean id="excute" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+<!--		<property name="targetObject" ref="noProxyClass"/>-->
+<!--		<property name="targetMethod" value="toString"/>-->
+<!--	</bean>-->
+
+<!--	<bean id="task" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">-->
+<!--		<property name="jobDetail" ref="excute"/>-->
+<!--		<property name="startDelay" value="0"/>-->
+<!--		<property name="repeatInterval" value="5000"/>-->
+<!--	</bean>-->
+
+	<aop:config>
+		<aop:aspect ref="proxyClass">
+			<aop:pointcut id="proxyCut" expression="execution( * com.shuai.aop.SourceClass.* (..))"/>
+			<aop:around method="around" pointcut-ref="proxyCut"/>
+			<aop:before method="before" pointcut-ref="proxyCut"/>
+			<aop:after method="after" pointcut-ref="proxyCut"/>
+			<aop:after-returning method="returning" pointcut-ref="proxyCut" returning="result"/>
+			<aop:after-throwing method="throwing" pointcut-ref="proxyCut" throwing="e"/>
+		</aop:aspect>
+	</aop:config>
+
+<!--	<aop:config>-->
+<!--		<aop:pointcut id="pointCut" expression="(*)"/>-->
+<!--		<aop:advisor advice-ref="interceptor" pointcut-ref="pointCut"></aop:advisor>-->
+<!--	</aop:config>-->
+<!--	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"></bean>-->
+<!--	<tx:advice id="interceptor" transaction-manager="transactionManager">-->
+
+<!--	</tx:advice>-->
+</beans>

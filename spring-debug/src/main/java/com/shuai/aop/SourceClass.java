@@ -2,6 +2,10 @@ package com.shuai.aop;
 
 import com.shuai.beans.People;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import java.util.Random;
 
 /**
  * @description:
@@ -10,24 +14,37 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @version: 1.0
  */
 
-public class SourceClass {
 
-	@Autowired
-	People people;
+public class SourceClass implements JdkProxy{
 
-	public void before(){
-		System.out.println("source before!");
+	public int add(int a, int b){
+		return a + b;
 	}
 
-	public void after(){
-		System.out.println("source after");
+	public String getStr(String str){
+		return str + ", base over!";
 	}
 
-	public People getPeople() {
-		return people;
+	public Object getObj(){
+		return new Object();
 	}
 
-	public void setPeople(People people) {
-		this.people = people;
+	public char[] getChars(int size){
+		char[] chars = new char[size];
+		Random random = new Random();
+		for (int i = 0; i < size; i++) {
+			chars[i] = (char)(random.nextInt(26) + 'a');
+		}
+		return chars;
+	}
+
+	public void show(){
+		System.out.println("show!");
+	}
+
+
+	public int chu(int m, int n) {
+		System.out.println("chu : [" + m + ", " + n + "]");
+		return m / n;
 	}
 }

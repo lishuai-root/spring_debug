@@ -23,6 +23,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ *符合组件定义类，用于封装 <aop:config/>标签
+ *
  * {@link ComponentDefinition} implementation that holds one or more nested
  * {@link ComponentDefinition} instances, aggregating them into a named group
  * of components.
@@ -42,7 +44,7 @@ public class CompositeComponentDefinition extends AbstractComponentDefinition {
 
 
 	/**
-	 * Create a new CompositeComponentDefinition.
+	 * Create a new CompositeComponentDefinition. 创建一个新的复合组件定义。
 	 * @param name the name of the composite component
 	 * @param source the source element that defines the root of the composite component
 	 */

@@ -283,15 +283,26 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 	private Callback[] getCallbacks(Class<?> rootClass) throws Exception {
 		// Parameters used for optimization choices...
+		// 用于优化选择的参数...
 		boolean exposeProxy = this.advised.isExposeProxy();
 		boolean isFrozen = this.advised.isFrozen();
 		boolean isStatic = this.advised.getTargetSource().isStatic();
 
 		// Choose an "aop" interceptor (used for AOP calls).
+		/**
+		 * 选择一个“aop”拦截器（用于 AOP 调用）。
+		 * 
+		 * 通用的aop拦截器，被aop代理的每个方法都会先走到{@link DynamicAdvisedInterceptor#intercept(Object, Method, Object[], MethodProxy)}中，
+		 * 然后在该方法中再调用切点
+		 *
+		 */
 		Callback aopInterceptor = new DynamicAdvisedInterceptor(this.advised);
 
 		// Choose a "straight to target" interceptor. (used for calls that are
 		// unadvised but can return this). May be required to expose the proxy.
+		/**
+		 * 选择“直接瞄准”拦截器。 （用于不建议但可以返回的调用）。可能需要公开代理。
+		 */
 		Callback targetInterceptor;
 		if (exposeProxy) {
 			targetInterceptor = (isStatic ?
@@ -306,13 +317,16 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 		// Choose a "direct to target" dispatcher (used for
 		// unadvised calls to static targets that cannot return this).
+		/**
+		 * 选择“直接到目标”调度程序（用于对无法返回 this 的静态目标的不建议调用）。
+		 */
 		Callback targetDispatcher = (isStatic ?
 				new StaticDispatcher(this.advised.getTargetSource().getTarget()) : new SerializableNoOp());
 
 		Callback[] mainCallbacks = new Callback[] {
-				aopInterceptor,  // for normal advice
-				targetInterceptor,  // invoke target without considering advice, if optimized
-				new SerializableNoOp(),  // no override for methods mapped to this
+				aopInterceptor,  // for normal advice 一般建议
+				targetInterceptor,  // invoke target without considering advice, if optimized 如果优化，则在不考虑建议的情况下调用目标
+				new SerializableNoOp(),  // no override for methods mapped to this 映射到此的方法没有覆盖
 				targetDispatcher, this.advisedDispatcher,
 				new EqualsInterceptor(this.advised),
 				new HashCodeInterceptor(this.advised)
@@ -323,6 +337,9 @@ class CglibAopProxy implements AopProxy, Serializable {
 		// If the target is a static one and the advice chain is frozen,
 		// then we can make some optimizations by sending the AOP calls
 		// direct to the target using the fixed chain for that method.
+		/**
+		 * 如果目标是静态的并且通知链被冻结，那么我们可以通过使用该方法的固定链将 AOP 调用直接发送到目标来进行一些优化。
+		 */
 		if (isStatic && isFrozen) {
 			Method[] methods = rootClass.getMethods();
 			Callback[] fixedCallbacks = new Callback[methods.length];
@@ -339,6 +356,9 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 			// Now copy both the callbacks from mainCallbacks
 			// and fixedCallbacks into the callbacks array.
+			/**
+			 * 现在将 mainCallbacks 和 fixedCallbacks 的回调复制到回调数组中。
+			 */
 			callbacks = new Callback[mainCallbacks.length + fixedCallbacks.length];
 			System.arraycopy(mainCallbacks, 0, callbacks, 0, mainCallbacks.length);
 			System.arraycopy(fixedCallbacks, 0, callbacks, mainCallbacks.length, fixedCallbacks.length);
@@ -402,6 +422,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 	/**
 	 * Serializable replacement for CGLIB's NoOp interface.
 	 * Public to allow use elsewhere in the framework.
+	 *
+	 * CGLIB 的 NoOp 接口的可序列化替代。公开以允许在框架中的其他地方使用。
 	 */
 	public static class SerializableNoOp implements NoOp, Serializable {
 	}
@@ -412,6 +434,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 	 * is passed directly back to the target. Used when the proxy needs to be
 	 * exposed and it can't be determined that the method won't return
 	 * {@code this}.
+	 *
+	 * 用于没有建议链的静态目标的方法拦截器。调用直接传递回目标。当需要暴露代理并且无法确定该方法不会返回{@code this}时使用。
 	 */
 	private static class StaticUnadvisedInterceptor implements MethodInterceptor, Serializable {
 
@@ -434,6 +458,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 	/**
 	 * Method interceptor used for static targets with no advice chain, when the
 	 * proxy is to be exposed.
+	 *
+	 * 当要公开代理时，方法拦截器用于没有建议链的静态目标。
 	 */
 	private static class StaticUnadvisedExposedInterceptor implements MethodInterceptor, Serializable {
 
@@ -464,6 +490,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 	 * Interceptor used to invoke a dynamic target without creating a method
 	 * invocation or evaluating an advice chain. (We know there was no advice
 	 * for this method.)
+	 *
+	 * 用于调用动态目标而不创建方法调用或评估建议链的拦截器。 （我们知道这种方法没有任何建议。）
 	 */
 	private static class DynamicUnadvisedInterceptor implements MethodInterceptor, Serializable {
 
@@ -492,6 +520,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 	/**
 	 * Interceptor for unadvised dynamic targets when the proxy needs exposing.
+	 *
+	 * 当代理需要公开时，拦截器用于不建议的动态目标。
 	 */
 	private static class DynamicUnadvisedExposedInterceptor implements MethodInterceptor, Serializable {
 
@@ -525,6 +555,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 	 * Dispatcher for a static target. Dispatcher is much faster than
 	 * interceptor. This will be used whenever it can be determined that a
 	 * method definitely does not return "this"
+	 *
+	 * 静态目标的调度程序。 Dispatcher 比拦截器快得多。只要可以确定一个方法肯定不返回“this”，就会使用它
 	 */
 	private static class StaticDispatcher implements Dispatcher, Serializable {
 
@@ -650,6 +682,8 @@ class CglibAopProxy implements AopProxy, Serializable {
 	/**
 	 * General purpose AOP callback. Used when the target is dynamic or when the
 	 * proxy is not frozen.
+	 *
+	 * 通用 AOP 回调。当目标是动态的或代理未冻结时使用。
 	 */
 	private static class DynamicAdvisedInterceptor implements MethodInterceptor, Serializable {
 

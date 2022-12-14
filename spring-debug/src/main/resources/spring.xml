@@ -26,6 +26,7 @@
 		<property name="name" value="${address.name}"/>
 		<property name="address" value="${address.address}"/>
 		<property name="age" value="${address.age}"/>
+		<property name="bigPeople" ref="bigPeople"/>
 	</bean>
 
 <!--	<bean id="sourceClass" class="com.shuai.aop.SourceClass">-->

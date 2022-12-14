@@ -544,6 +544,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	/**
 	 * Return whether this a <b>Prototype</b>, with an independent instance
 	 * returned for each call.
+	 * 返回这是否是一个 <b>原型<b>，每次调用都返回一个独立的实例。
 	 * @see #SCOPE_PROTOTYPE
 	 */
 	@Override
@@ -892,6 +893,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	/**
 	 * Return constructor argument values for this bean (never {@code null}).
+	 * 返回此 bean 的构造函数参数值（从不 {@code null}）。
 	 */
 	@Override
 	public ConstructorArgumentValues getConstructorArgumentValues() {
@@ -954,6 +956,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	/**
 	 * Return if there are method overrides defined for this bean.
+	 * 如果有为此 bean 定义的方法覆盖，则返回。
 	 * @since 5.0.2
 	 */
 	public boolean hasMethodOverrides() {
@@ -1042,6 +1045,9 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Set whether this bean definition is 'synthetic', that is, not defined
 	 * by the application itself (for example, an infrastructure bean such
 	 * as a helper for auto-proxying, created through {@code <aop:config>}).
+	 *
+	 * 设置此bean定义是否为“合成”，即未定义
+	 * 由应用程序本身（例如作为自动代理的助手，通过｛@code＜aop:config＞｝创建）
 	 */
 	public void setSynthetic(boolean synthetic) {
 		this.synthetic = synthetic;

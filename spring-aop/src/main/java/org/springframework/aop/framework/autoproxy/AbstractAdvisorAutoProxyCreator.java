@@ -31,10 +31,15 @@ import org.springframework.util.Assert;
  * Generic auto proxy creator that builds AOP proxies for specific beans
  * based on detected Advisors for each bean.
  *
+ * 通用自动代理创建者，根据检测到的每个 bean 的顾问为特定 bean 构建 AOP 代理。
+ *
  * <p>Subclasses may override the {@link #findCandidateAdvisors()} method to
  * return a custom list of Advisors applying to any object. Subclasses can
  * also override the inherited {@link #shouldSkip} method to exclude certain
  * objects from auto-proxying.
+ *
+ * 子类可以覆盖 {@link #findCandidateAdvisors()} 方法以返回应用于任何对象的自定义顾问列表。
+ * 子类还可以覆盖继承的 {@link #shouldSkip} 方法以从自动代理中排除某些对象。
  *
  * <p>Advisors or advices requiring ordering should be annotated with
  * {@link org.springframework.core.annotation.Order @Order} or implement the
@@ -43,6 +48,10 @@ import org.springframework.util.Assert;
  * not annotated with {@code @Order} or don't implement the {@code Ordered}
  * interface will be considered as unordered; they will appear at the end of the
  * advisor chain in an undefined order.
+ *
+ * 需要排序的顾问或建议应使用 {@link org.springframework.core.annotation.Order @Order} 注释或实现 {@link org.springframework.core.Ordered} 接口。
+ * 此类使用 {@link AnnotationAwareOrderComparator} 对顾问进行排序。未使用 {@code @Order} 注释或未实现 {@code Ordered} 接口的顾问将被视为无序；
+ * 它们将以未定义的顺序出现在顾问链的末尾。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -95,6 +104,9 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
 		List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);
+		/**
+		 * 将｛@link ExposeInvocationInterceptor｝添加到建议链的开头。
+		 */
 		extendAdvisors(eligibleAdvisors);
 		if (!eligibleAdvisors.isEmpty()) {
 			eligibleAdvisors = sortAdvisors(eligibleAdvisors);
@@ -104,6 +116,8 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 
 	/**
 	 * Find all candidate Advisors to use in auto-proxying.
+	 * 查找要在自动代理中使用的所有候选顾问。
+	 *
 	 * @return the List of candidate Advisors
 	 */
 	protected List<Advisor> findCandidateAdvisors() {
@@ -135,6 +149,8 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	/**
 	 * Return whether the Advisor bean with the given name is eligible
 	 * for proxying in the first place.
+	 * 返回具有给定名称的 Advisor bean 首先是否有资格进行代理。
+	 *
 	 * @param beanName the name of the Advisor bean
 	 * @return whether the bean is eligible
 	 */

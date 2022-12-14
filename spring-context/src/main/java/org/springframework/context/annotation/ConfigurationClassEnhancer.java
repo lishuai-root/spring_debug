@@ -73,6 +73,7 @@ import org.springframework.util.ReflectionUtils;
 class ConfigurationClassEnhancer {
 
 	// The callbacks to use. Note that these callbacks must be stateless.
+	// 要使用的回调函数。注意，这些回调必须是无状态的。
 	private static final Callback[] CALLBACKS = new Callback[] {
 			new BeanMethodInterceptor(),
 			new BeanFactoryAwareMethodInterceptor(),
@@ -208,6 +209,9 @@ class ConfigurationClassEnhancer {
 	 * Custom extension of CGLIB's DefaultGeneratorStrategy, introducing a {@link BeanFactory} field.
 	 * Also exposes the application ClassLoader as thread context ClassLoader for the time of
 	 * class generation (in order for ASM to pick it up when doing common superclass resolution).
+	 *
+	 * CGLIB的DefaultGeneratorStrategy的自定义扩展，引入了{@link BeanFactory}字段。
+	 * 还在类生成时将应用程序ClassLoader公开为线程上下文ClassLoader(以便ASM在进行公共超类解析时拾取它)
 	 */
 	private static class BeanFactoryAwareGeneratorStrategy extends
 			ClassLoaderAwareGeneratorStrategy {
@@ -270,6 +274,8 @@ class ConfigurationClassEnhancer {
 	/**
 	 * Intercepts the invocation of any {@link Bean}-annotated methods in order to ensure proper
 	 * handling of bean semantics such as scoping and AOP proxying.
+	 *
+	 * 拦截任何{@link Bean}注释方法的调用，以确保正确处理Bean语义，如作用域和AOP代理。
 	 * @see Bean
 	 * @see ConfigurationClassEnhancer
 	 */
@@ -278,8 +284,12 @@ class ConfigurationClassEnhancer {
 		/**
 		 * Enhance a {@link Bean @Bean} method to check the supplied BeanFactory for the
 		 * existence of this bean object.
+		 * 增强{@link Bean @Bean}方法，以检查所提供的BeanFactory是否存在此Bean对象。
+		 *
 		 * @throws Throwable as a catch-all for any exception that may be thrown when invoking the
 		 * super implementation of the proxied method i.e., the actual {@code @Bean} method
+		 * 作为调用代理方法的超级实现(即实际的{@code @Bean}方法)时可能抛出的任何异常的一网打
+		 *
 		 */
 		@Override
 		@Nullable
@@ -299,11 +309,16 @@ class ConfigurationClassEnhancer {
 
 			// To handle the case of an inter-bean method reference, we must explicitly check the
 			// container for already cached instances.
+			// 要处理bean间方法引用的情况，必须显式地检查容器中已经缓存的实例。
 
 			// First, check to see if the requested bean is a FactoryBean. If so, create a subclass
 			// proxy that intercepts calls to getObject() and returns any cached bean instance.
 			// This ensures that the semantics of calling a FactoryBean from within @Bean methods
 			// is the same as that of referring to a FactoryBean within XML. See SPR-6602.
+			/**
+			 * 首先，检查请求的bean是否是FactoryBean。如果是，创建一个子类代理来拦截对getObject()的调用，并返回任何缓存的bean实例。
+			 * 这确保了从@Bean方法中调用FactoryBean的语义与在XML中引用FactoryBean的语义相同。看到spr - 6602。
+			 */
 			if (factoryContainsBean(beanFactory, BeanFactory.FACTORY_BEAN_PREFIX + beanName) &&
 					factoryContainsBean(beanFactory, beanName)) {
 				Object factoryBean = beanFactory.getBean(BeanFactory.FACTORY_BEAN_PREFIX + beanName);
@@ -320,6 +335,9 @@ class ConfigurationClassEnhancer {
 				// The factory is calling the bean method in order to instantiate and register the bean
 				// (i.e. via a getBean() call) -> invoke the super implementation of the method to actually
 				// create the bean instance.
+				/**
+				 * 工厂调用bean方法是为了实例化和注册bean(即通过getBean()调用)->调用该方法的超级实现来实际创建bean实例。
+				 */
 				if (logger.isInfoEnabled() &&
 						BeanFactoryPostProcessor.class.isAssignableFrom(beanMethod.getReturnType())) {
 					logger.info(String.format("@Bean method %s.%s is non-static and returns an object " +
@@ -343,6 +361,10 @@ class ConfigurationClassEnhancer {
 			// the bean method, direct or indirect. The bean may have already been marked
 			// as 'in creation' in certain autowiring scenarios; if so, temporarily set
 			// the in-creation status to false in order to avoid an exception.
+			/**
+			 * 用户(即不是工厂)通过调用bean方法直接或间接地请求这个bean。
+			 * 在某些自动装配场景中，bean可能已经被标记为“创建中”;如果是，请临时将创建中的状态设置为false，以避免异常。
+			 */
 			boolean alreadyInCreation = beanFactory.isCurrentlyInCreation(beanName);
 			try {
 				if (alreadyInCreation) {
@@ -441,6 +463,9 @@ class ConfigurationClassEnhancer {
 		 * factory method. Compares method name and parameter types only in order to work
 		 * around a potential problem with covariant return types (currently only known
 		 * to happen on Groovy classes).
+		 *
+		 * 检查给定的方法是否对应于容器当前调用的工厂方法。
+		 * 比较方法名和参数类型只是为了解决协变返回类型的潜在问题(目前只知道发生在Groovy类上)。
 		 */
 		private boolean isCurrentlyInvokedFactoryMethod(Method method) {
 			Method currentlyInvoked = SimpleInstantiationStrategy.getCurrentlyInvokedFactoryMethod();

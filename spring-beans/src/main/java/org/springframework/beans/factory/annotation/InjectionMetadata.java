@@ -68,6 +68,10 @@ public class InjectionMetadata {
 
 	private final Class<?> targetClass;
 
+	/**
+	 * AutowiredAnnotationBeanPostProcessor::buildAutowiringMetadata(final Class<?> clazz)中初始化
+	 * 记录bean需要注入的属性
+	 */
 	private final Collection<InjectedElement> injectedElements;
 
 	/**

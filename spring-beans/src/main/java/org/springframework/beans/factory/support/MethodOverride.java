@@ -75,6 +75,8 @@ public abstract class MethodOverride implements BeanMetadataElement {
 	/**
 	 * Return whether the overridden method is <em>overloaded</em> (i.e., whether argument
 	 * type matching needs to occur to disambiguate methods of the same name).
+	 *
+	 * 返回被覆盖的方法是否<em>重载<em>（即，是否需要进行参数类型匹配以消除同名方法的歧义）。
 	 */
 	protected boolean isOverloaded() {
 		return this.overloaded;

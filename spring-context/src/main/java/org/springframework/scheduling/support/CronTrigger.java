@@ -88,9 +88,13 @@ public class CronTrigger implements Trigger {
 
 	/**
 	 * Determine the next execution time according to the given trigger context.
+	 * 根据给定的触发器上下文确定下一次执行时间。
+	 *
 	 * <p>Next execution times are calculated based on the
 	 * {@linkplain TriggerContext#lastCompletionTime completion time} of the
 	 * previous execution; therefore, overlapping executions won't occur.
+	 * 下一次执行时间根据上一次执行的{@linkplain TriggerContextlastCompletionTime完成时间}计算;因此，不会发生重叠执行。
+	 *
 	 */
 	@Override
 	public Date nextExecutionTime(TriggerContext triggerContext) {
@@ -101,6 +105,9 @@ public class CronTrigger implements Trigger {
 				// Previous task apparently executed too early...
 				// Let's simply use the last calculated execution time then,
 				// in order to prevent accidental re-fires in the same second.
+				/**
+				 * 之前的任务显然执行得太早了……让我们简单地使用最后计算的执行时间，以防止在同一秒内意外地再次触发。
+				 */
 				date = scheduled;
 			}
 		}

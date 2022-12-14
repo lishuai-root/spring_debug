@@ -3,6 +3,7 @@ package com.shuai.beans;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,9 +14,14 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@Scope("myScope")
 public class Apple {
 	@Autowired
 	Address address;
+
+	@Autowired
+	DriverCar driverCar;
+
 	public void showInfo(){
 		System.out.println("apple!");
 	}

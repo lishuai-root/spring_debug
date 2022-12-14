@@ -25,6 +25,8 @@ import org.springframework.util.Assert;
  * {@link org.springframework.beans.factory.parsing.ComponentDefinition}
  * implementation that holds a pointcut definition.
  *
+ * {@link org.springframework.beans.factory.parsing.ComponentDefinition} 包含切入点定义的实现。
+ *
  * @author Rob Harrop
  * @since 2.0
  */

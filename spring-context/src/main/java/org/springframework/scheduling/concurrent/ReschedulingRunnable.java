@@ -35,10 +35,13 @@ import org.springframework.util.ErrorHandler;
 /**
  * Internal adapter that reschedules an underlying {@link Runnable} according
  * to the next execution time suggested by a given {@link Trigger}.
+ * 内部适配器，根据给定的{@link触发器}建议的下一次执行时间重新调度底层{@link Runnable}。
  *
  * <p>Necessary because a native {@link ScheduledExecutorService} supports
  * delay-driven execution only. The flexibility of the {@link Trigger} interface
  * will be translated onto a delay for the next execution time (repeatedly).
+ * 必须的，因为本地{@link ScheduledExecutorService}只支持延迟驱动执行。
+ * {@link Trigger}接口的灵活性将转化为下一次执行时间(重复)的延迟。
  *
  * @author Juergen Hoeller
  * @author Mark Fisher
@@ -74,10 +77,12 @@ class ReschedulingRunnable extends DelegatingErrorHandlingRunnable implements Sc
 	@Nullable
 	public ScheduledFuture<?> schedule() {
 		synchronized (this.triggerContextMonitor) {
+			// 获取任务下一次执行的时间
 			this.scheduledExecutionTime = this.trigger.nextExecutionTime(this.triggerContext);
 			if (this.scheduledExecutionTime == null) {
 				return null;
 			}
+			// 用任务下一次的执行时间减去当前时间，得到间隔时间
 			long initialDelay = this.scheduledExecutionTime.getTime() - this.triggerContext.getClock().millis();
 			this.currentFuture = this.executor.schedule(this, initialDelay, TimeUnit.MILLISECONDS);
 			return this;
@@ -92,11 +97,13 @@ class ReschedulingRunnable extends DelegatingErrorHandlingRunnable implements Sc
 	@Override
 	public void run() {
 		Date actualExecutionTime = new Date(this.triggerContext.getClock().millis());
+		// 调用父类方法执行定时任务
 		super.run();
 		Date completionTime = new Date(this.triggerContext.getClock().millis());
 		synchronized (this.triggerContextMonitor) {
 			Assert.state(this.scheduledExecutionTime != null, "No scheduled execution");
 			this.triggerContext.update(this.scheduledExecutionTime, actualExecutionTime, completionTime);
+			// 每次执行完定时任务后，重新把定时任务注册到线程池，等待下次执行
 			if (!obtainCurrentFuture().isCancelled()) {
 				schedule();
 			}
