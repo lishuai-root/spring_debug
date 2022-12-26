@@ -2212,6 +2212,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		return wrappedBean;
 	}
 
+	/**
+	 * 在bean实例创建完成后，初始化之前，调用实现了Aware类的方法
+	 * 所有的被@Configuration注解标注的配置类都会被代理，且在创建完代理类之后调用{@link BeanFactoryAware#setBeanFactory(BeanFactory)}方法设置回调
+	 * @param beanName
+	 * @param bean
+	 */
 	private void invokeAwareMethods(String beanName, Object bean) {
 		if (bean instanceof Aware) {
 			if (bean instanceof BeanNameAware) {

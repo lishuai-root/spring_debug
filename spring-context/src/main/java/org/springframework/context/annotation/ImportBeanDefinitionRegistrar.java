@@ -25,14 +25,20 @@ import org.springframework.core.type.AnnotationMetadata;
  * Interface to be implemented by types that register additional bean definitions when
  * processing @{@link Configuration} classes. Useful when operating at the bean definition
  * level (as opposed to {@code @Bean} method/instance level) is desired or necessary.
+ * 在处理@{@link Configuration}类时，由注册其他bean定义的类型实现的接口。
+ * 当需要或必须在bean定义级别(与{@code @Bean}方法实例级别相反)操作时非常有用。
  *
  * <p>Along with {@code @Configuration} and {@link ImportSelector}, classes of this type
  * may be provided to the @{@link Import} annotation (or may also be returned from an
  * {@code ImportSelector}).
+ * 与{@code @ configuration}和{@link ImportSelector}一起，这种类型的类可以提供给@{@link Import}注释(或者也可以从{@code ImportSelector}返回)。
  *
  * <p>An {@link ImportBeanDefinitionRegistrar} may implement any of the following
  * {@link org.springframework.beans.factory.Aware Aware} interfaces, and their respective
  * methods will be called prior to {@link #registerBeanDefinitions}:
+ * 一个{@link ImportBeanDefinitionRegistrar}可以实现以下接口中的任何一个，
+ * 并且它们各自的方法将在{@link #registerBeanDefinitions}之前被调用:
+ *
  * <ul>
  * <li>{@link org.springframework.context.EnvironmentAware EnvironmentAware}</li>
  * <li>{@link org.springframework.beans.factory.BeanFactoryAware BeanFactoryAware}

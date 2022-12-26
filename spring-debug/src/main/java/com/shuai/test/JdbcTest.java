@@ -1,5 +1,7 @@
 package com.shuai.test;
 
+import com.shuai.aop.MyConfiguration;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -15,9 +17,10 @@ import java.util.Map;
 
 public class JdbcTest {
 	public static void main(String[] args) {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring_debug.xml");
+//		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring_debug.xml");
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MyConfiguration.class);
 		JdbcTemplate template = context.getBean(JdbcTemplate.class);
-		List<Map<String, Object>> list = template.queryForList("SELECT * FROM BASEDB.base_user");
+		List<Map<String, Object>> list = template.queryForList("SELECT * FROM SPRING_FRAMEWORK_DEBUG.debug_user");
 		for (Map<String,Object> map:list){
 			for (String key:map.keySet()){
 				System.out.print(key+" : "+map.get(key) + ", ");

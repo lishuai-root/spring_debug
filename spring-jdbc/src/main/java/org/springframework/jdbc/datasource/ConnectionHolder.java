@@ -16,13 +16,13 @@
 
 package org.springframework.jdbc.datasource;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Savepoint;
-
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.support.ResourceHolderSupport;
 import org.springframework.util.Assert;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Savepoint;
 
 /**
  * Resource holder wrapping a JDBC {@link Connection}.
@@ -113,6 +113,8 @@ public class ConnectionHolder extends ResourceHolderSupport {
 
 	/**
 	 * Set whether this holder represents an active, JDBC-managed transaction.
+	 * 设置此holder是否表示活动的jdbc管理的事务。
+	 *
 	 * @see DataSourceTransactionManager
 	 */
 	protected void setTransactionActive(boolean transactionActive) {
@@ -121,6 +123,7 @@ public class ConnectionHolder extends ResourceHolderSupport {
 
 	/**
 	 * Return whether this holder represents an active, JDBC-managed transaction.
+	 * 返回该holder是否表示活动的jdbc管理的事务。
 	 */
 	protected boolean isTransactionActive() {
 		return this.transactionActive;
@@ -179,6 +182,8 @@ public class ConnectionHolder extends ResourceHolderSupport {
 	/**
 	 * Create a new JDBC 3.0 Savepoint for the current Connection,
 	 * using generated savepoint names that are unique for the Connection.
+	 * 为当前连接创建一个新的JDBC 3.0保存点，使用生成的对该连接唯一的保存点名称。
+	 *
 	 * @return the new Savepoint
 	 * @throws SQLException if thrown by the JDBC driver
 	 */
@@ -189,10 +194,15 @@ public class ConnectionHolder extends ResourceHolderSupport {
 
 	/**
 	 * Releases the current Connection held by this ConnectionHolder.
+	 * 释放由这个ConnectionHolder持有的当前连接。
+	 *
 	 * <p>This is necessary for ConnectionHandles that expect "Connection borrowing",
 	 * where each returned Connection is only temporarily leased and needs to be
 	 * returned once the data operation is done, to make the Connection available
 	 * for other operations within the same transaction.
+	 * 这对于期望“连接借用”的ConnectionHandles是必要的，其中每个返回的连接只是临时租用的，
+	 * 需要在数据操作完成后返回，以使该连接可用于同一事务中的其他操作。
+	 *
 	 */
 	@Override
 	public void released() {

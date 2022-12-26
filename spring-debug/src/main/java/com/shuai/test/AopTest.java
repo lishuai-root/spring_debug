@@ -1,10 +1,11 @@
 package com.shuai.test;
 
-import com.shuai.aop.NoProxyClass;
-import com.shuai.aop.SourceClass;
+import com.shuai.aop.*;
 import org.springframework.cglib.core.DebuggingClassWriter;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.List;
 
 /**
  * @description:
@@ -24,11 +25,22 @@ public class AopTest {
 //		bean.show();
 //		System.out.println(bean);
 		NoProxyClass bean1 = context.getBean(NoProxyClass.class);
+		MyBean bean2 = context.getBean(MyBean.class);
+		Object myBean = context.getBean("proxyClass");
+		System.out.println("bean2 : " + bean2);
+
+		System.out.println(bean2);
 		System.out.println(bean1.toString());
 		int chu = bean.chu(2, 2);
 		System.out.println(chu);
 		System.out.println(bean);
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
-
+		System.out.println("-------------------");
+		List<Object> objectList = MySchedulingConfigurer.objectList;
+		for (int i = 0; i < objectList.size(); i++) {
+			for (int j = i + 1; j < objectList.size(); j++) {
+				System.out.println(objectList.get(i) == objectList.get(j));
+			}
+		}
 	}
 }

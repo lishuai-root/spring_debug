@@ -16,6 +16,14 @@
 
 package org.springframework.aop.support;
 
+import org.springframework.aop.*;
+import org.springframework.core.BridgeMethodResolver;
+import org.springframework.core.MethodIntrospector;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -24,22 +32,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.springframework.aop.Advisor;
-import org.springframework.aop.AopInvocationException;
-import org.springframework.aop.IntroductionAdvisor;
-import org.springframework.aop.IntroductionAwareMethodMatcher;
-import org.springframework.aop.MethodMatcher;
-import org.springframework.aop.Pointcut;
-import org.springframework.aop.PointcutAdvisor;
-import org.springframework.aop.SpringProxy;
-import org.springframework.aop.TargetClassAware;
-import org.springframework.core.BridgeMethodResolver;
-import org.springframework.core.MethodIntrospector;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * Utility methods for AOP support code.
@@ -97,7 +89,12 @@ public abstract class AopUtils {
 
 	/**
 	 * Determine the target class of the given bean instance which might be an AOP proxy.
+	 * 确定给定bean实例的目标类，它可能是一个AOP代理。
+	 *
 	 * <p>Returns the target class for an AOP proxy or the plain class otherwise.
+	 * 返回AOP代理的目标类，否则返回普通类。
+	 *
+	 * 如果当前对象所属类是一个代理类，则返回其父类，否则返回当前对象所属类
 	 * @param candidate the instance to check (might be an AOP proxy)
 	 * @return the target class (or the plain class of the given object as fallback;
 	 * never {@code null})
@@ -111,6 +108,9 @@ public abstract class AopUtils {
 			result = ((TargetClassAware) candidate).getTargetClass();
 		}
 		if (result == null) {
+			/**
+			 * 如果candidate是代理类，取父类，否则取当前类
+			 */
 			result = (isCglibProxy(candidate) ? candidate.getClass().getSuperclass() : candidate.getClass());
 		}
 		return result;
@@ -182,9 +182,16 @@ public abstract class AopUtils {
 	 * is one. E.g. the method may be {@code IFoo.bar()} and the target class
 	 * may be {@code DefaultFoo}. In this case, the method may be
 	 * {@code DefaultFoo.bar()}. This enables attributes on that method to be found.
+	 * 给定一个方法(可能来自接口)和当前AOP调用中使用的目标类，如果有相应的目标方法，请找到对应的目标方法。
+	 * 例如，方法可以是{@code IFoo.bar()}，目标类可以是{@code DefaultFoo}。在这种情况下，方法可以是{@code DefaultFoo.bar()}。
+	 * 这样就可以找到该方法上的属性。
+	 *
 	 * <p><b>NOTE:</b> In contrast to {@link org.springframework.util.ClassUtils#getMostSpecificMethod},
 	 * this method resolves Java 5 bridge methods in order to retrieve attributes
 	 * from the <i>original</i> method definition.
+	 * 相对于{@link org.springframework.util.ClassUtils#getMostSpecificMethod}，
+	 * 该方法解析Java 5桥接方法，以便从<i>原始<i>方法定义中检索属性。
+	 *
 	 * @param method the method to be invoked, which may come from an interface
 	 * @param targetClass the target class for the current invocation.
 	 * May be {@code null} or may not even implement the method.
@@ -193,9 +200,19 @@ public abstract class AopUtils {
 	 * @see org.springframework.util.ClassUtils#getMostSpecificMethod
 	 */
 	public static Method getMostSpecificMethod(Method method, @Nullable Class<?> targetClass) {
+		/**
+		 * 如果{@param targetClass}不为空，获取{@param targetClass}的父类(用户定义的原始类，不是代理类)
+		 */
 		Class<?> specificTargetClass = (targetClass != null ? ClassUtils.getUserClass(targetClass) : null);
+		/**
+		 * 在{@param specificTargetClass}类及其父类(接口)查找目标方法，如果没有返回{@param method}
+		 */
 		Method resolvedMethod = ClassUtils.getMostSpecificMethod(method, specificTargetClass);
 		// If we are dealing with method with generic parameters, find the original method.
+		/**
+		 * 如果我们正在处理具有泛型参数的方法，请找到原始方法。
+		 * 解析桥接方法，返回原方法，如果{@param method}就是原方法，则返回{@param method}
+		 */
 		return BridgeMethodResolver.findBridgedMethod(resolvedMethod);
 	}
 

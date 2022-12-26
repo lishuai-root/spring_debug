@@ -34,6 +34,8 @@ public interface TargetClassAware {
 	/**
 	 * Return the target class behind the implementing object
 	 * (typically a proxy configuration or an actual proxy).
+	 * 返回实现对象后面的目标类(通常是代理配置或实际的代理)。
+	 *
 	 * @return the target Class, or {@code null} if not known
 	 */
 	@Nullable

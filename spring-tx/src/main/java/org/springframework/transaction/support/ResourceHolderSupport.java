@@ -16,10 +16,10 @@
 
 package org.springframework.transaction.support;
 
-import java.util.Date;
-
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.TransactionTimedOutException;
+
+import java.util.Date;
 
 /**
  * Convenient base class for resource holders.
@@ -49,6 +49,7 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 
 	/**
 	 * Mark the resource as synchronized with a transaction.
+	 * 将资源标记为与事务同步。
 	 */
 	public void setSynchronizedWithTransaction(boolean synchronizedWithTransaction) {
 		this.synchronizedWithTransaction = synchronizedWithTransaction;
@@ -63,6 +64,7 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 
 	/**
 	 * Mark the resource transaction as rollback-only.
+	 * 将资源事务标记为仅回滚。
 	 */
 	public void setRollbackOnly() {
 		this.rollbackOnly = true;
@@ -70,8 +72,12 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 
 	/**
 	 * Reset the rollback-only status for this resource transaction.
+	 * 重置此资源事务的仅回滚状态。
+	 *
 	 * <p>Only really intended to be called after custom rollback steps which
 	 * keep the original resource in action, e.g. in case of a savepoint.
+	 * 只打算在自定义回滚步骤之后调用，这些步骤保持原始资源的作用，例如在保存点的情况下。
+	 *
 	 * @since 5.0
 	 * @see org.springframework.transaction.SavepointManager#rollbackToSavepoint
 	 */
@@ -167,6 +173,7 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 	/**
 	 * Decrease the reference count by one because the holder has been released
 	 * (i.e. someone released the resource held by it).
+	 * 将引用计数减少1，因为holder已经被释放(即某人释放了它所持有的资源)。
 	 */
 	public void released() {
 		this.referenceCount--;
@@ -181,6 +188,7 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 
 	/**
 	 * Clear the transactional state of this resource holder.
+	 * 清除此资源持有者的事务状态。
 	 */
 	public void clear() {
 		this.synchronizedWithTransaction = false;
@@ -190,6 +198,7 @@ public abstract class ResourceHolderSupport implements ResourceHolder {
 
 	/**
 	 * Reset this resource holder - transactional state as well as reference count.
+	 * 重置此资源持有者事务状态以及引用计数。
 	 */
 	@Override
 	public void reset() {

@@ -16,21 +16,15 @@
 
 package org.springframework.jdbc.datasource;
 
-import java.sql.SQLException;
-import java.sql.Savepoint;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.lang.Nullable;
-import org.springframework.transaction.CannotCreateTransactionException;
-import org.springframework.transaction.NestedTransactionNotSupportedException;
-import org.springframework.transaction.SavepointManager;
-import org.springframework.transaction.TransactionException;
-import org.springframework.transaction.TransactionSystemException;
-import org.springframework.transaction.TransactionUsageException;
+import org.springframework.transaction.*;
 import org.springframework.transaction.support.SmartTransactionObject;
 import org.springframework.util.Assert;
+
+import java.sql.SQLException;
+import java.sql.Savepoint;
 
 /**
  * Convenient base class for JDBC-aware transaction objects. Can contain a
@@ -64,6 +58,7 @@ public abstract class JdbcTransactionObjectSupport implements SavepointManager, 
 
 	/**
 	 * Set the ConnectionHolder for this transaction object.
+	 * 为这个事务对象设置ConnectionHolder。
 	 */
 	public void setConnectionHolder(@Nullable ConnectionHolder connectionHolder) {
 		this.connectionHolder = connectionHolder;
@@ -79,6 +74,7 @@ public abstract class JdbcTransactionObjectSupport implements SavepointManager, 
 
 	/**
 	 * Check whether this transaction object has a ConnectionHolder.
+	 * 检查此事务对象是否有ConnectionHolder。
 	 */
 	public boolean hasConnectionHolder() {
 		return (this.connectionHolder != null);
@@ -119,6 +115,8 @@ public abstract class JdbcTransactionObjectSupport implements SavepointManager, 
 	/**
 	 * Set whether savepoints are allowed within this transaction.
 	 * The default is {@code false}.
+	 *
+	 * 设置是否在此事务中允许保存点。默认值是{@code false}。
 	 */
 	public void setSavepointAllowed(boolean savepointAllowed) {
 		this.savepointAllowed = savepointAllowed;
@@ -143,6 +141,8 @@ public abstract class JdbcTransactionObjectSupport implements SavepointManager, 
 
 	/**
 	 * This implementation creates a JDBC 3.0 Savepoint and returns it.
+	 * 这个实现创建了一个JDBC 3.0保存点并返回它。
+	 *
 	 * @see java.sql.Connection#setSavepoint
 	 */
 	@Override
@@ -166,12 +166,17 @@ public abstract class JdbcTransactionObjectSupport implements SavepointManager, 
 
 	/**
 	 * This implementation rolls back to the given JDBC 3.0 Savepoint.
+	 * 此实现回滚到给定的JDBC 3.0保存点。
+	 *
 	 * @see java.sql.Connection#rollback(java.sql.Savepoint)
 	 */
 	@Override
 	public void rollbackToSavepoint(Object savepoint) throws TransactionException {
 		ConnectionHolder conHolder = getConnectionHolderForSavepoint();
 		try {
+			/**
+			 * 回滚到保存点，并重置仅回滚
+			 */
 			conHolder.getConnection().rollback((Savepoint) savepoint);
 			conHolder.resetRollbackOnly();
 		}
@@ -182,12 +187,17 @@ public abstract class JdbcTransactionObjectSupport implements SavepointManager, 
 
 	/**
 	 * This implementation releases the given JDBC 3.0 Savepoint.
+	 * 这个实现释放给定的JDBC 3.0保存点。
+	 *
 	 * @see java.sql.Connection#releaseSavepoint
 	 */
 	@Override
 	public void releaseSavepoint(Object savepoint) throws TransactionException {
 		ConnectionHolder conHolder = getConnectionHolderForSavepoint();
 		try {
+			/**
+			 * 删除指定保存点
+			 */
 			conHolder.getConnection().releaseSavepoint((Savepoint) savepoint);
 		}
 		catch (Throwable ex) {

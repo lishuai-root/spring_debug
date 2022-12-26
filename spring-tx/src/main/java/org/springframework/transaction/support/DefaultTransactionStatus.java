@@ -25,18 +25,23 @@ import org.springframework.util.Assert;
  * Default implementation of the {@link org.springframework.transaction.TransactionStatus}
  * interface, used by {@link AbstractPlatformTransactionManager}. Based on the concept
  * of an underlying "transaction object".
+ * transaction的默认实现。{@link AbstractPlatformTransactionManager}使用的TransactionStatus}接口。基于底层“事务对象”的概念。
  *
  * <p>Holds all status information that {@link AbstractPlatformTransactionManager}
  * needs internally, including a generic transaction object determined by the
  * concrete transaction manager implementation.
+ * 保存{@link AbstractPlatformTransactionManager}内部需要的所有状态信息，包括由具体事务管理器实现确定的通用事务对象。
  *
  * <p>Supports delegating savepoint-related methods to a transaction object
  * that implements the {@link SavepointManager} interface.
+ * 支持将与SavepointManager相关的方法委托给实现{@link SavepointManager}接口的事务对象。
  *
  * <p><b>NOTE:</b> This is <i>not</i> intended for use with other PlatformTransactionManager
  * implementations, in particular not for mock transaction managers in testing environments.
  * Use the alternative {@link SimpleTransactionStatus} class or a mock for the plain
  * {@link org.springframework.transaction.TransactionStatus} interface instead.
+ * 注意：这并不适合与其他PlatformTransactionManager实现一起使用，特别是不适用于测试环境中的模拟事务管理器。
+ * 使用可选的{@link SimpleTransactionStatus}类或普通{@link org.springframework.transaction的模拟。TransactionStatus}接口代替。
  *
  * @author Juergen Hoeller
  * @since 19.01.2004

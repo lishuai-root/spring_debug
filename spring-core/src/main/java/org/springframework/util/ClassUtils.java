@@ -16,31 +16,14 @@
 
 package org.springframework.util;
 
+import org.springframework.lang.Nullable;
+
 import java.beans.Introspector;
 import java.io.Closeable;
 import java.io.Externalizable;
 import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.StringJoiner;
-
-import org.springframework.lang.Nullable;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Miscellaneous {@code java.lang.Class} utility methods.
@@ -661,6 +644,9 @@ public abstract class ClassUtils {
 	 * Determine if the given type is assignable from the given value,
 	 * assuming setting by reflection. Considers primitive wrapper classes
 	 * as assignable to the corresponding primitive types.
+	 * 确定给定类型是否可从给定值赋值，假设通过反射设置。将基元包装器类视为可赋值给相应的基元类型。
+	 * 基本类的包装类会被认为是基本类型
+	 *
 	 * @param type the target type
 	 * @param value the value that should be assigned to the type
 	 * @return if the type is assignable from the value
@@ -1152,6 +1138,8 @@ public abstract class ClassUtils {
 	/**
 	 * Return the qualified name of the given method, consisting of
 	 * fully qualified interface/class name + "." + method name.
+	 * 返回给定方法的限定名称，由完全限定的接口类名称+ "."+方法名称。
+	 *
 	 * @param method the method
 	 * @param clazz the clazz that the method is being invoked on
 	 * (may be {@code null} to indicate the method's declaring class)
@@ -1450,16 +1438,25 @@ public abstract class ClassUtils {
 	/**
 	 * Determine whether the given method is declared by the user or at least pointing to
 	 * a user-declared method.
+	 * 确定给定的方法是由用户声明的还是至少指向用户声明的方法。
+	 *
 	 * <p>Checks {@link Method#isSynthetic()} (for implementation methods) as well as the
 	 * {@code GroovyObject} interface (for interface methods; on an implementation class,
 	 * implementations of the {@code GroovyObject} methods will be marked as synthetic anyway).
 	 * Note that, despite being synthetic, bridge methods ({@link Method#isBridge()}) are considered
 	 * as user-level methods since they are eventually pointing to a user-declared generic method.
+	 * 检查{@link Method#isSynthetic()}(用于实现方法)和{@code GroovyObject}接口(用于接口方法;在实现类上，{@code GroovyObject}方法的实现将被标记为合成的)。
+	 * 注意，尽管桥接方法({@link MethodisBridge()})是合成方法，但它们被认为是用户级方法，因为它们最终指向用户声明的泛型方法。
+	 *
 	 * @param method the method to check
 	 * @return {@code true} if the method can be considered as user-declared; {@code false} otherwise
 	 */
 	public static boolean isUserLevelMethod(Method method) {
 		Assert.notNull(method, "Method must not be null");
+		/**
+		 * 判断{@param method}是否用户级别的
+		 * 是否桥接 || (不是合成 && 不是代理类中的方法)
+		 */
 		return (method.isBridge() || (!method.isSynthetic() && !isGroovyObjectMethod(method)));
 	}
 

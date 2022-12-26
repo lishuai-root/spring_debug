@@ -16,9 +16,9 @@
 
 package org.springframework.transaction.support;
 
-import java.io.Flushable;
-
 import org.springframework.core.Ordered;
+
+import java.io.Flushable;
 
 /**
  * Interface for transaction synchronization callbacks.
@@ -50,7 +50,7 @@ public interface TransactionSynchronization extends Ordered, Flushable {
 	/** Completion status in case of proper rollback. */
 	int STATUS_ROLLED_BACK = 1;
 
-	/** Completion status in case of heuristic mixed completion or system errors. */
+	/** Completion status in case of heuristic mixed completion or system errors. 启发式混合补全或系统错误时的补全状态。*/
 	int STATUS_UNKNOWN = 2;
 
 
@@ -107,10 +107,16 @@ public interface TransactionSynchronization extends Ordered, Flushable {
 
 	/**
 	 * Invoked before transaction commit/rollback.
+	 * 在事务提交回滚之前调用。
+	 *
 	 * Can perform resource cleanup <i>before</i> transaction completion.
+	 * 可以在<i>事务完成之前执行<i>资源清理。
+	 *
 	 * <p>This method will be invoked after {@code beforeCommit}, even when
 	 * {@code beforeCommit} threw an exception. This callback allows for
 	 * closing resources before transaction completion, for any outcome.
+	 * 此方法将在{@code beforeCommit}之后调用，即使{@code beforeCommit}抛出异常。此回调允许在事务完成之前关闭资源，用于任何结果。
+	 *
 	 * @throws RuntimeException in case of errors; will be <b>logged but not propagated</b>
 	 * (note: do not throw TransactionException subclasses here!)
 	 * @see #beforeCommit
@@ -139,7 +145,11 @@ public interface TransactionSynchronization extends Ordered, Flushable {
 
 	/**
 	 * Invoked after transaction commit/rollback.
+	 * 在事务提交回滚后调用。
+	 *
 	 * Can perform resource cleanup <i>after</i> transaction completion.
+	 * 可以在<i>事务完成后执行<i>资源清理。
+	 *
 	 * <p><b>NOTE:</b> The transaction will have been committed or rolled back already,
 	 * but the transactional resources might still be active and accessible. As a
 	 * consequence, any data access code triggered at this point will still "participate"
@@ -147,6 +157,11 @@ public interface TransactionSynchronization extends Ordered, Flushable {
 	 * following anymore!), unless it explicitly declares that it needs to run in a
 	 * separate transaction. Hence: <b>Use {@code PROPAGATION_REQUIRES_NEW}
 	 * for any transactional operation that is called from here.</b>
+	 * <p><b>注意:<b>事务将已经提交或回滚，但事务资源可能仍然是活动的和可访问的。
+	 * 因此，此时触发的任何数据访问代码仍将“参与”原始事务，允许执行一些清理(不再执行提交!)，
+	 * 除非它显式声明需要在单独的事务中运行。
+	 * 因此:<b>使用{@code PROPAGATION_REQUIRES_NEW}用于从这里调用的任何事务操作。
+	 *
 	 * @param status completion status according to the {@code STATUS_*} constants
 	 * @throws RuntimeException in case of errors; will be <b>logged but not propagated</b>
 	 * (note: do not throw TransactionException subclasses here!)

@@ -170,11 +170,15 @@ abstract class ConfigurationClassUtils {
 		// 获取bean定义中被@Configuration注解标注的属性集合(属性集合是@Configuration的属性)
 		Map<String, Object> config = metadata.getAnnotationAttributes(Configuration.class.getName());
 
-		// 如果bean被@Configuration注解标注，且属性proxyBeanMethods为true(使用代理模式)，则将bean定义记为full
+		/**
+		 * 如果bean被@Configuration注解标注，且属性proxyBeanMethods为true(使用代理模式)，则将bean定义记为full
+		 * {@link Configuration}中{@link Configuration#proxyBeanMethods()}默认为true，因此如果没有明确指定proxyBeanMethods属性时，
+		 * 这里总是将配置类设置为需要代理
+		 */
 		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
-		// 如果bean被@configuration注解标注，且被注解@Component，@ComponentScan、@Import、@ImportResource或者@Bean标记的方法，则将bean定义标记为lite
+		// 如果bean被@configuration注解标注，或者被注解@Component，@ComponentScan、@Import、@ImportResource或者@Bean标记的方法，则将bean定义标记为lite
 		else if (config != null || isConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}

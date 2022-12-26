@@ -16,18 +16,13 @@
 
 package org.springframework.util;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.UndeclaredThrowableException;
+import org.springframework.lang.Nullable;
+
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.lang.Nullable;
 
 /**
  * Simple utility class for working with the reflection API and handling
@@ -229,6 +224,7 @@ public abstract class ReflectionUtils {
 	 * Attempt to find a {@link Method} on the supplied class with the supplied name
 	 * and parameter types. Searches all superclasses up to {@code Object}.
 	 * 尝试在提供的类上用提供的名称和参数类型找到一个{@link Method}。搜索{@code Object}之前的所有超类。
+	 * 只查找具体方法
 	 *
 	 * <p>Returns {@code null} if no {@link Method} can be found.
 	 * @param clazz the class to introspect
@@ -243,9 +239,15 @@ public abstract class ReflectionUtils {
 		Assert.notNull(name, "Method name must not be null");
 		Class<?> searchType = clazz;
 		while (searchType != null) {
+			/**
+			 * 获取{@param #searchType}类及其接口上的具体方法(抽象方法和接口方法申明不算)
+			 */
 			Method[] methods = (searchType.isInterface() ? searchType.getMethods() :
 					getDeclaredMethods(searchType, false));
 			for (Method method : methods) {
+				/**
+				 * 通过方法名和参数列表判断方法是否相等
+				 */
 				if (name.equals(method.getName()) && (paramTypes == null || hasSameParams(method, paramTypes))) {
 					return method;
 				}
@@ -472,6 +474,9 @@ public abstract class ReflectionUtils {
 		if (result == null) {
 			try {
 				Method[] declaredMethods = clazz.getDeclaredMethods();
+				/**
+				 * 获取所有接口中的具体方法
+				 */
 				List<Method> defaultMethods = findConcreteMethodsOnInterfaces(clazz);
 				if (defaultMethods != null) {
 					result = new Method[declaredMethods.length + defaultMethods.size()];
@@ -500,6 +505,9 @@ public abstract class ReflectionUtils {
 		List<Method> result = null;
 		for (Class<?> ifc : clazz.getInterfaces()) {
 			for (Method ifcMethod : ifc.getMethods()) {
+				/**
+				 * 判断是否具体方法
+				 */
 				if (!Modifier.isAbstract(ifcMethod.getModifiers())) {
 					if (result == null) {
 						result = new ArrayList<>();

@@ -16,17 +16,20 @@
 
 package org.springframework.transaction.interceptor;
 
+import org.springframework.lang.Nullable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.lang.Nullable;
 
 /**
  * TransactionAttribute implementation that works out whether a given exception
  * should cause transaction rollback by applying a number of rollback rules,
  * both positive and negative. If no custom rollback rules apply, this attribute
  * behaves like DefaultTransactionAttribute (rolling back on runtime exceptions).
+ *
+ * TransactionAttribute实现，该实现通过应用若干回滚规则(积极的和消极的)来确定给定的异常是否应该导致事务回滚。
+ * 如果没有应用自定义回滚规则，则此属性的行为类似于DefaultTransactionAttribute(在运行时异常上回滚)。
  *
  * <p>{@link TransactionAttributeEditor} creates objects of this class.
  *
@@ -119,6 +122,8 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute i
 	 * Winning rule is the shallowest rule (that is, the closest in the
 	 * inheritance hierarchy to the exception). If no rule applies (-1),
 	 * return false.
+	 * 获胜规则是最浅的规则(即继承层次结构中最接近异常的规则)。如果没有规则应用(-1)，则返回false。
+	 *
 	 * @see TransactionAttribute#rollbackOn(java.lang.Throwable)
 	 */
 	@Override
@@ -137,6 +142,9 @@ public class RuleBasedTransactionAttribute extends DefaultTransactionAttribute i
 		}
 
 		// User superclass behavior (rollback on unchecked) if no rule matches.
+		/**
+		 * 如果没有匹配的规则，则用户超类行为(未选中时回滚)。
+		 */
 		if (winner == null) {
 			return super.rollbackOn(ex);
 		}

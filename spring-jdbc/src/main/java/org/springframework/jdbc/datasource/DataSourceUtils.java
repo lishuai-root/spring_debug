@@ -16,21 +16,19 @@
 
 package org.springframework.jdbc.datasource;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Helper class that provides static methods for obtaining JDBC Connections from
@@ -164,6 +162,8 @@ public abstract class DataSourceUtils {
 
 	/**
 	 * Prepare the given Connection with the given transaction semantics.
+	 * 用给定的事务语义准备给定的Connection。
+	 *
 	 * @param con the Connection to prepare
 	 * @param definition the transaction definition to apply
 	 * @return the previous isolation level, if any
@@ -180,6 +180,11 @@ public abstract class DataSourceUtils {
 
 		boolean debugEnabled = logger.isDebugEnabled();
 		// Set read-only flag.
+		/**
+		 * 设置只读标志。
+		 * 如果{@link org.springframework.transaction.annotation.Transactional}指定了事务为只读，
+		 * 则设置当前事务为只读
+		 */
 		if (definition != null && definition.isReadOnly()) {
 			try {
 				if (debugEnabled) {
@@ -192,16 +197,26 @@ public abstract class DataSourceUtils {
 				while (exToCheck != null) {
 					if (exToCheck.getClass().getSimpleName().contains("Timeout")) {
 						// Assume it's a connection timeout that would otherwise get lost: e.g. from JDBC 4.0
+						/**
+						 * 假设这是一个连接超时，否则会丢失:例如从JDBC 4.0
+						 * 如果设置事务只读时，是因为连接超时导致设置失败，则抛出异常，其他原因则直接忽略
+						 */
 						throw ex;
 					}
 					exToCheck = exToCheck.getCause();
 				}
-				// "read-only not supported" SQLException -> ignore, it's just a hint anyway
+				// "read-only not supported" SQLException -> ignore, it's just a hint anyway"
+				// 只读不支持" SQLException ->忽略，这只是一个提示
 				logger.debug("Could not set JDBC Connection read-only", ex);
 			}
 		}
 
 		// Apply specific isolation level, if any.
+		/**
+		 * 应用特定的隔离级别(如果有)。
+		 * 如果{@link org.springframework.transaction.annotation.Transactional}指定了超时时间，
+		 * 则设置新的超时时间，并返回旧的超时时间
+		 */
 		Integer previousIsolationLevel = null;
 		if (definition != null && definition.getIsolationLevel() != TransactionDefinition.ISOLATION_DEFAULT) {
 			if (debugEnabled) {
@@ -221,6 +236,8 @@ public abstract class DataSourceUtils {
 	/**
 	 * Reset the given Connection after a transaction,
 	 * regarding read-only flag and isolation level.
+	 * 根据只读标志和隔离级别，在事务结束后重置给定的连接。
+	 *
 	 * @param con the Connection to reset
 	 * @param previousIsolationLevel the isolation level to restore, if any
 	 * @param resetReadOnly whether to reset the connection's read-only flag
@@ -236,15 +253,24 @@ public abstract class DataSourceUtils {
 		boolean debugEnabled = logger.isDebugEnabled();
 		try {
 			// Reset transaction isolation to previous value, if changed for the transaction.
+			/**
+			 * 如果事务已更改，则将事务隔离重置为以前的值。
+			 */
 			if (previousIsolationLevel != null) {
 				if (debugEnabled) {
 					logger.debug("Resetting isolation level of JDBC Connection [" +
 							con + "] to " + previousIsolationLevel);
 				}
+				/**
+				 * 重置连接的隔离级别
+				 */
 				con.setTransactionIsolation(previousIsolationLevel);
 			}
 
 			// Reset read-only flag if we originally switched it to true on transaction begin.
+			/**
+			 * 重置只读标志，如果我们最初在事务开始时将其切换为true。
+			 */
 			if (resetReadOnly) {
 				if (debugEnabled) {
 					logger.debug("Resetting read-only flag of JDBC Connection [" + con + "]");
@@ -347,6 +373,8 @@ public abstract class DataSourceUtils {
 	/**
 	 * Close the given Connection, obtained from the given DataSource,
 	 * if it is not managed externally (that is, not bound to the thread).
+	 * 关闭从给定DataSource获得的给定Connection，如果它不在外部管理(即未绑定到线程)。
+	 *
 	 * @param con the Connection to close if necessary
 	 * (if this is {@code null}, the call will be ignored)
 	 * @param dataSource the DataSource that the Connection was obtained from
@@ -368,6 +396,8 @@ public abstract class DataSourceUtils {
 	/**
 	 * Actually close the given Connection, obtained from the given DataSource.
 	 * Same as {@link #releaseConnection}, but throwing the original SQLException.
+	 * 实际上关闭从给定数据源获得的给定Connection。与{@link #releaseConnection}相同，但会抛出原始的SQLException。
+	 *
 	 * <p>Directly accessed by {@link TransactionAwareDataSourceProxy}.
 	 * @param con the Connection to close if necessary
 	 * (if this is {@code null}, the call will be ignored)
@@ -381,18 +411,32 @@ public abstract class DataSourceUtils {
 			return;
 		}
 		if (dataSource != null) {
+			/**
+			 * 如果当前事务是新连接，那在走到这里之前就已经清除了线程上数据源和数据库连接的绑定，如果这里能获取到，则说明不是新连接，
+			 * 是和其他事务共享了同一个连接
+			 * 当前线程存在事务的情况下说明存在共用数据库，连接直接使用ConnectionHolder中的released方法进行连接数减一而不是真正的释放连接
+			 */
 			ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);
 			if (conHolder != null && connectionEquals(conHolder, con)) {
 				// It's the transactional Connection: Don't close it.
+				/**
+				 * 这是事务性的连接:不要关闭它。
+				 * 只是将连接的引用计数器减一
+				 */
 				conHolder.released();
 				return;
 			}
 		}
+		/**
+		 * 关闭数据库连接
+		 */
 		doCloseConnection(con, dataSource);
 	}
 
 	/**
 	 * Close the Connection, unless a {@link SmartDataSource} doesn't want us to.
+	 * 关闭连接，除非一个{@link SmartDataSource}不希望我们这样做。
+	 *
 	 * @param con the Connection to close if necessary
 	 * @param dataSource the DataSource that the Connection was obtained from
 	 * @throws SQLException if thrown by JDBC methods
@@ -516,6 +560,10 @@ public abstract class DataSourceUtils {
 			// that has its own cleanup via transaction synchronization),
 			// to avoid issues with strict JTA implementations that expect
 			// the close call before transaction completion.
+			/**
+			 * 如果holder不再打开(也就是说，没有被其他资源使用，比如Hibernate Session，它通过事务同步有自己的清理)，
+			 * 则尽早释放Connection，以避免在事务完成之前期望关闭调用的严格JTA实现的问题。
+			 */
 			if (!this.connectionHolder.isOpen()) {
 				TransactionSynchronizationManager.unbindResource(this.dataSource);
 				this.holderActive = false;
@@ -530,14 +578,30 @@ public abstract class DataSourceUtils {
 			// If we haven't closed the Connection in beforeCompletion,
 			// close it now. The holder might have been used for other
 			// cleanup in the meantime, for example by a Hibernate Session.
+			/**
+			 * 如果我们在完成之前没有关闭连接，现在就关闭它。在此期间，持有者可能被用于其他清理，例如Hibernate会话。
+			 */
 			if (this.holderActive) {
 				// The thread-bound ConnectionHolder might not be available anymore,
 				// since afterCompletion might get called from a different thread.
+				/**
+				 * 线程绑定的ConnectionHolder可能不再可用，因为afterCompletion可能会从不同的线程调用。
+				 * 删除线程上的数据源和数据库连接的绑定
+				 */
 				TransactionSynchronizationManager.unbindResourceIfPossible(this.dataSource);
+				/**
+				 * 将当前连接设置成不可用
+				 */
 				this.holderActive = false;
 				if (this.connectionHolder.hasConnection()) {
+					/**
+					 * 关闭数据库连接，如果给定数据源
+					 */
 					releaseConnection(this.connectionHolder.getConnection(), this.dataSource);
 					// Reset the ConnectionHolder: It might remain bound to the thread.
+					/**
+					 * 重置ConnectionHolder:它可能仍然绑定到线程。
+					 */
 					this.connectionHolder.setConnection(null);
 				}
 			}

@@ -16,18 +16,18 @@
 
 package org.springframework.core;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ConcurrentReferenceHashMap;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.ReflectionUtils.MethodFilter;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ConcurrentReferenceHashMap;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.ReflectionUtils.MethodFilter;
 
 /**
  * Helper for resolving synthetic {@link Method#isBridge bridge Methods} to the
@@ -58,7 +58,7 @@ public final class BridgeMethodResolver {
 
 	/**
 	 * Find the original method for the supplied {@link Method bridge Method}.
-	 * 找到所提供的{@link method桥接方法}的原始方法。
+	 * 找到所提供的{@link method 桥接方法}的原始方法。
 	 *
 	 * 桥接方法是由Java编译器与源自源代码的方法一起创建的{@linkplain isSynthetic合成}方法。
 	 * Java编译器在各种情况下使用桥接方法来跨越Java编程语言语义和JVM语义的差异。

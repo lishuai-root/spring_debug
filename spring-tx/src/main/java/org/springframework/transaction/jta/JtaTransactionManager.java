@@ -16,43 +16,24 @@
 
 package org.springframework.transaction.jta;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Properties;
-
-import javax.naming.NamingException;
-
-import jakarta.transaction.HeuristicMixedException;
-import jakarta.transaction.HeuristicRollbackException;
-import jakarta.transaction.InvalidTransactionException;
-import jakarta.transaction.NotSupportedException;
-import jakarta.transaction.RollbackException;
-import jakarta.transaction.Status;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
-import jakarta.transaction.TransactionSynchronizationRegistry;
-import jakarta.transaction.UserTransaction;
-
+import jakarta.transaction.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jndi.JndiTemplate;
 import org.springframework.lang.Nullable;
-import org.springframework.transaction.CannotCreateTransactionException;
-import org.springframework.transaction.HeuristicCompletionException;
-import org.springframework.transaction.IllegalTransactionStateException;
-import org.springframework.transaction.InvalidIsolationLevelException;
-import org.springframework.transaction.NestedTransactionNotSupportedException;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionSuspensionNotSupportedException;
-import org.springframework.transaction.TransactionSystemException;
-import org.springframework.transaction.UnexpectedRollbackException;
+import org.springframework.transaction.*;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import javax.naming.NamingException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * {@link org.springframework.transaction.PlatformTransactionManager} implementation
@@ -992,6 +973,8 @@ public class JtaTransactionManager extends AbstractPlatformTransactionManager
 	/**
 	 * This implementation returns "true": a JTA commit will properly handle
 	 * transactions that have been marked rollback-only at a global level.
+	 *
+	 * 这个实现返回“true”:JTA提交将在全局级别正确处理标记为仅回滚的事务。
 	 */
 	@Override
 	protected boolean shouldCommitOnGlobalRollbackOnly() {

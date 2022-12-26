@@ -16,15 +16,15 @@
 
 package org.springframework.transaction.interceptor;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.StringUtils;
 import org.springframework.util.StringValueResolver;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Spring's common transaction attribute implementation.
@@ -92,6 +92,8 @@ public class DefaultTransactionAttribute extends DefaultTransactionDefinition im
 	/**
 	 * Set a descriptor for this transaction attribute,
 	 * e.g. indicating where the attribute is applying.
+	 *
+	 * 为该事务属性设置一个描述符，例如，指示属性应用于何处。
 	 * @since 4.3.4
 	 */
 	public void setDescriptor(@Nullable String descriptor) {
@@ -133,8 +135,12 @@ public class DefaultTransactionAttribute extends DefaultTransactionDefinition im
 
 	/**
 	 * Associate a qualifier value with this transaction attribute.
+	 * 将限定符值与此事务属性关联。
+	 *
 	 * <p>This may be used for choosing a corresponding transaction manager
 	 * to process this specific transaction.
+	 * 这可以用于选择相应的事务管理器来处理特定的事务。
+	 *
 	 * @since 3.0
 	 * @see #resolveAttributeStrings
 	 */
@@ -144,6 +150,7 @@ public class DefaultTransactionAttribute extends DefaultTransactionDefinition im
 
 	/**
 	 * Return a qualifier value associated with this transaction attribute.
+	 * 返回与此事务属性关联的限定符值。
 	 * @since 3.0
 	 */
 	@Override
@@ -190,13 +197,19 @@ public class DefaultTransactionAttribute extends DefaultTransactionDefinition im
 
 	/**
 	 * Resolve attribute values that are defined as resolvable Strings:
+	 * 解析定义为可解析字符串的属性值:
 	 * {@link #setTimeoutString}, {@link #setQualifier}, {@link #setLabels}.
 	 * This is typically used for resolving "${...}" placeholders.
+	 * {@link #setTimeoutString}， {@link #setQualifier}， {@link #setLabels}。这通常用于解析“{…}”占位符。
+	 *
 	 * @param resolver the embedded value resolver to apply, if any
 	 * @since 5.3
 	 */
 	public void resolveAttributeStrings(@Nullable StringValueResolver resolver) {
 		String timeoutString = this.timeoutString;
+		/**
+		 * 解析超时时间
+		 */
 		if (StringUtils.hasText(timeoutString)) {
 			if (resolver != null) {
 				timeoutString = resolver.resolveStringValue(timeoutString);
@@ -212,6 +225,9 @@ public class DefaultTransactionAttribute extends DefaultTransactionDefinition im
 			}
 		}
 
+		/**
+		 * 解析事务管理器限定符
+		 */
 		if (resolver != null) {
 			if (this.qualifier != null) {
 				this.qualifier = resolver.resolveStringValue(this.qualifier);

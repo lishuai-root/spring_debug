@@ -16,17 +16,17 @@
 
 package org.springframework.jdbc.datasource;
 
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
 
 /**
  * Implementation of {@link SmartDataSource} that wraps a single JDBC Connection
@@ -190,6 +190,7 @@ public class SingleConnectionDataSource extends DriverManagerDataSource implemen
 
 	/**
 	 * This is a single Connection: Do not close it when returning to the "pool".
+	 * 这是一个单一的连接:当返回到“池”时不要关闭它。
 	 */
 	@Override
 	public boolean shouldClose(Connection con) {

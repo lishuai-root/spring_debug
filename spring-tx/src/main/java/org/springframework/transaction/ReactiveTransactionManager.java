@@ -26,6 +26,9 @@ import org.springframework.lang.Nullable;
  * Typically, applications will work with either transactional operators or
  * declarative transaction demarcation through AOP.
  *
+ * 这是Spring响应式事务基础结构中的中心接口。
+ * 应用程序可以直接使用它，但它主要不是作为API:通常，应用程序将通过AOP使用事务操作符或声明性事务界定。
+ *
  * @author Mark Paluch
  * @author Juergen Hoeller
  * @since 5.2

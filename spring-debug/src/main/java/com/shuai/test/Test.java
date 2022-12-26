@@ -3,11 +3,18 @@ package com.shuai.test;
 
 import com.shuai.aop.ProxyClass;
 import com.shuai.aop.SourceClass;
+import com.shuai.aop.TestCglibProxy;
+import com.shuai.aop.TestCglibProxyImp;
 import com.shuai.beans.Apple;
 import com.shuai.beans.People;
 import com.shuai.configuration.AutoDemo;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.cglib.core.DebuggingClassWriter;
+import org.springframework.cglib.proxy.Callback;
+import org.springframework.cglib.proxy.CallbackFilter;
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cglib.proxy.NoOp;
 
+import java.lang.reflect.Method;
 import java.util.PriorityQueue;
 
 /**
@@ -20,9 +27,9 @@ import java.util.PriorityQueue;
 public class Test {
 
 	public static void main(String[] args) {
-		System.out.println(Runtime.getRuntime().maxMemory() >> 20);
-		System.out.println(Runtime.getRuntime().totalMemory() >> 20);
-		System.out.println(Runtime.getRuntime().freeMemory() >> 20);
+//		System.out.println(Runtime.getRuntime().maxMemory() >> 20);
+//		System.out.println(Runtime.getRuntime().totalMemory() >> 20);
+//		System.out.println(Runtime.getRuntime().freeMemory() >> 20);
 
 //		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
 //
@@ -54,5 +61,21 @@ public class Test {
 //		System.out.println("SourceClass : " + bean);
 //		bean.before();
 //		bean.after();
+		System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "target/cglib");
+		Enhancer enhancer = new Enhancer();
+//		enhancer.setSuperclass(TestCglibProxyImp.class);
+		enhancer.setInterfaces(new Class[]{TestCglibProxy.class});
+		enhancer.setUseFactory(false);
+
+		enhancer.setCallbackTypes(new Class[]{NoOp.INSTANCE.getClass()});
+		enhancer.setCallbackFilter(new CallbackFilter() {
+			@Override
+			public int accept(Method method) {
+				return 0;
+			}
+		});
+
+		Object o = enhancer.createClass();
+		System.out.println(o);
 	}
 }

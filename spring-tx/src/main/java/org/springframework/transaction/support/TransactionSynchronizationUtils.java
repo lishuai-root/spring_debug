@@ -16,16 +16,15 @@
 
 package org.springframework.transaction.support;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.aop.scope.ScopedObject;
 import org.springframework.core.InfrastructureProxy;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
+
+import java.util.List;
 
 /**
  * Utility methods for triggering specific {@link TransactionSynchronization}
@@ -57,6 +56,8 @@ public abstract class TransactionSynchronizationUtils {
 	/**
 	 * Unwrap the given resource handle if necessary; otherwise return
 	 * the given handle as-is.
+	 * 如果需要，打开给定的资源句柄;否则按原样返回给定句柄。
+	 *
 	 * @since 5.3.4
 	 * @see InfrastructureProxy#getWrappedObject()
 	 */
@@ -88,6 +89,8 @@ public abstract class TransactionSynchronizationUtils {
 
 	/**
 	 * Trigger {@code beforeCommit} callbacks on all currently registered synchronizations.
+	 * 在所有当前注册的同步上触发{@code beforeCommit}回调。
+	 *
 	 * @param readOnly whether the transaction is defined as read-only transaction
 	 * @throws RuntimeException if thrown by a {@code beforeCommit} callback
 	 * @see TransactionSynchronization#beforeCommit(boolean)
@@ -100,6 +103,8 @@ public abstract class TransactionSynchronizationUtils {
 
 	/**
 	 * Trigger {@code beforeCompletion} callbacks on all currently registered synchronizations.
+	 * 在所有当前注册的同步上触发{@code beforeCompletion}回调。
+	 *
 	 * @see TransactionSynchronization#beforeCompletion()
 	 */
 	public static void triggerBeforeCompletion() {
@@ -155,6 +160,8 @@ public abstract class TransactionSynchronizationUtils {
 	/**
 	 * Actually invoke the {@code afterCompletion} methods of the
 	 * given Spring TransactionSynchronization objects.
+	 * 实际上调用给定Spring TransactionSynchronization对象的{@code afterCompletion}方法。
+	 *
 	 * @param synchronizations a List of TransactionSynchronization objects
 	 * @param completionStatus the completion status according to the
 	 * constants in the TransactionSynchronization interface
@@ -180,7 +187,7 @@ public abstract class TransactionSynchronizationUtils {
 
 
 	/**
-	 * Inner class to avoid hard-coded dependency on AOP module.
+	 * Inner class to avoid hard-coded dependency on AOP module. 内部类，以避免硬编码对AOP模块的依赖。
 	 */
 	private static class ScopedProxyUnwrapper {
 

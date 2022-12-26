@@ -16,6 +16,12 @@
 
 package org.springframework.transaction.annotation;
 
+import org.springframework.lang.Nullable;
+import org.springframework.transaction.interceptor.AbstractFallbackTransactionAttributeSource;
+import org.springframework.transaction.interceptor.TransactionAttribute;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+
 import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -23,12 +29,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import org.springframework.lang.Nullable;
-import org.springframework.transaction.interceptor.AbstractFallbackTransactionAttributeSource;
-import org.springframework.transaction.interceptor.TransactionAttribute;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 
 /**
  * Implementation of the
@@ -161,11 +161,19 @@ public class AnnotationTransactionAttributeSource extends AbstractFallbackTransa
 
 	/**
 	 * Determine the transaction attribute for the given method or class.
+	 * 确定给定方法或类的事务属性。
+	 *
 	 * <p>This implementation delegates to configured
 	 * {@link TransactionAnnotationParser TransactionAnnotationParsers}
 	 * for parsing known annotations into Spring's metadata attribute class.
+	 * 这个实现委托给已配置的{@link TransactionAnnotationParser TransactionAnnotationParsers}来将已知的注释解析到Spring的元数据属性类中。
+	 *
 	 * Returns {@code null} if it's not transactional.
+	 * 如果不是事务性的，则返回{@code null}。
+	 *
 	 * <p>Can be overridden to support custom annotations that carry transaction metadata.
+	 * 可以重写以支持携带事务元数据的自定义注释。
+	 *
 	 * @param element the annotated method or class
 	 * @return the configured transaction attribute, or {@code null} if none was found
 	 */

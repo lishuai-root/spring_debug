@@ -16,18 +16,19 @@
 
 package org.springframework.jdbc.datasource;
 
-import java.sql.Connection;
-
 import javax.sql.DataSource;
+import java.sql.Connection;
 
 /**
  * Extension of the {@code javax.sql.DataSource} interface, to be
  * implemented by special DataSources that return JDBC Connections
  * in an unwrapped fashion.
+ * {@code javax.sql. xml的扩展名。DataSource}接口，由特殊的数据源实现，这些数据源以未包装的方式返回JDBC连接。
  *
  * <p>Classes using this interface can query whether or not the Connection
  * should be closed after an operation. Spring's DataSourceUtils and
  * JdbcTemplate classes automatically perform such a check.
+ * 使用此接口的类可以查询在操作之后是否应该关闭连接。Spring的DataSourceUtils和JdbcTemplate类自动执行这样的检查。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

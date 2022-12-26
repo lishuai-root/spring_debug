@@ -1,5 +1,6 @@
 package com.shuai.aop;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @EnableScheduling
+@Configuration
 public class NoProxyClass {
 
 	@Scheduled(cron="0/5 * * * * ? ")

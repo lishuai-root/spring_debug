@@ -45,9 +45,14 @@ public interface TransactionDefinition {
 
 	/**
 	 * Support a current transaction; create a new one if none exists.
+	 * 支持当前事务;如果不存在，则创建一个新的。
+	 *
 	 * Analogous to the EJB transaction attribute of the same name.
+	 * 类似于同名的EJB事务属性。
+	 *
 	 * <p>This is typically the default setting of a transaction definition,
 	 * and typically defines a transaction synchronization scope.
+	 * 这通常是事务定义的默认设置，通常定义一个事务同步范围。
 	 */
 	int PROPAGATION_REQUIRED = 0;
 
@@ -75,37 +80,60 @@ public interface TransactionDefinition {
 	/**
 	 * Support a current transaction; throw an exception if no current transaction
 	 * exists. Analogous to the EJB transaction attribute of the same name.
+	 * 支持当前事务;如果当前事务不存在，则抛出异常。类似于同名的EJB事务属性。
+	 *
 	 * <p>Note that transaction synchronization within a {@code PROPAGATION_MANDATORY}
 	 * scope will always be driven by the surrounding transaction.
+	 * 注意{@code PROPAGATION_MANDATORY}范围内的事务同步总是由周围的事务驱动。
 	 */
 	int PROPAGATION_MANDATORY = 2;
 
 	/**
 	 * Create a new transaction, suspending the current transaction if one exists.
+	 * 创建一个新事务，如果存在当前事务，则暂停当前事务。
+	 *
 	 * Analogous to the EJB transaction attribute of the same name.
+	 * 类似于同名的EJB事务属性。
+	 *
 	 * <p><b>NOTE:</b> Actual transaction suspension will not work out-of-the-box
 	 * on all transaction managers. This in particular applies to
 	 * {@link org.springframework.transaction.jta.JtaTransactionManager},
 	 * which requires the {@code jakarta.transaction.TransactionManager} to be
 	 * made available it to it (which is server-specific in standard Jakarta EE).
+	 * <p><b>注意:<b>实际的事务暂停将不会在所有事务管理器上开箱即用。
+	 * 这尤其适用于{@link org.springframework.transaction.jta.JtaTransactionManager}，
+	 * 它需要{@code jakarta.transaction.TransactionManager}使其可用(在标准Jakarta EE中是特定于服务器的)。
+	 *
 	 * <p>A {@code PROPAGATION_REQUIRES_NEW} scope always defines its own
 	 * transaction synchronizations. Existing synchronizations will be suspended
 	 * and resumed appropriately.
+	 * 作用域总是定义自己的事务同步。现有的同步将暂停并适当地恢复。
+	 *
 	 * @see org.springframework.transaction.jta.JtaTransactionManager#setTransactionManager
 	 */
 	int PROPAGATION_REQUIRES_NEW = 3;
 
 	/**
 	 * Do not support a current transaction; rather always execute non-transactionally.
+	 * 不支持当前事务;而是总是以非事务的方式执行。
+	 *
 	 * Analogous to the EJB transaction attribute of the same name.
+	 * 类似于同名的EJB事务属性。
+	 *
 	 * <p><b>NOTE:</b> Actual transaction suspension will not work out-of-the-box
 	 * on all transaction managers. This in particular applies to
 	 * {@link org.springframework.transaction.jta.JtaTransactionManager},
 	 * which requires the {@code jakarta.transaction.TransactionManager} to be
 	 * made available it to it (which is server-specific in standard Jakarta EE).
+	 * 实际的事务暂停不会在所有事务管理器上立即工作。这尤其适用于{@link org.springframework.transaction.jta.JtaTransactionManager}，
+	 * 它需要{@code jakarta.transaction.TransactionManager}使其可用(在标准Jakarta EE中是特定于服务器的)。
+	 *
+	 *
 	 * <p>Note that transaction synchronization is <i>not</i> available within a
 	 * {@code PROPAGATION_NOT_SUPPORTED} scope. Existing synchronizations
 	 * will be suspended and resumed appropriately.
+	 * 注意，事务同步在{@code PROPAGATION_NOT_SUPPORTED}范围内是<i>而不是<i>可用。现有的同步将暂停并适当地恢复。
+	 *
 	 * @see org.springframework.transaction.jta.JtaTransactionManager#setTransactionManager
 	 */
 	int PROPAGATION_NOT_SUPPORTED = 4;
@@ -113,8 +141,11 @@ public interface TransactionDefinition {
 	/**
 	 * Do not support a current transaction; throw an exception if a current transaction
 	 * exists. Analogous to the EJB transaction attribute of the same name.
+	 * 不支持当前事务;如果当前事务存在，则抛出异常。类似于同名的EJB事务属性。
+	 *
 	 * <p>Note that transaction synchronization is <i>not</i> available within a
 	 * {@code PROPAGATION_NEVER} scope.
+	 * 注意，事务同步在{@code PROPAGATION_NEVER}范围内是<i>而不是<i>可用。
 	 */
 	int PROPAGATION_NEVER = 5;
 
@@ -122,11 +153,18 @@ public interface TransactionDefinition {
 	 * Execute within a nested transaction if a current transaction exists,
 	 * behave like {@link #PROPAGATION_REQUIRED} otherwise. There is no
 	 * analogous feature in EJB.
+	 * 如果当前事务存在，则在嵌套事务中执行，否则行为类似{@link #PROPAGATION_REQUIRED}。
+	 * EJB中没有类似的特性。
+	 *
 	 * <p><b>NOTE:</b> Actual creation of a nested transaction will only work on
 	 * specific transaction managers. Out of the box, this only applies to the JDBC
 	 * {@link org.springframework.jdbc.datasource.DataSourceTransactionManager}
 	 * when working on a JDBC 3.0 driver. Some JTA providers might support
 	 * nested transactions as well.
+	 * <p><b>注意:<b>实际创建的嵌套事务将只在特定的事务管理器上工作。
+	 * 开箱即用，这只适用于JDBC {@link org.springframework.jdbc.datasource.DataSourceTransactionManager}当使用JDBC 3.0驱动程序时。
+	 * 一些JTA提供者也可能支持嵌套事务。
+	 *
 	 * @see org.springframework.jdbc.datasource.DataSourceTransactionManager
 	 */
 	int PROPAGATION_NESTED = 6;
@@ -264,10 +302,16 @@ public interface TransactionDefinition {
 
 	/**
 	 * Return the name of this transaction. Can be {@code null}.
+	 * 返回此事务的名称。可以是{@code null}。
+	 *
 	 * <p>This will be used as the transaction name to be shown in a
 	 * transaction monitor, if applicable (for example, WebLogic's).
+	 * 这将被用作在事务监视器中显示的事务名称(如果适用的话，例如WebLogic的)。
+	 *
 	 * <p>In case of Spring's declarative transactions, the exposed name will be
 	 * the {@code fully-qualified class name + "." + method name} (by default).
+	 * 对于Spring的声明性事务，公开的名称将是{@code 全限定类名+"."+方法名}(默认)。
+	 *
 	 * @return the name of this transaction ({@code null} by default}
 	 * @see org.springframework.transaction.interceptor.TransactionAspectSupport
 	 * @see org.springframework.transaction.support.TransactionSynchronizationManager#getCurrentTransactionName()
@@ -282,6 +326,8 @@ public interface TransactionDefinition {
 
 	/**
 	 * Return an unmodifiable {@code TransactionDefinition} with defaults.
+	 * 返回一个带默认值的不可修改的{@code TransactionDefinition}。
+	 *
 	 * <p>For customization purposes, use the modifiable
 	 * {@link org.springframework.transaction.support.DefaultTransactionDefinition}
 	 * instead.

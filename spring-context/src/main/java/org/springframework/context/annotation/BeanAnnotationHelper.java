@@ -41,12 +41,20 @@ abstract class BeanAnnotationHelper {
 		return AnnotatedElementUtils.hasAnnotation(method, Bean.class);
 	}
 
+	/**
+	 * 获取被{@link Bean}注释的方法的bean名称，默认使用方法名，如果定义了{@link Bean#name()}属性，则会使用该属性的第一个值
+	 *
+	 * @param beanMethod
+	 * @return
+	 */
 	public static String determineBeanNameFor(Method beanMethod) {
 		String beanName = beanNameCache.get(beanMethod);
 		if (beanName == null) {
 			// By default, the bean name is the name of the @Bean-annotated method
+			// 默认情况下，bean名称是@ bean注释方法的名称
 			beanName = beanMethod.getName();
 			// Check to see if the user has explicitly set a custom bean name...
+			// 检查用户是否显式地设置了自定义bean名…
 			AnnotationAttributes bean =
 					AnnotatedElementUtils.findMergedAnnotationAttributes(beanMethod, Bean.class, false, false);
 			if (bean != null) {

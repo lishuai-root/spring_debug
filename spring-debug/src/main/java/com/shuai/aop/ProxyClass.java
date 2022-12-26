@@ -4,6 +4,8 @@ import com.shuai.beans.People;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
@@ -14,17 +16,25 @@ import java.util.Arrays;
  * @version: 1.0
  */
 
+@Component
+@Aspect
 public class ProxyClass {
 
+	@Pointcut(value = "execution( * com.shuai.aop.SourceClass.* (..))")
+	public void pointCut(){}
+
+	@Before("pointCut()")
 	public String before(JoinPoint joinPoint){
 		System.out.println(joinPoint.getSignature().getName() + " : proxy before!");
 		return "before";
 	}
 
+	@After("pointCut()")
 	public void after(JoinPoint joinPoint){
 		System.out.println(joinPoint.getSignature().getName() + " : proxy after!");
 	}
 
+	@Around("pointCut()")
 	public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
 		System.out.println("this class : " + joinPoint.getThis());
 		Signature signature = joinPoint.getSignature();
@@ -45,12 +55,14 @@ public class ProxyClass {
 		return result;
 	}
 
+	@AfterReturning(value = "pointCut()", returning = "result")
 	public Object returning(JoinPoint joinPoint, Object result){
 		Object obj = new Object();
 		System.out.println(joinPoint.getSignature().getName() + " : proxy after-returning! result : " + result);
 		return 100;
 	}
 
+	@AfterThrowing(value = "pointCut()", throwing = "e")
 	public void throwing(JoinPoint joinPoint, Exception e){
 		System.out.println(joinPoint.getSignature().getName() + " : proxy after-throwing! throw message : " + e.getMessage());
 	}

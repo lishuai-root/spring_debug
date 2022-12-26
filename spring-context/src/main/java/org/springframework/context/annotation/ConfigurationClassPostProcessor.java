@@ -454,6 +454,12 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * Post-processes a BeanFactory in search of Configuration class BeanDefinitions;
 	 * any candidates are then enhanced by a {@link ConfigurationClassEnhancer}.
 	 * Candidate status is determined by BeanDefinition attribute metadata.
+	 * 在搜索配置类BeanDefinitions时对BeanFactory进行后处理;任何候选都将被{@link ConfigurationClassEnhancer}增强。
+	 * 候选状态由BeanDefinition属性元数据确定。
+	 *
+	 * 所有带有@Configuration注解的配置类都要被代理，如果配置类中有带有@Bean注解的方法，可以通过代理拦截器拦截方法调用，保证用户手动调用
+	 * 带有@Bean方法时bean的单例性
+	 *
 	 * @see ConfigurationClassEnhancer
 	 */
 	public void enhanceConfigurationClasses(ConfigurableListableBeanFactory beanFactory) {
@@ -464,6 +470,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			Object configClassAttr = beanDef.getAttribute(ConfigurationClassUtils.CONFIGURATION_CLASS_ATTRIBUTE);
 			AnnotationMetadata annotationMetadata = null;
 			MethodMetadata methodMetadata = null;
+			/**
+			 * 通过扫描到的beanDefinition是{@link ScannedGenericBeanDefinition}类型的，该类型实现了{@link AnnotatedBeanDefinition},
+			 * 同时继承了{@link AbstractBeanDefinition}
+			 */
 			if (beanDef instanceof AnnotatedBeanDefinition) {
 				AnnotatedBeanDefinition annotatedBeanDefinition = (AnnotatedBeanDefinition) beanDef;
 				annotationMetadata = annotatedBeanDefinition.getMetadata();
@@ -473,8 +483,15 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				// Configuration class (full or lite) or a configuration-derived @Bean method
 				// -> eagerly resolve bean class at this point, unless it's a 'lite' configuration
 				// or component class without @Bean methods.
+				/**
+				 * 配置类(完整的或精简的)或配置派生的@Bean方法->在这一点上急切地解析bean类，除非它是一个没有@Bean方法的“精简”配置或组件类。
+				 */
 				AbstractBeanDefinition abd = (AbstractBeanDefinition) beanDef;
 				if (!abd.hasBeanClass()) {
+					/**
+					 * 如果显示的将{@link Configuration#proxyBeanMethods()} 的值设置为false，表示不需要代理此配置类，但是有在配置类中使用了
+					 * {@link Bean}注解，则spring不会代理此配置类，那么spring不会保证此配置类中被@Bean注解修饰的方法返回的对象的单例性
+					 */
 					boolean liteConfigurationCandidateWithoutBeanMethods =
 							(ConfigurationClassUtils.CONFIGURATION_CLASS_LITE.equals(configClassAttr) &&
 								annotationMetadata != null && !ConfigurationClassUtils.hasBeanMethods(annotationMetadata));
@@ -489,6 +506,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					}
 				}
 			}
+			/**
+			 * {@link Configuration}中{@link Configuration#proxyBeanMethods()}默认为true，因此如果没有明确指定proxyBeanMethods属性时，
+			 * 当前配置类总是会被代理
+			 */
 			if (ConfigurationClassUtils.CONFIGURATION_CLASS_FULL.equals(configClassAttr)) {
 				if (!(beanDef instanceof AbstractBeanDefinition)) {
 					throw new BeanDefinitionStoreException("Cannot enhance @Configuration bean definition '" +
@@ -513,8 +534,15 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		for (Map.Entry<String, AbstractBeanDefinition> entry : configBeanDefs.entrySet()) {
 			AbstractBeanDefinition beanDef = entry.getValue();
 			// If a @Configuration class gets proxied, always proxy the target class
+			/**
+			 * 如果@Configuration类被代理，则始终代理目标类
+			 */
 			beanDef.setAttribute(AutoProxyUtils.PRESERVE_TARGET_CLASS_ATTRIBUTE, Boolean.TRUE);
 			// Set enhanced subclass of the user-specified bean class
+			/**
+			 * 设置用户指定bean类的增强子类
+			 * 为配置类生成一个cglib子类，并设置beanDefinition类型，此处只是生成代理类，并不会实例化配置类
+			 */
 			Class<?> configClass = beanDef.getBeanClass();
 			Class<?> enhancedClass = enhancer.enhance(configClass, this.beanClassLoader);
 			if (configClass != enhancedClass) {
