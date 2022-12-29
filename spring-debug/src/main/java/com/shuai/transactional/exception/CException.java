@@ -8,4 +8,5 @@ package com.shuai.transactional.exception;
  */
 
 public class CException extends Exception {
+	static final long serialVersionUID = 3L;
 }

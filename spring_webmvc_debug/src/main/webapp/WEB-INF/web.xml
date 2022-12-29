@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring.xml</param-value>
+<!--		<param-name>globalInitializerClasses</param-name>-->
+<!--		<param-value>com.shuai.config.initializer.MyGlobalApplicationContextInitializer</param-value>-->
+<!--		<param-name>contextInitializerClasses</param-name>-->
+<!--		<param-value>com.shuai.config.initializer.MyContextApplicationContextInitializer</param-value>-->
+	</context-param>
+
+<!--	针对整个应用程序，不管是spring容器还是springmvc容器，在刷新前都会执行 -->
+	<context-param>
+		<param-name>globalInitializerClasses</param-name>
+		<param-value>com.shuai.config.initializer.MyGlobalApplicationContextInitializer</param-value>
+	</context-param>
+
+<!--	针对spring容器，只有spring容器在刷新前会执行，springmvc容器不会执行 -->
+	<context-param>
+		<param-name>contextInitializerClasses</param-name>
+		<param-value>com.shuai.config.initializer.MyContextApplicationContextInitializer</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>webmvc_debug</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring_mvc.xml</param-value>
+		</init-param>
+<!--		针对springmvc容器，springmvc容器刷新前会执行，spring容器刷新前不会执行-->
+		<init-param>
+			<param-name>contextInitializerClasses</param-name>
+			<param-value>com.shuai.config.initializer.MyMvcContextApplicationContextInitializer</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>webmvc_debug</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<!--	<filter>-->
+	<!--		<filter-name>encodeingFilter</filter-name>-->
+	<!--		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>-->
+	<!--		<async-supported>true</async-supported>-->
+	<!--		<init-param>-->
+	<!--			<param-name>encodeing</param-name>-->
+	<!--			<param-value>UTF-8</param-value>-->
+	<!--		</init-param>-->
+	<!--	</filter>-->
+	<!--	<filter-mapping>-->
+	<!--		<filter-name>encodeingFilter</filter-name>-->
+	<!--		<url-pattern>/</url-pattern>-->
+	<!--	</filter-mapping>-->
+
+
+</web-app>

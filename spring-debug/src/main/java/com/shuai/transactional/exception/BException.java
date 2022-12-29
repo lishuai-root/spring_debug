@@ -8,4 +8,5 @@ package com.shuai.transactional.exception;
  */
 
 public class BException extends Exception{
+	static final long serialVersionUID = 2L;
 }

@@ -1,21 +1,13 @@
 package com.shuai.test;
 
 
-import com.shuai.aop.ProxyClass;
-import com.shuai.aop.SourceClass;
 import com.shuai.aop.TestCglibProxy;
-import com.shuai.aop.TestCglibProxyImp;
-import com.shuai.beans.Apple;
-import com.shuai.beans.People;
-import com.shuai.configuration.AutoDemo;
 import org.springframework.cglib.core.DebuggingClassWriter;
-import org.springframework.cglib.proxy.Callback;
 import org.springframework.cglib.proxy.CallbackFilter;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.NoOp;
 
 import java.lang.reflect.Method;
-import java.util.PriorityQueue;
 
 /**
  * @description:
@@ -64,10 +56,10 @@ public class Test {
 		System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "target/cglib");
 		Enhancer enhancer = new Enhancer();
 //		enhancer.setSuperclass(TestCglibProxyImp.class);
-		enhancer.setInterfaces(new Class[]{TestCglibProxy.class});
+		enhancer.setInterfaces(new Class<?>[]{TestCglibProxy.class});
 		enhancer.setUseFactory(false);
 
-		enhancer.setCallbackTypes(new Class[]{NoOp.INSTANCE.getClass()});
+		enhancer.setCallbackTypes(new Class<?>[]{NoOp.INSTANCE.getClass()});
 		enhancer.setCallbackFilter(new CallbackFilter() {
 			@Override
 			public int accept(Method method) {

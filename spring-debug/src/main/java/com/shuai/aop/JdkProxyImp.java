@@ -20,7 +20,7 @@ public class JdkProxyImp {
 				return null;
 			}
 		};
-		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, handler);
+		return Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, handler);
 	}
 
 	public static void main(String[] args) {

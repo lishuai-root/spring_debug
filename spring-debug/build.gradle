@@ -33,7 +33,6 @@ dependencies {
     api("org.aspectj:aspectjweaver:1.9.6")
     api("jakarta.annotation:jakarta.annotation-api:2.0.0")
     api("mysql:mysql-connector-java:8.0.29")
-    api("")
     implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
 //    implementation 'org.projectlombok:lombok:1.18.18'
 

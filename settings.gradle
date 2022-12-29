@@ -56,4 +56,5 @@ settings.gradle.projectsLoaded {
 	}
 }
 include 'spring-debug'
+include 'spring_webmvc_debug'
 

@@ -1,8 +1,10 @@
 package com.shuai.test;
 
-import com.shuai.aop.*;
+import com.shuai.aop.MyBean;
+import com.shuai.aop.MySchedulingConfigurer;
+import com.shuai.aop.NoProxyClass;
+import com.shuai.aop.SourceClass;
 import org.springframework.cglib.core.DebuggingClassWriter;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
@@ -34,7 +36,7 @@ public class AopTest {
 		int chu = bean.chu(2, 2);
 		System.out.println(chu);
 		System.out.println(bean);
-		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+//		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(MyConfiguration.class);
 		System.out.println("-------------------");
 		List<Object> objectList = MySchedulingConfigurer.objectList;
 		for (int i = 0; i < objectList.size(); i++) {

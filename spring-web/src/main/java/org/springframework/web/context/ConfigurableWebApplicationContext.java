@@ -54,8 +54,12 @@ public interface ConfigurableWebApplicationContext extends WebApplicationContext
 
 	/**
 	 * Set the ServletContext for this web application context.
+	 * 为这个web应用程序上下文设置ServletContext。
+	 *
 	 * <p>Does not cause an initialization of the context: refresh needs to be
 	 * called after the setting of all configuration properties.
+	 * 不会导致上下文的初始化:需要在设置所有配置属性后调用refresh。
+	 *
 	 * @see #refresh()
 	 */
 	void setServletContext(@Nullable ServletContext servletContext);
@@ -89,8 +93,11 @@ public interface ConfigurableWebApplicationContext extends WebApplicationContext
 	/**
 	 * Set the config locations for this web application context in init-param style,
 	 * i.e. with distinct locations separated by commas, semicolons or whitespace.
+	 * 以init-param风格设置web应用程序上下文的配置位置，即使用逗号、分号或空格分隔不同的位置。
+	 *
 	 * <p>If not set, the implementation is supposed to use a default for the
 	 * given namespace or the root web application context, as appropriate.
+	 * 如果没有设置，实现将根据需要对给定的名称空间或根web应用程序上下文使用默认值。
 	 */
 	void setConfigLocation(String configLocation);
 
