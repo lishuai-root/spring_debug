@@ -21,6 +21,7 @@ import org.springframework.lang.Nullable;
 /**
  * Sub-interface of ThemeSource to be implemented by objects that
  * can resolve theme messages hierarchically.
+ * 由可以分层解析主题消息的对象实现的ThemeSource的子接口。
  *
  * @author Jean-Pierre Pawlak
  * @author Juergen Hoeller

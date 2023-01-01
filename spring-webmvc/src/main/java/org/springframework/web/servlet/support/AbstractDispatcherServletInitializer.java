@@ -16,15 +16,8 @@
 
 package org.springframework.web.servlet.support;
 
-import java.util.EnumSet;
-
-import jakarta.servlet.DispatcherType;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.*;
 import jakarta.servlet.FilterRegistration.Dynamic;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRegistration;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.core.Conventions;
@@ -35,6 +28,8 @@ import org.springframework.web.context.AbstractContextLoaderInitializer;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
+
+import java.util.EnumSet;
 
 /**
  * Base class for {@link org.springframework.web.WebApplicationInitializer}
@@ -109,6 +104,8 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 	/**
 	 * Return the name under which the {@link DispatcherServlet} will be registered.
 	 * Defaults to {@link #DEFAULT_SERVLET_NAME}.
+	 * 返回{@link DispatcherServlet}注册时使用的名称。默认为{@link #DEFAULT_SERVLET_NAME}。
+	 *
 	 * @see #registerDispatcherServlet(ServletContext)
 	 */
 	protected String getServletName() {
@@ -151,6 +148,8 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 	/**
 	 * Specify the servlet mapping(s) for the {@code DispatcherServlet} &mdash;
 	 * for example {@code "/"}, {@code "/app"}, etc.
+	 * 为{@code DispatcherServlet} &mdash;例如{@code ""}， {@code "app"}，等等。
+	 *
 	 * @see #registerDispatcherServlet(ServletContext)
 	 */
 	protected abstract String[] getServletMappings();
@@ -221,6 +220,8 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 	/**
 	 * Optionally perform further registration customization once
 	 * {@link #registerDispatcherServlet(ServletContext)} has completed.
+	 * 可以选择在{@link #registerDispatcherServlet(ServletContext)}完成后执行进一步的注册定制。
+	 *
 	 * @param registration the {@code DispatcherServlet} registration to be customized
 	 * @see #registerDispatcherServlet(ServletContext)
 	 */

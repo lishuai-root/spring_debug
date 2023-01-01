@@ -395,6 +395,8 @@ public abstract class ClassUtils {
 	 * Determine whether the {@link Class} identified by the supplied name is present
 	 * and can be loaded. Will return {@code false} if either the class or
 	 * one of its dependencies is not present or cannot be loaded.
+	 * 确定由提供的名称标识的{@link Class}是否存在并且可以加载。如果类或其依赖项之一不存在或无法加载，将返回{@code false}。
+	 *
 	 * @param className the name of the class to check
 	 * @param classLoader the class loader to use
 	 * (may be {@code null} which indicates the default class loader)

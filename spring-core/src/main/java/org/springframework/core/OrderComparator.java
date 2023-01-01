@@ -16,12 +16,12 @@
 
 package org.springframework.core;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.ObjectUtils;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.ObjectUtils;
 
 /**
  * {@link Comparator} implementation for {@link Ordered} objects, sorting
@@ -216,9 +216,15 @@ public class OrderComparator implements Comparator<Object> {
 		/**
 		 * Return an order source for the specified object, i.e. an object that
 		 * should be checked for an order value as a replacement to the given object.
+		 * 返回指定对象的订单源，即应该检查订单值以替换给定对象的对象。
+		 *
 		 * <p>Can also be an array of order source objects.
+		 * 也可以是订单源对象的数组。
+		 *
 		 * <p>If the returned object does not indicate any order, the comparator
 		 * will fall back to checking the original object.
+		 * 如果返回的对象没有指示任何顺序，比较器将返回到检查原始对象。
+		 *
 		 * @param obj the object to find an order source for
 		 * @return the order source for that object, or {@code null} if none found
 		 */

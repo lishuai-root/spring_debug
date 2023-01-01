@@ -16,12 +16,12 @@
 
 package org.springframework.beans.factory;
 
-import java.lang.annotation.Annotation;
-import java.util.Map;
-
 import org.springframework.beans.BeansException;
 import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
+
+import java.lang.annotation.Annotation;
+import java.util.Map;
 
 /**
  * Extension of the {@link BeanFactory} interface to be implemented by bean factories
@@ -281,6 +281,8 @@ public interface ListableBeanFactory extends BeanFactory {
 	 * Return the bean instances that match the given object type (including
 	 * subclasses), judging from either bean definitions or the value of
 	 * {@code getObjectType} in the case of FactoryBeans.
+	 * 返回与给定对象类型(包括子类)匹配的bean实例，根据bean定义或{@code getObjectType}(对于FactoryBeans)的值判断。
+	 *
 	 * <p><b>NOTE: This method introspects top-level beans only.</b> It does <i>not</i>
 	 * check nested beans which might match the specified type as well.
 	 * <p>Does consider objects created by FactoryBeans if the "allowEagerInit" flag is set,
@@ -288,14 +290,25 @@ public interface ListableBeanFactory extends BeanFactory {
 	 * FactoryBean doesn't match, the raw FactoryBean itself will be matched against the
 	 * type. If "allowEagerInit" is not set, only raw FactoryBeans will be checked
 	 * (which doesn't require initialization of each FactoryBean).
+	 * 注意:此方法仅内省顶级bean。<b>它检查<i>而不是<i>嵌套bean，这些bean也可能匹配指定的类型。
+	 * <p>不考虑由FactoryBeans创建的对象，如果设置了“allowEagerInit”标志，这意味着FactoryBeans将被初始化。
+	 * 如果FactoryBean创建的对象不匹配，原始FactoryBean本身将根据类型进行匹配。
+	 * 如果没有设置“allowEagerInit”，则只检查原始的FactoryBean(这不需要初始化每个FactoryBean)。
+	 *
 	 * <p>Does not consider any hierarchy this factory may participate in.
 	 * Use BeanFactoryUtils' {@code beansOfTypeIncludingAncestors}
 	 * to include beans in ancestor factories too.
+	 * 不考虑此工厂可能参与的任何层次结构。使用BeanFactoryUtils的{@code beansOfTypeIncludingAncestors}也可以在祖先工厂中包含bean。
+	 *
 	 * <p>Note: Does <i>not</i> ignore singleton beans that have been registered
 	 * by other means than bean definitions.
+	 * 注意:<i>不<i>是否忽略通过bean定义以外的其他方式注册的单例bean。
+	 *
 	 * <p>The Map returned by this method should always return bean names and
 	 * corresponding bean instances <i>in the order of definition</i> in the
 	 * backend configuration, as far as possible.
+	 * 此方法返回的Map应该总是尽可能地按照在后端配置中定义<i>的顺序返回bean名称和对应的bean实例<i>。
+	 *
 	 * @param type the class or interface to match, or {@code null} for all concrete beans
 	 * @param includeNonSingletons whether to include prototype or scoped beans too
 	 * or just singletons (also applies to FactoryBeans)

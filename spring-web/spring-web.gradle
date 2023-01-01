@@ -83,4 +83,22 @@ dependencies {
 		because("needed by Netty's SelfSignedCertificate on JDK 15+")
 	}
 	testFixturesImplementation("org.eclipse.jetty.websocket:websocket-jetty-server")
+/**
+ * -------------------------------------------------------------------------
+ *	添加org.springframework.web.multipart.commons后需要添加一下依赖
+ * -------------------------------------------------------------------------
+ */
+//	implementation('commons-fileupload:commons-fileupload:1.4')
+//	以本地jar包的方式引入依赖
+//	implementation fileTree(dir: 'src/main/resources/META-INF/lib', includes: ['*.jar'])
+//	optional("javax.servlet:javax.servlet-api") // Servlet 4 for mapping type
+//	optional("javax.servlet.jsp:javax.servlet.jsp-api")
+//	optional("javax.el:javax.el-api")
+//	optional("javax.faces:javax.faces-api")
+//	optional("javax.json.bind:javax.json.bind-api")
+//	optional("javax.mail:javax.mail-api")
+//	optional("javax.validation:validation-api")
+//	optional("javax.xml.bind:jaxb-api")
+//	optional("javax.xml.ws:jaxws-api")
+//	optional("org.glassfish.main:javax.jws")
 }

@@ -374,19 +374,32 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 在当前工厂以及父工厂中查找给定类型及其子类的bean实例，如果子工厂和父工厂存在同名的bean，优先取子工厂的bean实例
+	 *
 	 * Return all beans of the given type or subtypes, also picking up beans defined in
 	 * ancestor bean factories if the current bean factory is a HierarchicalBeanFactory.
+	 * 返回给定类型或子类型的所有bean，如果当前bean工厂是HierarchicalBeanFactory，还将拾取祖先bean工厂中定义的bean。
+	 *
 	 * The returned Map will only contain beans of this type.
+	 * 返回的Map将只包含这种类型的bean。
+	 *
 	 * <p>Does consider objects created by FactoryBeans if the "allowEagerInit" flag is set,
 	 * which means that FactoryBeans will get initialized. If the object created by the
 	 * FactoryBean doesn't match, the raw FactoryBean itself will be matched against the
 	 * type. If "allowEagerInit" is not set, only raw FactoryBeans will be checked
 	 * (which doesn't require initialization of each FactoryBean).
+	 * 如果设置了“allowEagerInit”标志，则考虑由FactoryBeans创建的对象，这意味着FactoryBeans将被初始化。
+	 * 如果FactoryBean创建的对象不匹配，原始FactoryBean本身将根据类型进行匹配。
+	 * 如果没有设置“allowEagerInit”，则只检查原始的FactoryBean(这不需要初始化每个FactoryBean)。
+	 *
 	 * <p><b>Note: Beans of the same name will take precedence at the 'lowest' factory level,
 	 * i.e. such beans will be returned from the lowest factory that they are being found in,
 	 * hiding corresponding beans in ancestor factories.</b> This feature allows for
 	 * 'replacing' beans by explicitly choosing the same bean name in a child factory;
 	 * the bean in the ancestor factory won't be visible then, not even for by-type lookups.
+	 * 注意:同名的bean将在“最低”工厂级别优先，即这样的bean将从它们所在的最低工厂返回，在祖先工厂中隐藏相应的bean。
+	 * 这个特性允许通过显式地在子工厂中选择相同的bean名称来“替换”bean;那时，祖先工厂中的bean将不可见，即使是按类型查找也不可见。
+	 *
 	 * @param lbf the bean factory
 	 * @param type type of bean to match
 	 * @param includeNonSingletons whether to include prototype or scoped beans too
@@ -406,12 +419,21 @@ public abstract class BeanFactoryUtils {
 
 		Assert.notNull(lbf, "ListableBeanFactory must not be null");
 		Map<String, T> result = new LinkedHashMap<>(4);
+		/**
+		 * 在当前工厂中获取所有type类型及其子类的bean实例
+		 */
 		result.putAll(lbf.getBeansOfType(type, includeNonSingletons, allowEagerInit));
 		if (lbf instanceof HierarchicalBeanFactory) {
 			HierarchicalBeanFactory hbf = (HierarchicalBeanFactory) lbf;
 			if (hbf.getParentBeanFactory() instanceof ListableBeanFactory) {
+				/**
+				 * 如果当前工厂存在父工厂，递归在父工厂中查找
+				 */
 				Map<String, T> parentResult = beansOfTypeIncludingAncestors(
 						(ListableBeanFactory) hbf.getParentBeanFactory(), type, includeNonSingletons, allowEagerInit);
+				/**
+				 * 如果子工厂和父工厂中存在同名的bean，优先获取子工厂中的bean实例
+				 */
 				parentResult.forEach((beanName, beanInstance) -> {
 					if (!result.containsKey(beanName) && !hbf.containsLocalBean(beanName)) {
 						result.put(beanName, beanInstance);

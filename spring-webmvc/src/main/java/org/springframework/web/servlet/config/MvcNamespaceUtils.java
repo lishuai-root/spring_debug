@@ -16,9 +16,6 @@
 
 package org.springframework.web.servlet.config;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
@@ -40,6 +37,9 @@ import org.springframework.web.servlet.support.SessionFlashMapManager;
 import org.springframework.web.servlet.theme.FixedThemeResolver;
 import org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator;
 import org.springframework.web.util.UrlPathHelper;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Convenience methods for use in MVC namespace BeanDefinitionParsers.
@@ -70,6 +70,12 @@ public abstract class MvcNamespaceUtils {
 	private static final String HANDLER_MAPPING_INTROSPECTOR_BEAN_NAME = "mvcHandlerMappingIntrospector";
 
 
+	/**
+	 * 添加springmvc容器必要的组件
+	 *
+	 * @param context
+	 * @param source
+	 */
 	public static void registerDefaultComponents(ParserContext context, @Nullable Object source) {
 		registerBeanNameUrlHandlerMapping(context, source);
 		registerHttpRequestHandlerAdapter(context, source);
@@ -221,6 +227,8 @@ public abstract class MvcNamespaceUtils {
 	/**
 	 * Registers an {@link AcceptHeaderLocaleResolver} under a well-known name
 	 * unless already registered.
+	 *
+	 * 除非已经注册，否则将{@link AcceptHeaderLocaleResolver}注册到众所周知的名称下。
 	 */
 	private static void registerLocaleResolver(ParserContext context, @Nullable Object source) {
 		if (!containsBeanInHierarchy(context, DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME)) {
@@ -235,6 +243,8 @@ public abstract class MvcNamespaceUtils {
 	/**
 	 * Registers an {@link FixedThemeResolver} under a well-known name
 	 * unless already registered.
+	 *
+	 * 除非已经注册，否则将{@link FixedThemeResolver}注册在一个众所周知的名称下。
 	 */
 	private static void registerThemeResolver(ParserContext context, @Nullable Object source) {
 		if (!containsBeanInHierarchy(context, DispatcherServlet.THEME_RESOLVER_BEAN_NAME)) {

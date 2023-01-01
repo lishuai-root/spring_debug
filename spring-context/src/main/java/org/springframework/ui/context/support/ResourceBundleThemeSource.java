@@ -16,12 +16,8 @@
 
 package org.springframework.ui.context.support;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.context.HierarchicalMessageSource;
 import org.springframework.context.MessageSource;
@@ -31,11 +27,16 @@ import org.springframework.ui.context.HierarchicalThemeSource;
 import org.springframework.ui.context.Theme;
 import org.springframework.ui.context.ThemeSource;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * {@link ThemeSource} implementation that looks up an individual
  * {@link java.util.ResourceBundle} per theme. The theme name gets
  * interpreted as ResourceBundle basename, supporting a common
  * basename prefix for all themes.
+ * {@link ThemeSource}实现，用于查找单个{@link java.util.ResourceBundle}。
+ * 主题名被解释为ResourceBundle basename，为所有主题支持一个公共的basename前缀。
  *
  * @author Jean-Pierre Pawlak
  * @author Juergen Hoeller

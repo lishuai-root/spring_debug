@@ -41,6 +41,10 @@
 			<param-value>com.shuai.config.initializer.MyMvcContextApplicationContextInitializer</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		<multipart-config>
+<!--			<location>E:\\All_workspace\\IDEA_workspace\\spring-framework-main\\spring_webmvc_debug\\src\\main\\resources\\uploadFiles</location>-->
+			<max-file-size>10485760</max-file-size>
+		</multipart-config>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>webmvc_debug</servlet-name>
@@ -61,5 +65,5 @@
 	<!--		<url-pattern>/</url-pattern>-->
 	<!--	</filter-mapping>-->
 
-
+	
 </web-app>

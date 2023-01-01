@@ -93,7 +93,7 @@ public abstract class AbstractRefreshableWebApplicationContext extends AbstractR
 	@Nullable
 	private String namespace;
 
-	/** the ThemeSource for this ApplicationContext. */
+	/** the ThemeSource for this ApplicationContext. 这个ApplicationContext的ThemeSource(主题来源)。*/
 	@Nullable
 	private ThemeSource themeSource;
 
@@ -194,7 +194,7 @@ public abstract class AbstractRefreshableWebApplicationContext extends AbstractR
 	}
 
 	/**
-	 * Initialize the theme capability.
+	 * Initialize the theme capability. 初始化主题功能。
 	 */
 	@Override
 	protected void onRefresh() {

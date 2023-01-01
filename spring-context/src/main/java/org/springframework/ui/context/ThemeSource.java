@@ -22,6 +22,7 @@ import org.springframework.lang.Nullable;
  * Interface to be implemented by objects that can resolve {@link Theme Themes}.
  * This enables parameterization and internationalization of messages
  * for a given 'theme'.
+ * 由可以解析{@link Theme Themes}的对象实现的接口。这使给定“主题”的消息能够参数化和国际化。
  *
  * @author Jean-Pierre Pawlak
  * @author Juergen Hoeller
