@@ -37,11 +37,17 @@ public interface ApplicationEventPublisher {
 	 * Notify all <strong>matching</strong> listeners registered with this
 	 * application of an application event. Events may be framework events
 	 * (such as ContextRefreshedEvent) or application-specific events.
+	 * 通知所有在此应用程序中注册的<strong>匹配<strong>监听器一个应用程序事件。
+	 * 事件可以是框架事件(例如ContextRefreshedEvent)或特定于应用程序的事件。
+	 *
 	 * <p>Such an event publication step is effectively a hand-off to the
 	 * multicaster and does not imply synchronous/asynchronous execution
 	 * or even immediate execution at all. Event listeners are encouraged
 	 * to be as efficient as possible, individually using asynchronous
 	 * execution for longer-running and potentially blocking operations.
+	 * 这样的事件发布步骤实际上是一个多播程序的交接，并不意味着同步或异步执行，甚至根本不意味着立即执行。
+	 * 我们鼓励事件侦听器尽可能高效，单独使用异步执行来进行长时间运行和可能阻塞的操作。
+	 *
 	 * @param event the event to publish
 	 * @see #publishEvent(Object)
 	 * @see org.springframework.context.event.ContextRefreshedEvent

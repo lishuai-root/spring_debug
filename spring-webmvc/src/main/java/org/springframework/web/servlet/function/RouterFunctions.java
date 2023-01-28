@@ -16,22 +16,17 @@
 
 package org.springframework.web.servlet.function;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
+import org.springframework.web.util.pattern.PathPatternParser;
+
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
-import org.springframework.web.util.pattern.PathPatternParser;
+import java.util.function.*;
 
 /**
  * <strong>Central entry point to Spring's functional web framework.</strong>
@@ -41,6 +36,11 @@ import org.springframework.web.util.pattern.PathPatternParser;
  * given a {@code RequestPredicate} and {@code HandlerFunction}, and to do further
  * {@linkplain #nest(RequestPredicate, RouterFunction) subrouting} on an existing routing
  * function.
+ * <strong> Spring功能web框架的中心入口点。<strong>公开路由功能，
+ * 例如{@linkplain #route() 使用可发现的构建器风格API创建}一个{@code RouterFunction}，
+ * {@linkplain #route(RequestPredicate, HandlerFunction) 创建}一个{@code RouterFunction}，
+ * 并在现有路由函数上进一步执行{@linkplain #nest(RequestPredicate, RouterFunction) 子路由}。
+ *
  *
  * @author Arjen Poutsma
  * @since 5.2
@@ -176,6 +176,10 @@ public abstract class RouterFunctions {
 	 * Changes the {@link PathPatternParser} on the given {@linkplain RouterFunction router function}. This method
 	 * can be used to change the {@code PathPatternParser} properties from the defaults, for instance to change
 	 * {@linkplain PathPatternParser#setCaseSensitive(boolean) case sensitivity}.
+	 * 改变给定路由器函数{@linkplain RouterFunction}上的{@link PathPatternParser}。
+	 * 此方法可用于从默认值更改{@code PathPatternParser}属性，
+	 * 例如更改{@linkplain PathPatternParser#setCaseSensitive(boolean) 大小写敏感性}。
+	 *
 	 * @param routerFunction the router function to change the parser in
 	 * @param parser the parser to change to.
 	 * @param <T> the type of response returned by the handler function
@@ -904,6 +908,8 @@ public abstract class RouterFunctions {
 	/**
 	 * A composed routing function that first invokes one function, and then invokes
 	 * another function (of a different response type) if this route had
+	 * 一个组合路由函数，它首先调用一个函数，然后如果该路由存在，则调用另一个函数(具有不同的响应类型)
+	 *
 	 * {@linkplain Optional#empty() no result}.
 	 */
 	static final class DifferentComposedRouterFunction extends AbstractRouterFunction<ServerResponse> {
@@ -917,6 +923,11 @@ public abstract class RouterFunctions {
 			this.second = second;
 		}
 
+		/**
+		 * 返回匹配给定请求的{@linkplain HandlerFunction 处理函数}。
+		 * @param request the request to route
+		 * @return
+		 */
 		@Override
 		@SuppressWarnings("unchecked")
 		public Optional<HandlerFunction<ServerResponse>> route(ServerRequest request) {
@@ -930,6 +941,12 @@ public abstract class RouterFunctions {
 			}
 		}
 
+		/**
+		 * 接受给定的访问者。
+		 * 默认实现调用{@link RouterFunctions.Visitor#unknown(RouterFunction)};
+		 * 组合的{@code RouterFunction}实现被期望为组成这个路由器函数的所有组件调用{@code accept}。
+		 * @param visitor the visitor to accept
+		 */
 		@Override
 		public void accept(Visitor visitor) {
 			this.first.accept(visitor);

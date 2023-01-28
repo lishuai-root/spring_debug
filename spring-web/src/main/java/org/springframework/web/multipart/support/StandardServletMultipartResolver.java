@@ -134,6 +134,13 @@ public class StandardServletMultipartResolver implements MultipartResolver {
 	}
 
 
+	/**
+	 * 通过请求类型判断是否上传请求
+	 * 判断请求类型是否以"multipart/form-data"或者"multipart/"开头，匹配过程忽略大小写
+	 *
+	 * @param request the servlet request to be evaluated
+	 * @return
+	 */
 	@Override
 	public boolean isMultipart(HttpServletRequest request) {
 		return StringUtils.startsWithIgnoreCase(request.getContentType(),
@@ -145,12 +152,20 @@ public class StandardServletMultipartResolver implements MultipartResolver {
 		return new StandardMultipartHttpServletRequest(request, this.resolveLazily);
 	}
 
+	/**
+	 * 清理上传请求的缓存资源
+	 *
+	 * @param request the request to cleanup resources for
+	 */
 	@Override
 	public void cleanupMultipart(MultipartHttpServletRequest request) {
 		if (!(request instanceof AbstractMultipartHttpServletRequest) ||
 				((AbstractMultipartHttpServletRequest) request).isResolved()) {
 			// To be on the safe side: explicitly delete the parts,
 			// but only actual file parts (for Resin compatibility)
+			/**
+			 * 为了安全起见:显式删除部分，但只删除实际文件部分(为了树脂兼容性)
+			 */
 			try {
 				for (Part part : request.getParts()) {
 					if (request.getFile(part.getName()) != null) {

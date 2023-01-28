@@ -16,6 +16,9 @@
 
 package org.springframework.core.annotation;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 import java.lang.reflect.AnnotatedElement;
@@ -23,9 +26,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
 
 /**
  * Provides access to a collection of merged annotations, usually obtained
@@ -140,7 +140,11 @@ public interface MergedAnnotations extends Iterable<MergedAnnotation<Annotation>
 	/**
 	 * Determine if the specified annotation is either directly present or
 	 * meta-present.
+	 * 确定指定的注释是直接存在还是元存在。
+	 *
 	 * <p>Equivalent to calling {@code get(annotationType).isPresent()}.
+	 * 等价于调用{@code get(annotationType).isPresent()}。
+	 *
 	 * @param annotationType the annotation type to check
 	 * @return {@code true} if the annotation is present
 	 */
@@ -317,6 +321,8 @@ public interface MergedAnnotations extends Iterable<MergedAnnotation<Annotation>
 	 * Create a new {@link MergedAnnotations} instance containing all
 	 * annotations and meta-annotations from the specified element and,
 	 * depending on the {@link SearchStrategy}, related inherited elements.
+	 * 创建一个新的{@link MergedAnnotations}实例，包含来自指定元素的所有注释和元注释，以及相关的继承元素(取决于{@link SearchStrategy})。
+	 *
 	 * @param element the source element
 	 * @param searchStrategy the search strategy to use
 	 * @param repeatableContainers the repeatable containers that may be used by
@@ -334,6 +340,8 @@ public interface MergedAnnotations extends Iterable<MergedAnnotation<Annotation>
 	 * Create a new {@link MergedAnnotations} instance containing all
 	 * annotations and meta-annotations from the specified element and,
 	 * depending on the {@link SearchStrategy}, related inherited elements.
+	 * 创建一个新的{@link MergedAnnotations}实例，包含来自指定元素的所有注释和元注释，以及相关的继承元素(取决于{@link SearchStrategy})。
+	 *
 	 * @param element the source element
 	 * @param searchStrategy the search strategy to use
 	 * @param repeatableContainers the repeatable containers that may be used by
@@ -471,6 +479,9 @@ public interface MergedAnnotations extends Iterable<MergedAnnotation<Annotation>
 		 * Perform a full search of the entire type hierarchy, including
 		 * superclasses and implemented interfaces. Superclass annotations do
 		 * not need to be meta-annotated with {@link Inherited @Inherited}.
+		 *
+		 * 执行整个类型层次结构的完整搜索，包括超类和实现的接口。
+		 * 超类注释不需要使用{@link Inherited @Inherited}进行元注释。
 		 */
 		TYPE_HIERARCHY,
 

@@ -713,9 +713,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				mbd.postProcessed = true;
 			}
 		}
-		if ("apple".equals(beanName)){
-			System.out.println(beanName);
-		}
+//		if ("apple".equals(beanName)){
+//			System.out.println(beanName);
+//		}
 
 		// Eagerly cache singletons to be able to resolve circular references
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.

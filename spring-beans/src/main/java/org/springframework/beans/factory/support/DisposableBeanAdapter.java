@@ -16,32 +16,33 @@
 
 package org.springframework.beans.factory.support;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
+import org.springframework.lang.Nullable;
+import org.springframework.util.*;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
-
 /**
  * Adapter that implements the {@link DisposableBean} and {@link Runnable}
+ * 实现{@link DisposableBean}和{@link Runnable}的适配器
+ *
  * interfaces performing various destruction steps on a given bean instance:
+ * 对给定bean实例执行各种销毁步骤的接口:
  * <ul>
  * <li>DestructionAwareBeanPostProcessors;
+ * 感知破坏的Bean后处理器;
  * <li>the bean implementing DisposableBean itself;
+ * 实现DisposableBean本身的bean;
  * <li>a custom destroy method specified on the bean definition.
+ * 在bean定义中指定的自定义销毁方法。
  * </ul>
  *
  * @author Juergen Hoeller

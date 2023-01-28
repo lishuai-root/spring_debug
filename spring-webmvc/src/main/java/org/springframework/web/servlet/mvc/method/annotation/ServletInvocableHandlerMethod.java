@@ -16,15 +16,8 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.concurrent.Callable;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.context.MessageSource;
 import org.springframework.core.KotlinDetector;
 import org.springframework.core.MethodParameter;
@@ -45,6 +38,12 @@ import org.springframework.web.method.support.InvocableHandlerMethod;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.View;
 import org.springframework.web.util.NestedServletException;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.concurrent.Callable;
 
 /**
  * Extends {@link InvocableHandlerMethod} with the ability to handle return
@@ -107,6 +106,8 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 	/**
 	 * Invoke the method and handle the return value through one of the
 	 * configured {@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers}.
+	 * 调用该方法并通过其中一个配置的HandlerMethodReturnValueHandler处理返回值。
+	 *
 	 * @param webRequest the current request
 	 * @param mavContainer the ModelAndViewContainer for this request
 	 * @param providedArgs "given" arguments matched by type (not resolved)
@@ -114,7 +115,14 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 	public void invokeAndHandle(ServletWebRequest webRequest, ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
 
+		/**
+		 * 调用处理程序处理请求
+		 */
 		Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
+
+		/**
+		 * 根据{@link ResponseStatus}注释设置响应状态。
+		 */
 		setResponseStatus(webRequest);
 
 		if (returnValue == null) {
@@ -145,6 +153,8 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 
 	/**
 	 * Set the response status according to the {@link ResponseStatus} annotation.
+	 *
+	 * 根据{@link ResponseStatus}注释设置响应状态。
 	 */
 	private void setResponseStatus(ServletWebRequest webRequest) throws IOException {
 		HttpStatus status = getResponseStatus();
@@ -155,9 +165,15 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 		HttpServletResponse response = webRequest.getResponse();
 		if (response != null) {
 			String reason = getResponseStatusReason();
+			/**
+			 * 如果{@link ResponseStatus}注解中定义了原因，则相应错误码和原因
+			 */
 			if (StringUtils.hasText(reason)) {
 				response.sendError(status.value(), reason);
 			}
+			/**
+			 * 只设置响应码
+			 */
 			else {
 				response.setStatus(status.value());
 			}

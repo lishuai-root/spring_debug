@@ -16,15 +16,7 @@
 
 package org.springframework.web.servlet.mvc.condition;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
@@ -32,9 +24,12 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.mvc.condition.HeadersRequestCondition.HeaderExpression;
+
+import java.util.*;
 
 /**
  * A logical disjunction (' || ') request condition to match a request's
@@ -43,6 +38,11 @@ import org.springframework.web.servlet.mvc.condition.HeadersRequestCondition.Hea
  * {@link RequestMapping#consumes()} and {@link RequestMapping#headers()}
  * where the header name is 'Content-Type'. Regardless of which syntax is
  * used, the semantics are the same.
+ *
+ * 逻辑分离(' || ')请求条件，将请求的'Content-Type'报头匹配到媒体类型表达式列表。
+ * 支持两种媒体类型表达式，分别在{@link RequestMapping#consumes()}和{@link RequestMapping#headers()}中描述，其中头名称为'Content-Type'。
+ * 无论使用哪种语法，语义都是相同的。
+ *
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -55,6 +55,11 @@ public final class ConsumesRequestCondition extends AbstractRequestCondition<Con
 
 	private final List<ConsumeMediaTypeExpression> expressions;
 
+	/**
+	 * 是否期望请求有请求体，如果在使用了{@link org.springframework.web.bind.annotation.RequestBody}注解
+	 * 则会通过{@link RequestBody#required()}属性设置，如果存在多个{@link org.springframework.web.bind.annotation.RequestBody}注解
+	 * 只会以第一个为准
+	 */
 	private boolean bodyRequired = true;
 
 
@@ -136,6 +141,7 @@ public final class ConsumesRequestCondition extends AbstractRequestCondition<Con
 
 	/**
 	 * Whether the condition has any media type expressions.
+	 * 条件是否有任何媒体类型表达式。
 	 */
 	@Override
 	public boolean isEmpty() {
@@ -154,11 +160,18 @@ public final class ConsumesRequestCondition extends AbstractRequestCondition<Con
 
 	/**
 	 * Whether this condition should expect requests to have a body.
+	 * 这种情况是否期望请求具有主体。
+	 *
 	 * <p>By default this is set to {@code true} in which case it is assumed a
 	 * request body is required and this condition matches to the "Content-Type"
 	 * header or falls back on "Content-Type: application/octet-stream".
+	 * 默认情况下，它被设置为{@code true}，在这种情况下，假设需要一个请求体，
+	 * 并且这个条件匹配“Content-Type”报头或退回到“Content-Type: application/octet-stream”。
+	 *
 	 * <p>If set to {@code false}, and the request does not have a body, then this
 	 * condition matches automatically, i.e. without checking expressions.
+	 * 如果设置为{@code false}，并且请求没有body，则该条件自动匹配，即不检查表达式。
+	 *
 	 * @param bodyRequired whether requests are expected to have a body
 	 * @since 5.2
 	 */

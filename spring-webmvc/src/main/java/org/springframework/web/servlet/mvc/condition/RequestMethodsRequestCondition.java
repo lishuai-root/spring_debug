@@ -16,16 +16,8 @@
 
 package org.springframework.web.servlet.mvc.condition;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
@@ -34,9 +26,13 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.cors.CorsUtils;
 
+import java.util.*;
+
 /**
  * A logical disjunction (' || ') request condition that matches a request
  * against a set of {@link RequestMethod RequestMethods}.
+ *
+ * 一个逻辑分离(' || ')请求条件，用于匹配一组{@link RequestMethod RequestMethods}请求。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -44,7 +40,9 @@ import org.springframework.web.cors.CorsUtils;
  */
 public final class RequestMethodsRequestCondition extends AbstractRequestCondition<RequestMethodsRequestCondition> {
 
-	/** Per HTTP method cache to return ready instances from getMatchingCondition. */
+	/** Per HTTP method cache to return ready instances from getMatchingCondition.
+	 * 每个HTTP方法缓存从getMatchingCondition返回就绪实例。
+	 * */
 	private static final Map<String, RequestMethodsRequestCondition> requestMethodConditionCache;
 
 	static {
@@ -78,6 +76,7 @@ public final class RequestMethodsRequestCondition extends AbstractRequestConditi
 
 	/**
 	 * Returns all {@link RequestMethod RequestMethods} contained in this condition.
+	 * 返回此条件中包含的所有{@link RequestMethod RequestMethods}。
 	 */
 	public Set<RequestMethod> getMethods() {
 		return this.methods;
@@ -116,11 +115,16 @@ public final class RequestMethodsRequestCondition extends AbstractRequestConditi
 	/**
 	 * Check if any of the HTTP request methods match the given request and
 	 * return an instance that contains the matching HTTP request method only.
+	 * 检查是否有任何HTTP请求方法与给定的请求匹配，并返回一个只包含匹配的HTTP请求方法的实例。
+	 *
 	 * @param request the current request
 	 * @return the same instance if the condition is empty (unless the request
 	 * method is HTTP OPTIONS), a new condition with the matched request method,
 	 * or {@code null} if there is no match or the condition is empty and the
 	 * request method is OPTIONS.
+	 * 如果条件为空(除非请求方法是HTTP OPTIONS)，则使用相同的实例，
+	 * 如果不匹配或条件为空且请求方法为OPTIONS，则使用匹配的请求方法的新条件{@code null}。
+	 *
 	 */
 	@Override
 	@Nullable
@@ -145,6 +149,8 @@ public final class RequestMethodsRequestCondition extends AbstractRequestConditi
 	 * On a pre-flight request match to the would-be, actual request.
 	 * Hence empty conditions is a match, otherwise try to match to the HTTP
 	 * method in the "Access-Control-Request-Method" header.
+	 * 飞行前的请求与可能的实际请求相匹配。
+	 * 因此空条件是一个匹配，否则尝试匹配“Access-Control-Request-Method”报头中的HTTP方法。
 	 */
 	@Nullable
 	private RequestMethodsRequestCondition matchPreFlight(HttpServletRequest request) {

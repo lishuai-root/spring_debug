@@ -16,6 +16,9 @@
 
 package org.springframework.http;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.*;
+
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -30,27 +33,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedCaseInsensitiveMap;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 /**
  * A data structure representing HTTP request or response headers, mapping String header names
@@ -127,6 +113,8 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	public static final String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
 	/**
 	 * The CORS {@code Access-Control-Allow-Origin} response header field name.
+	 *
+	 * CORS {@code Access-Control-Allow-Origin}响应报头字段名。
 	 * @see <a href="https://www.w3.org/TR/cors/">CORS W3C recommendation</a>
 	 */
 	public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
@@ -147,6 +135,8 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	public static final String ACCESS_CONTROL_REQUEST_HEADERS = "Access-Control-Request-Headers";
 	/**
 	 * The CORS {@code Access-Control-Request-Method} request header field name.
+	 * CORS {@code Access-Control-Request-Method}请求头字段名。
+	 *
 	 * @see <a href="https://www.w3.org/TR/cors/">CORS W3C recommendation</a>
 	 */
 	public static final String ACCESS_CONTROL_REQUEST_METHOD = "Access-Control-Request-Method";
@@ -182,6 +172,7 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	public static final String CONTENT_ENCODING = "Content-Encoding";
 	/**
 	 * The HTTP {@code Content-Disposition} header field name.
+	 * HTTP {@code Content-Disposition}报头字段名。
 	 * @see <a href="https://tools.ietf.org/html/rfc6266">RFC 6266</a>
 	 */
 	public static final String CONTENT_DISPOSITION = "Content-Disposition";
@@ -292,6 +283,8 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	public static final String MAX_FORWARDS = "Max-Forwards";
 	/**
 	 * The HTTP {@code Origin} header field name.
+	 * HTTP {@code Origin}报头字段名。
+	 *
 	 * @see <a href="https://tools.ietf.org/html/rfc6454">RFC 6454</a>
 	 */
 	public static final String ORIGIN = "Origin";
@@ -367,6 +360,8 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	public static final String USER_AGENT = "User-Agent";
 	/**
 	 * The HTTP {@code Vary} header field name.
+	 * HTTP {@code Vary}报头字段名
+	 *
 	 * @see <a href="https://tools.ietf.org/html/rfc7231#section-7.1.4">Section 7.1.4 of RFC 7231</a>
 	 */
 	public static final String VARY = "Vary";

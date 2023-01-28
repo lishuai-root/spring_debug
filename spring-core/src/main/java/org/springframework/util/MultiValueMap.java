@@ -16,13 +16,14 @@
 
 package org.springframework.util;
 
+import org.springframework.lang.Nullable;
+
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.lang.Nullable;
-
 /**
  * Extension of the {@code Map} interface that stores multiple values.
+ * {@code Map}接口的扩展，用于存储多个值。
  *
  * @author Arjen Poutsma
  * @since 3.0

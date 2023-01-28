@@ -43,6 +43,8 @@ public abstract class ReflectionUtils {
 	/**
 	 * Pre-built MethodFilter that matches all non-bridge non-synthetic methods
 	 * which are not declared on {@code java.lang.Object}.
+	 * 预构建的MethodFilter，匹配所有未在{@code java.lang.Object}上声明的非桥接非合成方法。
+	 *
 	 * @since 3.0.5
 	 */
 	public static final MethodFilter USER_DECLARED_METHODS =
@@ -221,6 +223,8 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
+	 * 通过方法名称和参数列表在指定类及其父类中查找具体方法
+	 *
 	 * Attempt to find a {@link Method} on the supplied class with the supplied name
 	 * and parameter types. Searches all superclasses up to {@code Object}.
 	 * 尝试在提供的类上用提供的名称和参数类型找到一个{@link Method}。搜索{@code Object}之前的所有超类。
@@ -264,8 +268,14 @@ public abstract class ReflectionUtils {
 
 	/**
 	 * Invoke the specified {@link Method} against the supplied target object with no arguments.
+	 * 针对所提供的不带参数的目标对象调用指定的{@link Method}。
+	 *
 	 * The target object can be {@code null} when invoking a static {@link Method}.
+	 * 当调用静态方法时，目标对象可以是{@code null}。
+	 *
 	 * <p>Thrown exceptions are handled via a call to {@link #handleReflectionException}.
+	 * 抛出的异常通过调用{@link #handleReflectionException}来处理。
+	 *
 	 * @param method the method to invoke
 	 * @param target the target object to invoke the method on
 	 * @return the invocation result, if any
@@ -280,7 +290,11 @@ public abstract class ReflectionUtils {
 	 * Invoke the specified {@link Method} against the supplied target object with the
 	 * supplied arguments. The target object can be {@code null} when invoking a
 	 * static {@link Method}.
+	 * 使用所提供的参数针对所提供的目标对象调用指定的{@link Method}。当调用静态方法时，目标对象可以是{@code null}。
+	 *
 	 * <p>Thrown exceptions are handled via a call to {@link #handleReflectionException}.
+	 * 抛出的异常通过调用{@link #handleReflectionException}来处理。
+	 *
 	 * @param method the method to invoke
 	 * @param target the target object to invoke the method on
 	 * @param args the invocation arguments (may be {@code null})

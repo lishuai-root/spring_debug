@@ -58,15 +58,15 @@ public final class BridgeMethodResolver {
 
 	/**
 	 * Find the original method for the supplied {@link Method bridge Method}.
-	 * 找到所提供的{@link method 桥接方法}的原始方法。
+	 * 找到所提供的{@link Method 桥接方法}的原始方法。
 	 *
-	 * 桥接方法是由Java编译器与源自源代码的方法一起创建的{@linkplain isSynthetic合成}方法。
+	 * 桥接方法是由Java编译器与源自源代码的方法一起创建的{@linkplain isSynthetic 合成}方法。
 	 * Java编译器在各种情况下使用桥接方法来跨越Java编程语言语义和JVM语义的差异。
 	 *
 	 * <p>It is safe to call this method passing in a non-bridge {@link Method} instance.
 	 * In such a case, the supplied {@link Method} instance is returned directly to the caller.
 	 * Callers are <strong>not</strong> required to check for bridging before calling this method.
-	 * 在非桥接{@link method}实例中调用此方法是安全的。
+	 * 在非桥接{@link Method}实例中调用此方法是安全的。
 	 * 在这种情况下，提供的{@link Method}实例将直接返回给调用者。调用方<strong>而不是<strong>需要在调用此方法之前检查桥接。
 	 *
 	 * @param bridgeMethod the method to introspect
@@ -188,7 +188,7 @@ public final class BridgeMethodResolver {
 	 * returns {@code false}.
 	 *
 	 * 如果根据declaringType解析所有类型后，
-	 * 提供的{@link MethodgetGenericParameterTypes()泛型方法}和具体方法{@link Method}的{@link Type}签名都相等，则返回{@code false}。
+	 * 提供的{@link Method#getGenericParameterTypes() 泛型方法}和具体方法{@link Method}的{@link Type}签名都相等，则返回{@code false}。
 	 */
 	private static boolean isResolvedTypeMatch(Method genericMethod, Method candidateMethod, Class<?> declaringClass) {
 		Type[] genericParameters = genericMethod.getGenericParameterTypes();

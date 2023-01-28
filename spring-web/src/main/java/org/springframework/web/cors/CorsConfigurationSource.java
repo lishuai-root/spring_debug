@@ -24,6 +24,8 @@ import org.springframework.lang.Nullable;
  * Interface to be implemented by classes (usually HTTP request handlers) that
  * provides a {@link CorsConfiguration} instance based on the provided request.
  *
+ * 由类(通常是HTTP请求处理程序)实现的接口，该类根据所提供的请求提供{@link CorsConfiguration}实例。
+ *
  * @author Sebastien Deleuze
  * @since 4.2
  */
@@ -31,6 +33,8 @@ public interface CorsConfigurationSource {
 
 	/**
 	 * Return a {@link CorsConfiguration} based on the incoming request.
+	 * 根据传入的请求返回一个{@link CorsConfiguration}。
+	 *
 	 * @return the associated {@link CorsConfiguration}, or {@code null} if none
 	 */
 	@Nullable

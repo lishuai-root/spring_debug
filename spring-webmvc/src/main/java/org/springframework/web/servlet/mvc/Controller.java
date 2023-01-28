@@ -29,6 +29,10 @@ import org.springframework.web.servlet.ModelAndView;
  * participate in an MVC workflow. Controllers are comparable to the
  * notion of a Struts {@code Action}.
  *
+ * 基本控制器接口，代表一个接收{@code HttpServletRequest}和{@code HttpServletResponse}实例的组件，
+ * 就像一个{@code HttpServlet}，但能够参与MVC工作流。控制器类似于Struts {@code Action}的概念。
+ *
+ *
  * <p>Any implementation of the Controller interface should be a
  * <i>reusable, thread-safe</i> class, capable of handling multiple
  * HTTP requests throughout the lifecycle of an application. To be able to

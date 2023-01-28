@@ -16,16 +16,8 @@
 
 package org.springframework.web.method.support;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-
 import org.springframework.context.MessageSource;
-import org.springframework.core.CoroutinesUtils;
-import org.springframework.core.DefaultParameterNameDiscoverer;
-import org.springframework.core.KotlinDetector;
-import org.springframework.core.MethodParameter;
-import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.core.*;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.WebDataBinder;
@@ -33,6 +25,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.HandlerMethod;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * Extension of {@link HandlerMethod} that invokes the underlying method with
@@ -153,7 +149,11 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	/**
 	 * Get the method argument values for the current request, checking the provided
 	 * argument values and falling back to the configured argument resolvers.
+	 * 获取当前请求的方法参数值，检查提供的参数值并返回到配置的参数解析器。
+	 *
 	 * <p>The resulting array will be passed into {@link #doInvoke}.
+	 * 生成的数组将被传递到{@link #doInvoke}。
+	 *
 	 * @since 5.1.2
 	 */
 	protected Object[] getMethodArgumentValues(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer,
@@ -194,6 +194,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 
 	/**
 	 * Invoke the handler method with the given argument values.
+	 * 使用给定的参数值调用处理程序方法。
 	 */
 	@Nullable
 	protected Object doInvoke(Object... args) throws Exception {

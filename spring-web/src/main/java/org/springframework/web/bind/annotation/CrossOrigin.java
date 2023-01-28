@@ -16,15 +16,11 @@
 
 package org.springframework.web.bind.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.List;
-
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.cors.CorsConfiguration;
+
+import java.lang.annotation.*;
+import java.util.List;
 
 /**
  * Annotation for permitting cross-origin requests on specific handler classes
@@ -66,7 +62,9 @@ public @interface CrossOrigin {
 	@Deprecated
 	boolean DEFAULT_ALLOW_CREDENTIALS = false;
 
-	/** @deprecated as of Spring 5.0, in favor of {@link CorsConfiguration#applyPermitDefaultValues} */
+	/** @deprecated as of Spring 5.0, in favor of {@link CorsConfiguration#applyPermitDefaultValues}
+	 * 从Spring 5.0起已弃用，改用{@link CorsConfiguration#applyPermitDefaultValues}
+	 * */
 	@Deprecated
 	long DEFAULT_MAX_AGE = 1800;
 
@@ -80,8 +78,11 @@ public @interface CrossOrigin {
 	/**
 	 * A list of origins for which cross-origin requests are allowed. Please,
 	 * see {@link CorsConfiguration#setAllowedOrigins(List)} for details.
+	 * 允许跨源请求的源列表。详情请参见{@link CorsConfiguration#setAllowedOrigins(List)}。
+	 *
 	 * <p>By default all origins are allowed unless {@link #originPatterns} is
 	 * also set in which case {@code originPatterns} is used instead.
+	 * 默认情况下，所有的源都是允许的，除非还设置了{@link #originPatterns}，在这种情况下使用{@code originPatterns}代替。
 	 */
 	@AliasFor("value")
 	String[] origins() default {};
@@ -98,12 +99,19 @@ public @interface CrossOrigin {
 	/**
 	 * The list of request headers that are permitted in actual requests,
 	 * possibly {@code "*"}  to allow all headers.
+	 * 实际请求中允许的请求头列表，可能是{@code "*"}允许所有的头。
+	 *
 	 * <p>Allowed headers are listed in the {@code Access-Control-Allow-Headers}
 	 * response header of preflight requests.
+	 * 预飞行请求的{@code Access-Control-Allow-Headers}响应头中列出了允许的头。
+	 *
 	 * <p>A header name is not required to be listed if it is one of:
 	 * {@code Cache-Control}, {@code Content-Language}, {@code Expires},
 	 * {@code Last-Modified}, or {@code Pragma} as per the CORS spec.
+	 * 根据CORS规范，如果头名是下列情况之一，则不需要列出:{@code Cache-Control}、{@code Content-Language}、{@code Expires}、{@code Last-Modified}或{@code Pragma}。
+	 *
 	 * <p>By default all requested headers are allowed.
+	 * 默认情况下，所有请求的头都被允许。
 	 */
 	String[] allowedHeaders() default {};
 
@@ -122,8 +130,11 @@ public @interface CrossOrigin {
 
 	/**
 	 * The list of supported HTTP request methods.
+	 * 支持的HTTP请求方法的列表。
+	 *
 	 * <p>By default the supported methods are the same as the ones to which a
 	 * controller method is mapped.
+	 * 默认情况下，支持的方法与控制器方法映射到的方法相同。
 	 */
 	RequestMethod[] methods() default {};
 
@@ -132,13 +143,19 @@ public @interface CrossOrigin {
 	 * cross domain requests, to the annotated endpoint. The configured value is
 	 * set on the {@code Access-Control-Allow-Credentials} response header of
 	 * preflight requests.
+	 * 浏览器是否应该向带注释的端点发送凭据，例如跨域请求的cookie。
+	 * 配置的值设置在预飞行请求的{@code Access-Control-Allow-Credentials}响应头上。
+	 *
 	 * <p><strong>NOTE:</strong> Be aware that this option establishes a high
 	 * level of trust with the configured domains and also increases the surface
 	 * attack of the web application by exposing sensitive user-specific
 	 * information such as cookies and CSRF tokens.
+	 * 注意:<strong>注意:<strong>注意:此选项与配置的域建立了高度信任，并通过暴露敏感的用户特定信息(如cookie和CSRF令牌)增加了对web应用程序的表面攻击。
+	 *
 	 * <p>By default this is not set in which case the
 	 * {@code Access-Control-Allow-Credentials} header is also not set and
 	 * credentials are therefore not allowed.
+	 * 默认情况下，不设置{@code Access-Control-Allow-Credentials}头也不设置，因此不允许凭据。
 	 */
 	String allowCredentials() default "";
 

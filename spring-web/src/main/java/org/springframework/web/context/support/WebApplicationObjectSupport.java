@@ -16,10 +16,7 @@
 
 package org.springframework.web.context.support;
 
-import java.io.File;
-
 import jakarta.servlet.ServletContext;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.lang.Nullable;
@@ -27,6 +24,8 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.WebUtils;
+
+import java.io.File;
 
 /**
  * Convenient superclass for application objects running in a {@link WebApplicationContext}.
@@ -58,6 +57,8 @@ public abstract class WebApplicationObjectSupport extends ApplicationObjectSuppo
 	/**
 	 * Overrides the base class behavior to enforce running in an ApplicationContext.
 	 * All accessors will throw IllegalStateException if not running in a context.
+	 * 重写基类行为以强制在ApplicationContext中运行。如果不在上下文中运行，所有访问器都将抛出IllegalStateException。
+	 *
 	 * @see #getApplicationContext()
 	 * @see #getMessageSourceAccessor()
 	 * @see #getWebApplicationContext()
@@ -87,9 +88,14 @@ public abstract class WebApplicationObjectSupport extends ApplicationObjectSuppo
 	/**
 	 * Subclasses may override this for custom initialization based
 	 * on the ServletContext that this application object runs in.
+	 * 子类可以基于运行此应用程序对象的ServletContext重写此自定义初始化。
+	 *
 	 * <p>The default implementation is empty. Called by
 	 * {@link #initApplicationContext(org.springframework.context.ApplicationContext)}
 	 * as well as {@link #setServletContext(jakarta.servlet.ServletContext)}.
+	 * 默认实现为空。
+	 * 由{@link #initApplicationContext(org.springframework.context.ApplicationContext)}和{@link #setServletContext(jakarta.servlet.ServletContext)}调用。
+	 *
 	 * @param servletContext the ServletContext that this application object runs in
 	 * (never {@code null})
 	 */

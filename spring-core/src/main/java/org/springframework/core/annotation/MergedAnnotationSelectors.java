@@ -51,6 +51,8 @@ public abstract class MergedAnnotationSelectors {
 	/**
 	 * Select the first directly declared annotation when possible. If no direct
 	 * annotations are declared then the nearest annotation is selected.
+	 * 尽可能选择第一个直接声明的注释。如果没有声明直接注释，则选择最近的注释。
+	 *
 	 * @return a selector that picks the first directly declared annotation whenever possible
 	 */
 	@SuppressWarnings("unchecked")

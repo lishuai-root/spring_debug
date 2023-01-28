@@ -16,12 +16,8 @@
 
 package org.springframework.web.servlet.mvc.method;
 
-import java.util.List;
-import java.util.Set;
-
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -31,23 +27,19 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.handler.AbstractHandlerMapping;
-import org.springframework.web.servlet.mvc.condition.ConsumesRequestCondition;
-import org.springframework.web.servlet.mvc.condition.HeadersRequestCondition;
-import org.springframework.web.servlet.mvc.condition.ParamsRequestCondition;
-import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
-import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
-import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
-import org.springframework.web.servlet.mvc.condition.RequestCondition;
-import org.springframework.web.servlet.mvc.condition.RequestConditionHolder;
-import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition;
+import org.springframework.web.servlet.mvc.condition.*;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.util.ServletRequestPathUtils;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Request mapping information. A composite for the following conditions:
+ * 请求映射信息。复合材料适用于以下条件:
  * <ol>
  * <li>{@link PathPatternsRequestCondition} with parsed {@code PathPatterns} or
  * {@link PatternsRequestCondition} with String patterns via {@code PathMatcher}
@@ -260,6 +252,7 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 	/**
 	 * Return the HTTP request methods of this {@link RequestMappingInfo};
 	 * or instance with 0 request methods (never {@code null}).
+	 * 返回这个{@link RequestMappingInfo}的HTTP请求方法;或实例的请求方法为0(从不{@code null})。
 	 */
 	public RequestMethodsRequestCondition getMethodsCondition() {
 		return this.methodsCondition;
@@ -284,6 +277,8 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 	/**
 	 * Return the "consumes" condition of this {@link RequestMappingInfo};
 	 * or instance with 0 consumes expressions (never {@code null}).
+	 *
+	 * 返回这个{@link RequestMappingInfo}的"consume "条件;或者0的实例消耗表达式(从不{@code null})。
 	 */
 	public ConsumesRequestCondition getConsumesCondition() {
 		return this.consumesCondition;
@@ -323,6 +318,8 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 	 * Combine "this" request mapping info (i.e. the current instance) with
 	 * another request mapping info instance.
 	 * <p>Example: combine type- and method-level request mappings.
+	 * 将“this”请求映射信息(即当前实例)与另一个请求映射信息实例结合起来。<p>示例:结合类型级和方法级请求映射。
+	 *
 	 * @return a new request mapping info instance; never {@code null}
 	 */
 	@Override
@@ -366,9 +363,13 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 	 * Checks if all conditions in this request mapping info match the provided
 	 * request and returns a potentially new request mapping info with conditions
 	 * tailored to the current request.
+	 * 检查此请求映射信息中的所有条件是否与所提供的请求匹配，并返回一个潜在的新请求映射信息，其中包含为当前请求量身定制的条件。
+	 *
 	 * <p>For example the returned instance may contain the subset of URL
 	 * patterns that match to the current request, sorted with best matching
 	 * patterns on top.
+	 * 例如，返回的实例可能包含与当前请求匹配的URL模式子集，以最佳匹配模式排序。
+	 *
 	 * @return a new instance in case of a match; or {@code null} otherwise
 	 */
 	@Override
@@ -599,6 +600,7 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 
 		/**
 		 * Provide additional configuration needed for request mapping purposes.
+		 * 提供请求映射所需的额外配置。
 		 */
 		Builder options(BuilderConfiguration options);
 
@@ -864,8 +866,12 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 
 	/**
 	 * Container for configuration options used for request mapping purposes.
+	 * 用于请求映射目的的配置选项的容器。
+	 *
 	 * Such configuration is required to create RequestMappingInfo instances but
 	 * is typically used across all RequestMappingInfo instances.
+	 * 创建RequestMappingInfo实例需要这样的配置，但通常用于所有RequestMappingInfo实例。
+	 *
 	 * @since 4.2
 	 * @see Builder#options
 	 */
@@ -950,7 +956,10 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 
 		/**
 		 * Set whether to apply trailing slash matching in PatternsRequestCondition.
+		 * 在PatternsRequestCondition中设置是否应用尾斜杠匹配。
+		 *
 		 * <p>By default this is set to 'true'.
+		 * 默认情况下，这被设置为'true'。
 		 */
 		public void setTrailingSlashMatch(boolean trailingSlashMatch) {
 			this.trailingSlashMatch = trailingSlashMatch;
@@ -965,10 +974,15 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 
 		/**
 		 * Set whether to apply suffix pattern matching in PatternsRequestCondition.
+		 * 在PatternsRequestCondition中设置是否应用后缀模式匹配。
+		 *
 		 * <p>By default this is set to 'false'.
 		 * @see #setRegisteredSuffixPatternMatch(boolean)
 		 * @deprecated as of 5.2.4. See deprecation note on
 		 * {@link RequestMappingHandlerMapping#setUseSuffixPatternMatch(boolean)}.
+		 * @see #setRegisteredSuffixPatternMatch(boolean) @自5.2.4起已弃用。
+		 * 请参阅{@link RequestMappingHandlerMapping#setUseSuffixPatternMatch(boolean)}上的弃用说明。
+		 *
 		 */
 		@Deprecated
 		public void setSuffixPatternMatch(boolean suffixPatternMatch) {
@@ -988,12 +1002,17 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 		/**
 		 * Set whether suffix pattern matching should be restricted to registered
 		 * file extensions only. Setting this property also sets
+		 * 设置后缀模式匹配是否仅限于已注册的文件扩展名。设置此属性也会设置
+		 *
 		 * {@code suffixPatternMatch=true} and requires that a
 		 * {@link #setContentNegotiationManager} is also configured in order to
 		 * obtain the registered file extensions.
+		 * {@code suffixPatternMatch=true}并且需要配置一个{@link #setContentNegotiationManager}以获得注册的文件扩展名。
+		 *
 		 * @deprecated as of 5.2.4. See class-level note in
 		 * {@link RequestMappingHandlerMapping} on the deprecation of path
 		 * extension config options.
+		 * 自5.2.4起已弃用。请参阅{@link RequestMappingHandlerMapping}中关于路径扩展配置选项弃用的类级注释。
 		 */
 		@Deprecated
 		public void setRegisteredSuffixPatternMatch(boolean registeredSuffixPatternMatch) {
@@ -1032,7 +1051,10 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 
 		/**
 		 * Set the ContentNegotiationManager to use for the ProducesRequestCondition.
+		 * 设置ContentNegotiationManager用于ProducesRequestCondition。
+		 *
 		 * <p>By default this is not set.
+		 * 默认情况下没有设置。
 		 */
 		public void setContentNegotiationManager(ContentNegotiationManager contentNegotiationManager) {
 			this.contentNegotiationManager = contentNegotiationManager;

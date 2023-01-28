@@ -16,18 +16,9 @@
 
 package org.springframework.web.context.request.async;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.RejectedExecutionException;
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.SyncTaskExecutor;
@@ -36,11 +27,22 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.async.DeferredResult.DeferredResultHandler;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
+
 /**
  * The central class for managing asynchronous request processing, mainly intended
  * as an SPI and not typically used directly by application classes.
+ * 用于管理异步请求处理的中心类，主要用作SPI，通常不被应用程序类直接使用。
  *
  * <p>An async scenario starts with request processing as usual in a thread (T1).
+ * 异步场景通常从线程(T1)中的请求处理开始。
+ *
  * Concurrent request handling can be initiated by calling
  * {@link #startCallableProcessing(Callable, Object...) startCallableProcessing} or
  * {@link #startDeferredResultProcessing(DeferredResult, Object...) startDeferredResultProcessing},
@@ -49,6 +51,11 @@ import org.springframework.web.context.request.async.DeferredResult.DeferredResu
  * result in a third thread (T3). Within the dispatched thread (T3), the saved
  * result can be accessed via {@link #getConcurrentResult()} or its presence
  * detected via {@link #hasConcurrentResult()}.
+ * 并发请求处理可以通过调用{@link #startCallableProcessing(Callable, Object...) startCallableProcessing}
+ * 或{@link #startDeferredResultProcessing(DeferredResult, Object...) startDeferredResultProcessing}来启动，
+ * 这两者都会在单独的线程(T2)中产生结果。结果被保存，请求被分派到容器，在第三个线程(T3)中使用保存的结果恢复处理。
+ * 在分派的线程(T3)中，可以通过{@link #getConcurrentResult()}访问保存的结果，也可以通过{@link #hasConcurrentResult()}检测它的存在。
+ *
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -88,6 +95,8 @@ public final class WebAsyncManager {
 	 * Whether the concurrentResult is an error. If such errors remain unhandled, some
 	 * Servlet containers will call AsyncListener#onError at the end, after the ASYNC
 	 * and/or the ERROR dispatch (Boot's case), and we need to ignore those.
+	 *
+	 * concurrentResult是否为错误。如果这样的错误仍然没有得到处理，一些Servlet容器将在ASYNC and或ERROR分派(Boot的情况下)结束时调用AsyncListener#onError，我们需要忽略这些。
 	 */
 	private volatile boolean errorHandlingInProgress;
 
@@ -137,6 +146,10 @@ public final class WebAsyncManager {
 	 * of "false" means concurrent handling was either not started or possibly
 	 * that it has completed and the request was dispatched for further
 	 * processing of the concurrent result.
+	 *
+	 * 当前请求的选定处理程序是否选择异步处理请求。返回值“true”表示正在进行并发处理，响应将保持打开状态。
+	 * 返回值为“false”意味着并发处理没有启动，或者并发处理已经完成，请求被分派以进一步处理并发结果。
+	 *
 	 */
 	public boolean isConcurrentHandlingStarted() {
 		return (this.asyncWebRequest != null && this.asyncWebRequest.isAsyncStarted());
@@ -144,6 +157,7 @@ public final class WebAsyncManager {
 
 	/**
 	 * Whether a result value exists as a result of concurrent handling.
+	 * 并发处理的结果值是否存在。
 	 */
 	public boolean hasConcurrentResult() {
 		return (this.concurrentResult != RESULT_NONE);
@@ -190,6 +204,8 @@ public final class WebAsyncManager {
 
 	/**
 	 * Register a {@link CallableProcessingInterceptor} under the given key.
+	 * 在给定键下注册一个{@link CallableProcessingInterceptor}。
+	 *
 	 * @param key the key
 	 * @param interceptor the interceptor to register
 	 */
@@ -253,6 +269,9 @@ public final class WebAsyncManager {
 	 * from the task execution is saved and the request dispatched in order to
 	 * resume processing of that result. If the task raises an Exception then
 	 * the saved result will be the raised Exception.
+	 * 启动并发请求处理，并使用{@link #setTaskExecutor(AsyncTaskExecutor) AsyncTaskExecutor}执行给定的任务。
+	 * 任务执行的结果被保存，请求被分派，以便恢复对该结果的处理。如果任务引发了一个异常，那么保存的结果将是引发的异常。
+	 *
 	 * @param callable a unit of work to be executed asynchronously
 	 * @param processingContext additional context to save that can be accessed
 	 * via {@link #getConcurrentResultContext()}

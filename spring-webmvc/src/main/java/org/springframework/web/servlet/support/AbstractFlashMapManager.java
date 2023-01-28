@@ -16,17 +16,10 @@
 
 package org.springframework.web.servlet.support;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -36,8 +29,15 @@ import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.util.UrlPathHelper;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 /**
  * A base class for {@link FlashMapManager} implementations.
+ * FlashMapManager实现的基类。
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -67,6 +67,7 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 
 	/**
 	 * Return the amount of time in seconds before a FlashMap expires.
+	 * 返回FlashMap过期前的秒数。
 	 */
 	public int getFlashMapTimeout() {
 		return this.flashMapTimeout;
@@ -124,6 +125,7 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 
 	/**
 	 * Return a list of expired FlashMap instances contained in the given list.
+	 * 返回给定列表中包含的过期FlashMap实例的列表。
 	 */
 	private List<FlashMap> getExpiredFlashMaps(List<FlashMap> allMaps) {
 		List<FlashMap> result = new ArrayList<>();
@@ -137,6 +139,8 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 
 	/**
 	 * Return a FlashMap contained in the given list that matches the request.
+	 * 返回与请求匹配的给定列表中包含的FlashMap。
+	 *
 	 * @return a matching FlashMap or {@code null}
 	 */
 	@Nullable
@@ -190,23 +194,47 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 		return ServletUriComponentsBuilder.fromPath("/").query(query).build().getQueryParams();
 	}
 
+	/**
+	 * 将给定的{@link FlashMap}保存在当前请求的会话中
+	 *
+	 * @param flashMap the FlashMap to save
+	 * @param request the current request
+	 * @param response the current response
+	 */
 	@Override
 	public final void saveOutputFlashMap(FlashMap flashMap, HttpServletRequest request, HttpServletResponse response) {
 		if (CollectionUtils.isEmpty(flashMap)) {
 			return;
 		}
 
+		/**
+		 * 解析当前{@link FlashMap}的目标URL
+		 */
 		String path = decodeAndNormalizePath(flashMap.getTargetRequestPath(), request);
 		flashMap.setTargetRequestPath(path);
 
+		/**
+		 * 设置当前flashMap的过期时间，System.currentTimeMillis() + 180 * 1000
+		 */
 		flashMap.startExpirationPeriod(getFlashMapTimeout());
 
+		/**
+		 * 获取session的互斥锁，默认使用session中的"org.springframework.web.util.WebUtils.MUTEX"属性值，
+		 * 如果为空，则使用当前session
+		 */
 		Object mutex = getFlashMapsMutex(request);
 		if (mutex != null) {
 			synchronized (mutex) {
+				/**
+				 * 当前session已经存在的{@link FlashMap}集合，默认是session中"org.springframework.web.servlet.support.SessionFlashMapManager.FLASH_MAPS"的属性值
+				 * 如果不存在，创建新的{@link FlashMap}集合
+				 */
 				List<FlashMap> allFlashMaps = retrieveFlashMaps(request);
 				allFlashMaps = (allFlashMaps != null ? allFlashMaps : new CopyOnWriteArrayList<>());
 				allFlashMaps.add(flashMap);
+				/**
+				 * 将{@link FlashMap}集合更新到session中
+				 */
 				updateFlashMaps(allFlashMaps, request, response);
 			}
 		}
@@ -233,6 +261,8 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 
 	/**
 	 * Retrieve saved FlashMap instances from the underlying storage.
+	 * 从底层存储中检索已保存的FlashMap实例。
+	 *
 	 * @param request the current request
 	 * @return a List with FlashMap instances, or {@code null} if none found
 	 */
@@ -241,6 +271,8 @@ public abstract class AbstractFlashMapManager implements FlashMapManager {
 
 	/**
 	 * Update the FlashMap instances in the underlying storage.
+	 * 更新底层存储中的FlashMap实例。
+	 *
 	 * @param flashMaps a (potentially empty) list of FlashMap instances to save
 	 * @param request the current request
 	 * @param response the current response

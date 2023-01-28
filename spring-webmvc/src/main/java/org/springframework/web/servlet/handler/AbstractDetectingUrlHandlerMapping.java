@@ -52,32 +52,58 @@ public abstract class AbstractDetectingUrlHandlerMapping extends AbstractUrlHand
 	/**
 	 * Calls the {@link #detectHandlers()} method in addition to the
 	 * superclass's initialization.
+	 * 除了父类的初始化外，还调用{@link #detectHandlers()}方法。
 	 */
 	@Override
 	public void initApplicationContext() throws ApplicationContextException {
+		/**
+		 * 查找上下文中所有的映射拦截器，继承了{@link MappedInterceptor}的bean实例
+		 */
 		super.initApplicationContext();
+		/**
+		 * 查找上下文中所有名称或者别名中包含了以"/"开头的名称的bean，并注册请求路径和处理程序的映射关系
+		 */
 		detectHandlers();
 	}
 
 	/**
+	 * 查找上下文中所有名称或者别名中包含了以"/"开头的名称的bean，并注册请求路径和处理程序的映射关系
+	 *
 	 * Register all handlers found in the current ApplicationContext.
+	 * 注册当前ApplicationContext中找到的所有处理程序。
+	 *
 	 * <p>The actual URL determination for a handler is up to the concrete
 	 * {@link #determineUrlsForHandler(String)} implementation. A bean for
 	 * which no such URLs could be determined is simply not considered a handler.
+	 * 处理程序的实际URL确定取决于具体的{@link #determineUrlsForHandler(String)}实现。无法确定此类url的bean不能被视为处理程序。
+	 *
 	 * @throws org.springframework.beans.BeansException if the handler couldn't be registered
 	 * @see #determineUrlsForHandler(String)
 	 */
 	protected void detectHandlers() throws BeansException {
 		ApplicationContext applicationContext = obtainApplicationContext();
+		/**
+		 * 获取上下文中所有的bean名称
+		 */
 		String[] beanNames = (this.detectHandlersInAncestorContexts ?
 				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(applicationContext, Object.class) :
 				applicationContext.getBeanNamesForType(Object.class));
 
 		// Take any bean name that we can determine URLs for.
+		/**
+		 * 取我们可以确定其url的任何bean名。检查bean名称是否以"/"开头
+		 */
 		for (String beanName : beanNames) {
+			/**
+			 * 获取当前bean名称及其别名中所有以"/"开头的名称
+			 * 如果存在以"/"开头的名称，则认为当前bean是请求处理程序
+			 */
 			String[] urls = determineUrlsForHandler(beanName);
 			if (!ObjectUtils.isEmpty(urls)) {
 				// URL paths found: Let's consider it a handler.
+				/**
+				 * 找到的URL路径:让我们把它看作一个处理程序。
+				 */
 				registerHandler(urls, beanName);
 			}
 		}

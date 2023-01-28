@@ -35,10 +35,20 @@ import org.springframework.web.servlet.handler.HandlerMethodMappingNamingStrateg
 public class RequestMappingInfoHandlerMethodMappingNamingStrategy
 		implements HandlerMethodMappingNamingStrategy<RequestMappingInfo> {
 
-	/** Separator between the type and method-level parts of a HandlerMethod mapping name. */
+	/** Separator between the type and method-level parts of a HandlerMethod mapping name.
+	 * HandlerMethod映射名称的类型和方法级部分之间的分隔符。
+	 * */
 	public static final String SEPARATOR = "#";
 
 
+	/**
+	 * 为给定的处理程序和requestMapping创建名称
+	 * 名称格式:类名的大写字母 + "#" + 方法名称
+	 *
+	 * @param handlerMethod the handler method
+	 * @param mapping the mapping
+	 * @return
+	 */
 	@Override
 	public String getName(HandlerMethod handlerMethod, RequestMappingInfo mapping) {
 		if (mapping.getName() != null) {

@@ -16,21 +16,16 @@
 
 package org.springframework.core.annotation;
 
+import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
+import org.springframework.lang.Nullable;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Inherited;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Proxy;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
-import org.springframework.lang.Nullable;
 
 /**
  * A single merged annotation returned from a {@link MergedAnnotations}
@@ -78,6 +73,9 @@ public interface MergedAnnotation<A extends Annotation> {
 	 * {@linkplain #isDirectlyPresent() directly present} and
 	 * {@linkplain #isMetaPresent() meta-present} annotations within the context
 	 * of the {@link SearchStrategy} used.
+	 * 确定注释是否出现在源上。
+	 * 在使用的{@link SearchStrategy}上下文中考虑{@linkplain #isDirectlyPresent() 直接呈现}和{@linkplain #isMetaPresent() 元呈现}注释。
+	 *
 	 * @return {@code true} if the annotation is present
 	 */
 	boolean isPresent();
@@ -481,18 +479,31 @@ public interface MergedAnnotation<A extends Annotation> {
 	/**
 	 * Create a type-safe synthesized version of this merged annotation that can
 	 * be used directly in code.
+	 * 创建可以直接在代码中使用的合并注释的类型安全的合成版本。
+	 *
 	 * <p>The result is synthesized using a JDK {@link Proxy} and as a result may
 	 * incur a computational cost when first invoked.
+	 * 结果是使用JDK {@link Proxy}合成的，因此在第一次调用时可能会产生计算成本。
+	 *
 	 * <p>If this merged annotation was created {@linkplain #from(Annotation) from}
 	 * an annotation instance, that annotation will be returned unmodified if it is
 	 * not <em>synthesizable</em>. An annotation is considered synthesizable if
 	 * one of the following is true.
+	 * 如果这个合并的注释是在一个注释实例中创建的{@linkplain #from(Annotation) from}，那么如果该注释不<em>synthesizable<em>，
+	 * 则该注释将未经修改地返回。如果下列条件之一为真，则认为注释是可合成的。
+	 *
 	 * <ul>
 	 * <li>The annotation declares attributes annotated with {@link AliasFor @AliasFor}.</li>
+	 * 注释声明了用{@link AliasFor @AliasFor}注释的属性
+	 *
 	 * <li>The annotation is a composed annotation that relies on convention-based
 	 * annotation attribute overrides in meta-annotations.</li>
+	 * 该注释是一个复合注释，它依赖于元注释中基于约定的注释属性重写
+	 *
 	 * <li>The annotation declares attributes that are annotations or arrays of
 	 * annotations that are themselves synthesizable.</li>
+	 * 注释声明了注解属性或注解数组，这些属性本身是可合成的
+	 *
 	 * </ul>
 	 * @return a synthesized version of the annotation or the original annotation
 	 * unmodified
@@ -503,10 +514,16 @@ public interface MergedAnnotation<A extends Annotation> {
 	/**
 	 * Optionally create a type-safe synthesized version of this annotation based
 	 * on a condition predicate.
+	 * 可选地，根据条件谓词创建此注释的类型安全的合成版本。
+	 *
 	 * <p>The result is synthesized using a JDK {@link Proxy} and as a result may
 	 * incur a computational cost when first invoked.
+	 * 结果是使用JDK {@link Proxy}合成的，因此在第一次调用时可能会产生计算成本。
+	 *
 	 * <p>Consult the documentation for {@link #synthesize()} for an explanation
 	 * of what is considered synthesizable.
+	 * 参考文档{@link #synthesize()}了解什么是可合成的。
+	 *
 	 * @param condition the test to determine if the annotation can be synthesized
 	 * @return an optional containing the synthesized version of the annotation or
 	 * an empty optional if the condition doesn't match
@@ -519,6 +536,8 @@ public interface MergedAnnotation<A extends Annotation> {
 	/**
 	 * Create a {@link MergedAnnotation} that represents a missing annotation
 	 * (i.e. one that is not present).
+	 * 创建一个{@link MergedAnnotation}来表示一个缺失的注释(即一个不存在的注释)。
+	 *
 	 * @return an instance representing a missing annotation
 	 */
 	static <A extends Annotation> MergedAnnotation<A> missing() {

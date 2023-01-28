@@ -16,17 +16,19 @@
 
 package org.springframework.web.util.pattern;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.PatternSyntaxException;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.web.util.pattern.PatternParseException.PatternMessage;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.PatternSyntaxException;
+
 /**
  * Parser for URI template patterns. It breaks the path pattern into a number of
  * {@link PathElement PathElements} in a linked list. Instances are reusable but are not thread-safe.
+ *
+ * URI模板模式解析器。它将路径模式分解为链表中的许多{@link PathElement PathElements}。实例可以重用，但不是线程安全的。
  *
  * @author Andy Clement
  * @since 5.0

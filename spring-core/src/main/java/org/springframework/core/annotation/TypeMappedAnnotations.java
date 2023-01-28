@@ -16,24 +16,20 @@
 
 package org.springframework.core.annotation;
 
+import org.springframework.lang.Nullable;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.springframework.lang.Nullable;
-
 /**
  * {@link MergedAnnotations} implementation that searches for and adapts
  * annotations and meta-annotations using {@link AnnotationTypeMappings}.
+ * {@link MergedAnnotations}实现，使用{@link annotationtypemaps}搜索和调整注释和元注释。
  *
  * @author Phillip Webb
  * @since 5.2
@@ -90,11 +86,27 @@ final class TypeMappedAnnotations implements MergedAnnotations {
 	}
 
 
+	/**
+	 * 检查当前元素是否存在指定类型的注解
+	 *
+	 * @param annotationType the annotation type to check
+	 * @param <A>
+	 * @return
+	 */
 	@Override
 	public <A extends Annotation> boolean isPresent(Class<A> annotationType) {
+
+		/**
+		 * 过滤器用来过滤("java.lang", "org.springframework.lang")包下的注解
+		 * {@link AnnotationFilter#PLAIN}
+		 */
 		if (this.annotationFilter.matches(annotationType)) {
 			return false;
 		}
+		/**
+		 * 检查当前元素上的注解，以及当前元素上注解的继承注解中是否存在annotationType类型的注解
+		 * 在扫描请求处理器时为{@link Controller}或者{@link RequestMapping}注解
+		 */
 		return Boolean.TRUE.equals(scan(annotationType,
 				IsPresent.get(this.repeatableContainers, this.annotationFilter, false)));
 	}
@@ -248,6 +260,9 @@ final class TypeMappedAnnotations implements MergedAnnotations {
 	static MergedAnnotations from(AnnotatedElement element, SearchStrategy searchStrategy,
 			RepeatableContainers repeatableContainers, AnnotationFilter annotationFilter) {
 
+		/**
+		 * 如果指定元素为jdk自带的元素或者注解为空，返回null
+		 */
 		if (AnnotationsScanner.isKnownEmpty(element, searchStrategy)) {
 			return NONE;
 		}
@@ -313,12 +328,21 @@ final class TypeMappedAnnotations implements MergedAnnotations {
 			for (Annotation annotation : annotations) {
 				if (annotation != null) {
 					Class<? extends Annotation> type = annotation.annotationType();
+					/**
+					 * 如果当前类上存在指定类型的注解，返回{@link Boolean#TRUE}
+					 */
 					if (type != null && !this.annotationFilter.matches(type)) {
 						if (type == requiredType || type.getName().equals(requiredType)) {
 							return Boolean.TRUE;
 						}
+						/**
+						 * 获取当前注解继承的注解
+						 */
 						Annotation[] repeatedAnnotations =
 								this.repeatableContainers.findRepeatedAnnotations(annotation);
+						/**
+						 * 递归在继承的注解中查找指定注解
+						 */
 						if (repeatedAnnotations != null) {
 							Boolean result = doWithAnnotations(
 									requiredType, aggregateIndex, source, repeatedAnnotations);

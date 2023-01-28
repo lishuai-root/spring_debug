@@ -16,8 +16,6 @@
 
 package org.springframework.web.servlet.config.annotation;
 
-import java.util.List;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.Formatter;
 import org.springframework.format.FormatterRegistry;
@@ -33,13 +31,17 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
+import java.util.List;
+
 /**
  * Defines callback methods to customize the Java-based configuration for
  * Spring MVC enabled via {@code @EnableWebMvc}.
+ * 定义回调方法来定制基于java的Spring MVC配置，通过{@code @EnableWebMvc}启用。
  *
  * <p>{@code @EnableWebMvc}-annotated configuration classes may implement
  * this interface to be called back and given a chance to customize the
  * default configuration.
+ * {@code @EnableWebMvc}注释的配置类可以实现此接口，以便被回调并有机会自定义默认配置。
  *
  * @author Rossen Stoyanchev
  * @author Keith Donald
@@ -52,6 +54,9 @@ public interface WebMvcConfigurer {
 	 * Help with configuring {@link HandlerMapping} path matching options such as
 	 * whether to use parsed {@code PathPatterns} or String pattern matching
 	 * with {@code PathMatcher}, whether to match trailing slashes, and more.
+	 * 帮助配置{@link HandlerMapping}路径匹配选项，例如是否使用解析的{@code PathPatterns}或字符串模式匹配{@code PathMatcher}，
+	 * 是否匹配尾随斜杠，等等。
+	 *
 	 * @since 4.0.3
 	 * @see PathMatchConfigurer
 	 */
@@ -60,12 +65,14 @@ public interface WebMvcConfigurer {
 
 	/**
 	 * Configure content negotiation options.
+	 * 配置内容协商选项。
 	 */
 	default void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 	}
 
 	/**
 	 * Configure asynchronous request handling options.
+	 * 配置异步请求处理选项。
 	 */
 	default void configureAsyncSupport(AsyncSupportConfigurer configurer) {
 	}
@@ -75,6 +82,10 @@ public interface WebMvcConfigurer {
 	 * Servlet container's "default" servlet. A common use case for this is when
 	 * the {@link DispatcherServlet} is mapped to "/" thus overriding the
 	 * Servlet container's default handling of static resources.
+	 *
+	 * 配置一个处理程序，通过转发到Servlet容器的“默认”Servlet来委托未处理的请求。
+	 * 一个常见的用例是{@link DispatcherServlet}被映射到“/”，从而覆盖Servlet容器对静态资源的默认处理。
+	 *
 	 */
 	default void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 	}
@@ -82,6 +93,8 @@ public interface WebMvcConfigurer {
 	/**
 	 * Add {@link Converter Converters} and {@link Formatter Formatters} in addition to the ones
 	 * registered by default.
+	 *
+	 * 添加{@link Converter 转换器}和{@link Formatter Formatters}除了默认注册的。
 	 */
 	default void addFormatters(FormatterRegistry registry) {
 	}
@@ -89,8 +102,11 @@ public interface WebMvcConfigurer {
 	/**
 	 * Add Spring MVC lifecycle interceptors for pre- and post-processing of
 	 * controller method invocations and resource handler requests.
+	 * 添加Spring MVC生命周期拦截器，用于控制器方法调用和资源处理程序请求的预处理和后处理。
+	 *
 	 * Interceptors can be registered to apply to all requests or be limited
 	 * to a subset of URL patterns.
+	 * 拦截器可以注册为应用于所有请求，也可以限制为URL模式的一个子集。
 	 */
 	default void addInterceptors(InterceptorRegistry registry) {
 	}
@@ -99,6 +115,8 @@ public interface WebMvcConfigurer {
 	 * Add handlers to serve static resources such as images, js, and, css
 	 * files from specific locations under web application root, the classpath,
 	 * and others.
+	 *
+	 * 添加处理程序来提供静态资源，例如图像、js和css文件，这些文件来自web应用程序根目录、类路径和其他特定位置。
 	 * @see ResourceHandlerRegistry
 	 */
 	default void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -108,11 +126,17 @@ public interface WebMvcConfigurer {
 	 * Configure "global" cross origin request processing. The configured CORS
 	 * mappings apply to annotated controllers, functional endpoints, and static
 	 * resources.
+	 * 配置“全局”跨源请求处理。配置的CORS映射应用于带注释的控制器、功能端点和静态资源。
+	 *
 	 * <p>Annotated controllers can further declare more fine-grained config via
 	 * {@link org.springframework.web.bind.annotation.CrossOrigin @CrossOrigin}.
+	 * 带注释的控制器可以通过{@link org.springframework.web.bind.annotation.CrossOrigin @CrossOrigin}进一步声明更细粒度的配置。
+	 *
 	 * In such cases "global" CORS configuration declared here is
 	 * {@link org.springframework.web.cors.CorsConfiguration#combine(CorsConfiguration) combined}
 	 * with local CORS configuration defined on a controller method.
+	 * 在这种情况下，这里声明的“全局”CORS配置是{@link org.springframework.web.cors.CorsConfiguration#combine(CorsConfiguration) 与控制器方法上定义的本地CORS配置相结合}。
+	 *
 	 * @since 4.2
 	 * @see CorsRegistry
 	 * @see CorsConfiguration#combine(CorsConfiguration)

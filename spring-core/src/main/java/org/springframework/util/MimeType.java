@@ -16,34 +16,31 @@
 
 package org.springframework.util;
 
+import org.springframework.lang.Nullable;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeSet;
-
-import org.springframework.lang.Nullable;
+import java.util.*;
 
 /**
  * Represents a MIME Type, as originally defined in RFC 2046 and subsequently
  * used in other Internet protocols including HTTP.
+ * 表示MIME类型，最初在rfc2046中定义，随后用于其他互联网协议，包括HTTP。
  *
  * <p>This class, however, does not contain support for the q-parameters used
  * in HTTP content negotiation. Those can be found in the subclass
  * {@code org.springframework.http.MediaType} in the {@code spring-web} module.
+ * 但是，该类不支持HTTP内容协商中使用的q-parameters。
+ * 这些可以在{@code spring-web}模块中的{@code org.springframework.http.MediaType}子类中找到。
  *
  * <p>Consists of a {@linkplain #getType() type} and a {@linkplain #getSubtype() subtype}.
  * Also has functionality to parse MIME Type values from a {@code String} using
  * {@link #valueOf(String)}. For more parsing options see {@link MimeTypeUtils}.
+ * 由{@linkplain #getType() 类型}和{@linkplain #getSubtype() 子类型}组成。
+ * 还具有使用{@link #valueOf(String)}解析来自{@code String}的MIME类型值的功能。
+ * 有关更多解析选项，请参阅{@link MimeTypeUtils}。
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller

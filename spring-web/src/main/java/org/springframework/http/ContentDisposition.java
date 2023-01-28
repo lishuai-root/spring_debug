@@ -16,6 +16,11 @@
 
 package org.springframework.http;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StreamUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -27,17 +32,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StreamUtils;
-
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME;
 
 /**
  * Representation of the Content-Disposition type and parameters as defined in RFC 6266.
+ * RFC 6266中定义的Content-Disposition类型和参数的表示。
  *
  * @author Sebastien Deleuze
  * @author Juergen Hoeller
@@ -329,6 +330,8 @@ public final class ContentDisposition {
 
 	/**
 	 * Parse a {@literal Content-Disposition} header value as defined in RFC 2183.
+	 * 解析RFC 2183中定义的{@literal Content-Disposition}头值。
+	 *
 	 * @param contentDisposition the {@literal Content-Disposition} header value
 	 * @return the parsed content disposition
 	 * @see #toString()

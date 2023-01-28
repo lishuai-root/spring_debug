@@ -16,19 +16,8 @@
 
 package org.springframework.web.servlet.mvc.method;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.InvalidMediaTypeException;
@@ -47,14 +36,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.handler.AbstractHandlerMethodMapping;
-import org.springframework.web.servlet.mvc.condition.NameValueExpression;
-import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
-import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
-import org.springframework.web.servlet.mvc.condition.ProducesRequestCondition;
-import org.springframework.web.servlet.mvc.condition.RequestCondition;
+import org.springframework.web.servlet.mvc.condition.*;
 import org.springframework.web.util.ServletRequestPathUtils;
 import org.springframework.web.util.WebUtils;
 import org.springframework.web.util.pattern.PathPattern;
+
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Abstract base class for classes for which {@link RequestMappingInfo} defines
@@ -102,6 +90,9 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	 * Check if the given RequestMappingInfo matches the current request and
 	 * return a (potentially new) instance with conditions that match the
 	 * current request -- for example with a subset of URL patterns.
+	 * 检查给定的RequestMappingInfo是否与当前请求匹配，并返回一个(可能是新的)实例，
+	 * 该实例具有与当前请求匹配的条件——例如URL模式的子集。
+	 *
 	 * @return an info in case of a match; or {@code null} otherwise.
 	 */
 	@Override
@@ -131,6 +122,8 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 
 	/**
 	 * Expose URI template variables, matrix variables, and producible media types in the request.
+	 * 在请求中公开URI模板变量、矩阵变量和可生产的媒体类型。
+	 *
 	 * @see HandlerMapping#URI_TEMPLATE_VARIABLES_ATTRIBUTE
 	 * @see HandlerMapping#MATRIX_VARIABLES_ATTRIBUTE
 	 * @see HandlerMapping#PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE
@@ -229,6 +222,8 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 	/**
 	 * Iterate all RequestMappingInfo's once again, look if any match by URL at
 	 * least and raise exceptions according to what doesn't match.
+	 * 再次迭代所有RequestMappingInfo，至少通过URL查看是否有匹配，并根据不匹配的内容引发异常。
+	 *
 	 * @throws HttpRequestMethodNotSupportedException if there are matches by URL
 	 * but not by HTTP method
 	 * @throws HttpMediaTypeNotAcceptableException if there are matches by URL
@@ -243,6 +238,9 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 			return null;
 		}
 
+		/**
+		 * 如果有HTTP请求，并且当前请求不是跨域预检请求，抛出异常
+		 */
 		if (helper.hasMethodsMismatch()) {
 			Set<String> methods = helper.getAllowedMethods();
 			if (HttpMethod.OPTIONS.matches(request.getMethod())) {
@@ -305,6 +303,7 @@ public abstract class RequestMappingInfoHandlerMapping extends AbstractHandlerMe
 
 		/**
 		 * Any partial matches for "methods"?
+		 * “方法”是否有部分匹配?
 		 */
 		public boolean hasMethodsMismatch() {
 			for (PartialMatch match : this.partialMatches) {

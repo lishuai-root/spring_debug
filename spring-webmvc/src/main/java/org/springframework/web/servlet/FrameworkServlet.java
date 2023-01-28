@@ -198,7 +198,9 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	/** Should we publish a ServletRequestHandledEvent at the end of each request?. */
 	private boolean publishEvents = true;
 
-	/** Expose LocaleContext and RequestAttributes as inheritable for child threads?. */
+	/** Expose LocaleContext and RequestAttributes as inheritable for child threads?.
+	 * 将LocaleContext和RequestAttributes公开为子线程的可继承?
+	 * */
 	private boolean threadContextInheritable = false;
 
 	/** Should we dispatch an HTTP OPTIONS request to {@link #doService}?. */
@@ -1011,6 +1013,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 	/**
 	 * Return this servlet's WebApplicationContext.
+	 * 返回这个servlet的WebApplicationContext。
 	 */
 	@Nullable
 	public final WebApplicationContext getWebApplicationContext() {
@@ -1202,7 +1205,11 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 	/**
 	 * Process this request, publishing an event regardless of the outcome.
+	 * 处理此请求，不管结果如何，发布一个事件。
+	 *
 	 * <p>The actual event handling is performed by the abstract
+	 * 实际的事件处理由摘要执行
+	 *
 	 * {@link #doService} template method.
 	 */
 	protected final void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -1211,15 +1218,42 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		long startTime = System.currentTimeMillis();
 		Throwable failureCause = null;
 
+		/**
+		 * 返回与当前线程关联的LocaleContext(如果有的话)。
+		 */
 		LocaleContext previousLocaleContext = LocaleContextHolder.getLocaleContext();
+
+		/**
+		 * 为当前线程创建一个新的LocaleContext，用于确定当前区域设置的策略界面。
+		 */
 		LocaleContext localeContext = buildLocaleContext(request);
 
+		/**
+		 * 返回当前绑定到线程的RequestAttributes。
+		 */
 		RequestAttributes previousAttributes = RequestContextHolder.getRequestAttributes();
+		/**
+		 * 如果previousAttributes为空，或者是{@link ServletRequestAttributes}类型，则为当前请求创建一个新的类型为{@link ServletRequestAttributes}的请求参数对象
+		 * 否则返回null，保留预先绑定的RequestAttributes实例
+		 */
 		ServletRequestAttributes requestAttributes = buildRequestAttributes(request, response, previousAttributes);
 
+		/**
+		 * 获取当前请求的{@link WebAsyncManager}，如果没有找到，则创建它并将其与请求关联。
+		 */
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
+
+		/**
+		 * 在给定键下注册一个{@link CallableProcessingInterceptor}。
+		 *
+		 * 注册一个异步处理的拦截器，可以在异步任务的各个阶段进行回调，比如：异步任务交给异步任务执行器之前回调，异步任务执行前后回调，
+		 * 超时等异常时回调，任务完成时回调。。。
+		 */
 		asyncManager.registerCallableInterceptor(FrameworkServlet.class.getName(), new RequestBindingInterceptor());
 
+		/**
+		 * 通过ThreadLocal暴露当前请求的区域设置和请求属性
+		 */
 		initContextHolders(request, localeContext, requestAttributes);
 
 		try {
@@ -1235,7 +1269,13 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 
 		finally {
+			/**
+			 * 恢复当前线程的LocaleContext和RequestAttributes
+			 */
 			resetContextHolders(request, previousLocaleContext, previousAttributes);
+			/**
+			 * 执行请求的销毁和session的更新回调
+			 */
 			if (requestAttributes != null) {
 				requestAttributes.requestCompleted();
 			}
@@ -1260,11 +1300,15 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * Build ServletRequestAttributes for the given request (potentially also
 	 * holding a reference to the response), taking pre-bound attributes
 	 * (and their type) into consideration.
+	 * 为给定的请求构建ServletRequestAttributes(可能还包含对响应的引用)，将预先绑定的属性(及其类型)考虑在内。
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @param previousAttributes pre-bound RequestAttributes instance, if any
 	 * @return the ServletRequestAttributes to bind, or {@code null} to preserve
 	 * the previously bound instance (or not binding any, if none bound before)
+	 * ServletRequestAttributes来绑定，或者{@code null}来保留之前绑定的实例(或者不绑定任何实例，如果之前没有绑定)
+	 *
 	 * @see RequestContextHolder#setRequestAttributes
 	 */
 	@Nullable
@@ -1275,13 +1319,23 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			return new ServletRequestAttributes(request, response);
 		}
 		else {
-			return null;  // preserve the pre-bound RequestAttributes instance
+			return null;  // preserve the pre-bound RequestAttributes instance 保留预先绑定的RequestAttributes实例
 		}
 	}
 
+	/**
+	 * 通过ThreadLocal暴露当前请求的区域设置和请求属性
+	 *
+	 * @param request 当前请求
+	 * @param localeContext 当前请求的区域设置
+	 * @param requestAttributes 当前请求的请求属性
+	 */
 	private void initContextHolders(HttpServletRequest request,
 			@Nullable LocaleContext localeContext, @Nullable RequestAttributes requestAttributes) {
 
+		/**
+		 * {@link #threadContextInheritable} : 将LocaleContext和RequestAttributes公开为子线程的可继承?
+		 */
 		if (localeContext != null) {
 			LocaleContextHolder.setLocaleContext(localeContext, this.threadContextInheritable);
 		}
@@ -1290,6 +1344,13 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 	}
 
+	/**
+	 * 恢复当前线程的LocaleContext和RequestAttributes
+	 *
+	 * @param request
+	 * @param prevLocaleContext
+	 * @param previousAttributes
+	 */
 	private void resetContextHolders(HttpServletRequest request,
 			@Nullable LocaleContext prevLocaleContext, @Nullable RequestAttributes previousAttributes) {
 
@@ -1385,10 +1446,16 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	/**
 	 * Subclasses must implement this method to do the work of request handling,
 	 * receiving a centralized callback for GET, POST, PUT and DELETE.
+	 * 子类必须实现此方法来完成请求处理工作，接收GET、POST、PUT和DELETE的集中回调。
+	 *
 	 * <p>The contract is essentially the same as that for the commonly overridden
 	 * {@code doGet} or {@code doPost} methods of HttpServlet.
+	 * 该契约本质上与HttpServlet中通常被重写的{@code doGet}或{@code doPost}方法的契约相同。
+	 *
 	 * <p>This class intercepts calls to ensure that exception handling and
 	 * event publication takes place.
+	 * 该类拦截调用，以确保发生异常处理和事件发布。
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @throws Exception in case of any kind of processing failure
@@ -1418,6 +1485,9 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	/**
 	 * CallableProcessingInterceptor implementation that initializes and resets
 	 * FrameworkServlet's context holders, i.e. LocaleContextHolder and RequestContextHolder.
+	 *
+	 * CallableProcessingInterceptor实现，初始化和重置FrameworkServlet的上下文持有者，
+	 * 即LocaleContextHolder和RequestContextHolder。
 	 */
 	private class RequestBindingInterceptor implements CallableProcessingInterceptor {
 

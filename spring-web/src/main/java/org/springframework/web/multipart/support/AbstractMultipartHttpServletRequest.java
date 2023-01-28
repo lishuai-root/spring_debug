@@ -16,15 +16,8 @@
 
 package org.springframework.web.multipart.support;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
@@ -32,6 +25,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.util.*;
 
 /**
  * Abstract base implementation of the MultipartHttpServletRequest interface.
@@ -44,12 +39,17 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public abstract class AbstractMultipartHttpServletRequest extends HttpServletRequestWrapper
 		implements MultipartHttpServletRequest {
 
+	/**
+	 * 保存上传请求中上传的文件集合
+	 */
 	@Nullable
 	private MultiValueMap<String, MultipartFile> multipartFiles;
 
 
 	/**
 	 * Wrap the given HttpServletRequest in a MultipartHttpServletRequest.
+	 * 将给定的HttpServletRequest包装在MultipartHttpServletRequest中。
+	 *
 	 * @param request the request to wrap
 	 */
 	protected AbstractMultipartHttpServletRequest(HttpServletRequest request) {
@@ -125,6 +125,8 @@ public abstract class AbstractMultipartHttpServletRequest extends HttpServletReq
 	/**
 	 * Set a Map with parameter names as keys and list of MultipartFile objects as values.
 	 * To be invoked by subclasses on initialization.
+	 *
+	 * 设置一个Map，其中参数名作为键，MultipartFile对象列表作为值。在初始化时由子类调用。
 	 */
 	protected final void setMultipartFiles(MultiValueMap<String, MultipartFile> multipartFiles) {
 		this.multipartFiles =

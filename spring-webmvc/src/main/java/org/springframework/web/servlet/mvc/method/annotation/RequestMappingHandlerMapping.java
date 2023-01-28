@@ -16,17 +16,7 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
-
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.MergedAnnotation;
@@ -54,10 +44,23 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMappi
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+
 /**
+ * 当前类用来解析和匹配使用了{@link Controller}和{@link RequestMapping}注解的处理请求bean
+ *
  * Creates {@link RequestMappingInfo} instances from type and method-level
  * {@link RequestMapping @RequestMapping} annotations in
  * {@link Controller @Controller} classes.
+ *
+ * 从{@link Controller @Controller}类中的类型和方法级{@link RequestMapping @RequestMapping}注释创建{@link RequestMappingInfo}实例。
  *
  * <p><strong>Deprecation Note:</strong></p> In 5.2.4,
  * {@link #setUseSuffixPatternMatch(boolean) useSuffixPatternMatch} and
@@ -67,6 +70,12 @@ import org.springframework.web.util.pattern.PathPatternParser;
  * {@link org.springframework.web.accept.ContentNegotiationManagerFactoryBean
  * ContentNegotiationManagerFactoryBean}). For further context, please read issue
  * <a href="https://github.com/spring-projects/spring-framework/issues/24179">#24719</a>.
+ *
+ * 在5.2.4中，{@link #setUseSuffixPatternMatch(boolean) useSuffixPatternMatch}和{@link #setUseRegisteredSuffixPatternMatch(boolean) useRegisteredSuffixPatternMatch}被弃用，
+ * 以阻止在请求映射和内容协商中使用路径扩展(在{@link org.springframework.web.accept.ContentNegotiationManagerFactoryBean ContentNegotiationManagerFactoryBean}中也有类似的弃用)。
+ * 有关进一步的上下文，请阅读issue
+ * <a href="https://github.com/spring-projects/spring-framework/issues/24179">#24719</a>.
+ *
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -95,15 +104,27 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	/**
 	 * Whether to use suffix pattern match (".*") when matching patterns to
 	 * requests. If enabled a method mapped to "/users" also matches to "/users.*".
+	 * 在匹配模式到请求时是否使用后缀模式匹配(".*")。如果启用，映射到“users”的方法也匹配到“users.*”。
+	 *
 	 * <p>By default value this is set to {@code false}.
+	 * 默认值设置为{@code false}。
+	 *
 	 * <p>Also see {@link #setUseRegisteredSuffixPatternMatch(boolean)} for
 	 * more fine-grained control over specific suffixes to allow.
+	 * 还请参阅{@link #setUseRegisteredSuffixPatternMatch(boolean)}以获得对允许的特定后缀的更细粒度控制。
+	 *
 	 * <p><strong>Note:</strong> This property is ignored when
 	 * {@link #setPatternParser(PathPatternParser)} is configured.
 	 * @deprecated as of 5.2.4. See class level note on the deprecation of
 	 * path extension config options. As there is no replacement for this method,
 	 * in 5.2.x it is necessary to set it to {@code false}. In 5.3 the default
 	 * changes to {@code false} and use of this property becomes unnecessary.
+	 *
+	 * <p><strong>备注:<strong>当配置{@link #setPatternParser(PathPatternParser)}时，该属性被忽略。
+	 * 自5.2.4起已弃用。请参阅类级注释，说明已弃用路径扩展配置选项。
+	 * 由于没有替代的方法，在5.2。X，有必要将其设置为{@code false}。
+	 * 在5.3中，默认值更改为{@code false}，不再需要使用此属性。
+	 *
 	 */
 	@Deprecated
 	public void setUseSuffixPatternMatch(boolean useSuffixPatternMatch) {
@@ -115,11 +136,19 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	 * explicitly registered with the {@link ContentNegotiationManager}. This
 	 * is generally recommended to reduce ambiguity and to avoid issues such as
 	 * when a "." appears in the path for other reasons.
+	 * 后缀模式匹配是否只适用于显式注册到{@link ContentNegotiationManager}的路径扩展。
+	 * 通常建议这样做，以减少歧义，并避免由于其他原因在路径中出现“.”之类的问题。
+	 *
 	 * <p>By default this is set to "false".
+	 * 默认设置为“false”。
+	 *
 	 * <p><strong>Note:</strong> This property is ignored when
 	 * {@link #setPatternParser(PathPatternParser)} is configured.
 	 * @deprecated as of 5.2.4. See class level note on the deprecation of
 	 * path extension config options.
+	 * <p><strong>备注:<strong>当配置{@link #setPatternParser(PathPatternParser)}时，该属性被忽略。
+	 * 自5.2.4起已弃用。请参阅类级注释，说明已弃用路径扩展配置选项。
+	 *
 	 */
 	@Deprecated
 	public void setUseRegisteredSuffixPatternMatch(boolean useRegisteredSuffixPatternMatch) {
@@ -188,18 +217,33 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	@SuppressWarnings("deprecation")
 	public void afterPropertiesSet() {
 
+		/**
+		 * 创建用于请求映射目的的配置选项的容器。其中封装了解析需要的解析器，匹配器，保存解析结果的{@link ContentNegotiationManager}等
+		 */
 		this.config = new RequestMappingInfo.BuilderConfiguration();
 		this.config.setTrailingSlashMatch(useTrailingSlashMatch());
 		this.config.setContentNegotiationManager(getContentNegotiationManager());
 
+		/**
+		 * 设置根据路径模式解析请求的解析器
+		 */
 		if (getPatternParser() != null) {
 			this.config.setPatternParser(getPatternParser());
 			Assert.isTrue(!this.useSuffixPatternMatch && !this.useRegisteredSuffixPatternMatch,
 					"Suffix pattern matching not supported with PathPatternParser.");
 		}
 		else {
+			/**
+			 * 在{@link org.springframework.web.servlet.mvc.condition.PatternsRequestCondition}中设置是否应用后缀模式匹配。
+			 */
 			this.config.setSuffixPatternMatch(useSuffixPatternMatch());
+			/**
+			 * 是否在{@link org.springframework.web.servlet.mvc.condition.PatternsRequestCondition}中使用已注册后缀进行模式匹配。
+			 */
 			this.config.setRegisteredSuffixPatternMatch(useRegisteredSuffixPatternMatch());
+			/**
+			 * 设置根据URL解析请求的解析器
+			 */
 			this.config.setPathMatcher(getPathMatcher());
 		}
 
@@ -209,6 +253,8 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 
 	/**
 	 * Whether to use registered suffixes for pattern matching.
+	 * 是否使用已注册后缀进行模式匹配。
+	 *
 	 * @deprecated as of 5.2.4. See deprecation notice on
 	 * {@link #setUseSuffixPatternMatch(boolean)}.
 	 */
@@ -219,6 +265,8 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 
 	/**
 	 * Whether to use registered suffixes for pattern matching.
+	 * 是否使用已注册后缀进行模式匹配。
+	 *
 	 * @deprecated as of 5.2.4. See deprecation notice on
 	 * {@link #setUseRegisteredSuffixPatternMatch(boolean)}.
 	 */
@@ -229,6 +277,7 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 
 	/**
 	 * Whether to match to URLs irrespective of the presence of a trailing slash.
+	 * 是否与url匹配，而不考虑后面是否有斜杠。
 	 */
 	public boolean useTrailingSlashMatch() {
 		return this.useTrailingSlashMatch;
@@ -248,9 +297,14 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 
 
 	/**
+	 * 检查指定类是否存在{@link Controller}或者{@link RequestMapping}注解
+	 * 包括注解继承
+	 *
 	 * {@inheritDoc}
 	 * <p>Expects a handler to have either a type-level @{@link Controller}
 	 * annotation or a type-level @{@link RequestMapping} annotation.
+	 * {@inheritdoc}
+	 *  <p>期望处理程序具有类型级的@{@link Controller}注释或类型级的@{@link RequestMapping}注释。
 	 */
 	@Override
 	protected boolean isHandler(Class<?> beanType) {
@@ -261,6 +315,8 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	/**
 	 * Uses method and type-level @{@link RequestMapping} annotations to create
 	 * the RequestMappingInfo.
+	 * 使用方法和类型级别的@{@link RequestMapping}注释来创建RequestMappingInfo。
+	 *
 	 * @return the created RequestMappingInfo, or {@code null} if the method
 	 * does not have a {@code @RequestMapping} annotation.
 	 * @see #getCustomMethodCondition(Method)
@@ -301,6 +357,9 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	 * Delegates to {@link #createRequestMappingInfo(RequestMapping, RequestCondition)},
 	 * supplying the appropriate custom {@link RequestCondition} depending on whether
 	 * the supplied {@code annotatedElement} is a class or method.
+	 * 委托给{@link #createRequestMappingInfo(RequestMapping, RequestCondition)}，
+	 * 根据提供的{@code annotatedElement}是类还是方法，提供适当的自定义{@link RequestCondition}。
+	 *
 	 * @see #getCustomTypeCondition(Class)
 	 * @see #getCustomMethodCondition(Method)
 	 */
@@ -349,6 +408,10 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 	 * {@link RequestMapping @RequestMapping} annotation, which is either
 	 * a directly declared annotation, a meta-annotation, or the synthesized
 	 * result of merging annotation attributes within an annotation hierarchy.
+	 *
+	 * 从提供的{@link RequestMapping @RequestMapping}注释创建{@link RequestMappingInfo}，
+	 * 该注释可以是直接声明的注释、元注释，也可以是在注释层次结构中合并注释属性的合成结果。
+	 *
 	 */
 	protected RequestMappingInfo createRequestMappingInfo(
 			RequestMapping requestMapping, @Nullable RequestCondition<?> customCondition) {
@@ -390,18 +453,40 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 		updateConsumesCondition(mapping, method);
 	}
 
+	/**
+	 * 解析并注册处理程序映射，解析{@link RequestBody}注解
+	 * 
+	 * @param handler the bean name of the handler or the handler instance
+	 * @param method the method to register
+	 * @param mapping the mapping conditions associated with the handler method
+	 */
 	@Override
 	protected void registerHandlerMethod(Object handler, Method method, RequestMappingInfo mapping) {
+		/**
+		 * 解析并注册请求的处理程序映射
+		 */
 		super.registerHandlerMethod(handler, method, mapping);
+		/**
+		 * 解析处理程序的{@link RequestBody}注解
+		 */
 		updateConsumesCondition(mapping, method);
 	}
 
+	/**
+	 * 解析处理程序的{@link RequestBody}注解
+	 *
+	 * @param info
+	 * @param method
+	 */
 	private void updateConsumesCondition(RequestMappingInfo info, Method method) {
 		ConsumesRequestCondition condition = info.getConsumesCondition();
 		if (!condition.isEmpty()) {
 			for (Parameter parameter : method.getParameters()) {
 				MergedAnnotation<RequestBody> annot = MergedAnnotations.from(parameter).get(RequestBody.class);
 				if (annot.isPresent()) {
+					/**
+					 * 设置是否期望存在请求体
+					 */
 					condition.setBodyRequired(annot.getBoolean("required"));
 					break;
 				}
@@ -421,10 +506,21 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 						getPathMatcher()) : null);
 	}
 
+	/**
+	 * 解析处理程序的{@link CrossOrigin}注解
+	 *
+	 * @param handler
+	 * @param method
+	 * @param mappingInfo
+	 * @return
+	 */
 	@Override
 	protected CorsConfiguration initCorsConfiguration(Object handler, Method method, RequestMappingInfo mappingInfo) {
 		HandlerMethod handlerMethod = createHandlerMethod(handler, method);
 		Class<?> beanType = handlerMethod.getBeanType();
+		/**
+		 * 分别获取处理程序所属类和方法上的{@link CrossOrigin}注解
+		 */
 		CrossOrigin typeAnnotation = AnnotatedElementUtils.findMergedAnnotation(beanType, CrossOrigin.class);
 		CrossOrigin methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, CrossOrigin.class);
 
@@ -433,17 +529,32 @@ public class RequestMappingHandlerMapping extends RequestMappingInfoHandlerMappi
 		}
 
 		CorsConfiguration config = new CorsConfiguration();
+		/**
+		 * 将类和方法上配置的{@link CrossOrigin}注解属性添加到{@link CorsConfiguration}中
+		 */
 		updateCorsConfig(config, typeAnnotation);
 		updateCorsConfig(config, methodAnnotation);
 
+		/**
+		 * 添加当前跨域配置允许的HTTP请求类型{@link RequestMethod}
+		 */
 		if (CollectionUtils.isEmpty(config.getAllowedMethods())) {
 			for (RequestMethod allowedMethod : mappingInfo.getMethodsCondition().getMethods()) {
 				config.addAllowedMethod(allowedMethod.name());
 			}
 		}
+		/**
+		 * 为必要的跨域配置设置默认值
+		 */
 		return config.applyPermitDefaultValues();
 	}
 
+	/**
+	 * 解析{@link CrossOrigin}注解参数，并添加到{@link CorsConfiguration}类中
+	 *
+	 * @param config
+	 * @param annotation
+	 */
 	private void updateCorsConfig(CorsConfiguration config, @Nullable CrossOrigin annotation) {
 		if (annotation == null) {
 			return;

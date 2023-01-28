@@ -16,15 +16,10 @@
 
 package org.springframework.web.servlet.support;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
-
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.context.i18n.LocaleContext;
 import org.springframework.context.i18n.TimeZoneAwareLocaleContext;
 import org.springframework.lang.Nullable;
@@ -35,14 +30,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.FlashMap;
-import org.springframework.web.servlet.FlashMapManager;
-import org.springframework.web.servlet.LocaleContextResolver;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.ThemeResolver;
+import org.springframework.web.servlet.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Utility class for easy access to request-specific state which has been
@@ -224,6 +218,8 @@ public abstract class RequestContextUtils {
 
 	/**
 	 * Return read-only "input" flash attributes from request before redirect.
+	 * 在重定向之前从请求返回只读的“输入”flash属性。
+	 *
 	 * @param request current request
 	 * @return a read-only Map, or {@code null} if not found
 	 * @see FlashMap

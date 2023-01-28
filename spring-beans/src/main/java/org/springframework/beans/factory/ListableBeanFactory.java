@@ -248,25 +248,43 @@ public interface ListableBeanFactory extends BeanFactory {
 	String[] getBeanNamesForType(@Nullable Class<?> type, boolean includeNonSingletons, boolean allowEagerInit);
 
 	/**
+	 * 在当前工厂中查找指定类型的bean实例(不管是否单例)，不查找父工厂，查找过程可能会引起factoryBean的创建
+	 *
 	 * Return the bean instances that match the given object type (including
 	 * subclasses), judging from either bean definitions or the value of
 	 * {@code getObjectType} in the case of FactoryBeans.
+	 * 返回与给定对象类型(包括子类)匹配的bean实例，根据bean定义或{@code getObjectType}(对于FactoryBeans)的值判断。
+	 *
 	 * <p><b>NOTE: This method introspects top-level beans only.</b> It does <i>not</i>
 	 * check nested beans which might match the specified type as well.
+	 * 注意:此方法仅内省顶级bean。<b>它检查<i>而不是<i>嵌套bean，这些bean也可能匹配指定的类型。
+	 *
 	 * <p>Does consider objects created by FactoryBeans, which means that FactoryBeans
 	 * will get initialized. If the object created by the FactoryBean doesn't match,
 	 * the raw FactoryBean itself will be matched against the type.
+	 * <p>是否考虑FactoryBeans创建的对象，这意味着FactoryBeans将被初始化。
+	 * 如果FactoryBean创建的对象不匹配，原始FactoryBean本身将根据类型进行匹配。
+	 *
 	 * <p>Does not consider any hierarchy this factory may participate in.
 	 * Use BeanFactoryUtils' {@code beansOfTypeIncludingAncestors}
 	 * to include beans in ancestor factories too.
+	 * <p>不考虑工厂可能参与的任何层次结构。使用BeanFactoryUtils的{@code beansOfTypeIncludingAncestors}也可以在祖先工厂中包含bean。
+	 *
 	 * <p>Note: Does <i>not</i> ignore singleton beans that have been registered
 	 * by other means than bean definitions.
+	 * <p>注意:<i>不<i>是否忽略通过bean定义以外的其他方式注册的单例bean。
+	 *
 	 * <p>This version of getBeansOfType matches all kinds of beans, be it
 	 * singletons, prototypes, or FactoryBeans. In most implementations, the
 	 * result will be the same as for {@code getBeansOfType(type, true, true)}.
+	 * 这个版本的getBeansOfType匹配所有类型的bean，无论是单例bean、原型bean还是FactoryBeans。
+	 * 在大多数实现中，结果将与{@code getBeansOfType(type, true, true)}相同。
+	 *
 	 * <p>The Map returned by this method should always return bean names and
 	 * corresponding bean instances <i>in the order of definition</i> in the
 	 * backend configuration, as far as possible.
+	 * 这个方法返回的Map应该总是尽可能地按照在后端配置中定义<i>的顺序返回bean名称和对应的bean实例<i>。
+	 *
 	 * @param type the class or interface to match, or {@code null} for all concrete beans
 	 * @return a Map with the matching beans, containing the bean names as
 	 * keys and the corresponding bean instances as values

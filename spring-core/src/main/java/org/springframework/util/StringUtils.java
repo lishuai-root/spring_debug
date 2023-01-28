@@ -16,26 +16,11 @@
 
 package org.springframework.util;
 
+import org.springframework.lang.Nullable;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.StringTokenizer;
-import java.util.TimeZone;
-
-import org.springframework.lang.Nullable;
+import java.util.*;
 
 /**
  * Miscellaneous {@link String} utility methods.
@@ -335,6 +320,8 @@ public abstract class StringUtils {
 
 	/**
 	 * Test if the given {@code String} matches the given single character.
+	 * 测试给定的{@code String}是否匹配给定的单个字符。
+	 *
 	 * @param str the {@code String} to check
 	 * @param singleCharacter the character to compare to
 	 * @since 5.2.9
@@ -346,6 +333,8 @@ public abstract class StringUtils {
 	/**
 	 * Test if the given {@code String} starts with the specified prefix,
 	 * ignoring upper/lower case.
+	 * 测试给定的{@code String}是否以指定的前缀开头，忽略大写字母。
+	 *
 	 * @param str the {@code String} to check
 	 * @param prefix the prefix to look for
 	 * @see java.lang.String#startsWith

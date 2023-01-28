@@ -19,13 +19,20 @@ package org.springframework.web.servlet.resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.w3c.dom.Element;
 
 /**
+ * 在解析<mvc:resources></mvc:resources>标签是以beanDefinition的方式加入到工厂
+ * {@link org.springframework.web.servlet.config.ResourcesBeanDefinitionParser#parse(Element, ParserContext)}
+ * {@link org.springframework.web.servlet.config.ResourcesBeanDefinitionParser#registerUrlProvider(ParserContext, Object)}
+ *
  * An interceptor that exposes the {@link ResourceUrlProvider} instance it
  * is configured with as a request attribute.
+ * 一个拦截器，它将它配置的{@link ResourceUrlProvider}实例公开为请求属性。
  *
  * @author Rossen Stoyanchev
  * @since 4.1

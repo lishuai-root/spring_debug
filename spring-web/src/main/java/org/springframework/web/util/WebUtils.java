@@ -16,35 +16,21 @@
 
 package org.springframework.web.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URI;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
-
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletRequestWrapper;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.ServletResponseWrapper;
+import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URI;
+import java.util.*;
 
 /**
  * Miscellaneous utilities for web applications.
@@ -58,15 +44,21 @@ public abstract class WebUtils {
 
 	/**
 	 * Standard Servlet 2.3+ spec request attribute for include request URI.
+	 * 标准Servlet 2.3+规范包含请求URI的请求属性。
+	 *
 	 * <p>If included via a {@code RequestDispatcher}, the current resource will see the
 	 * originating request. Its own request URI is exposed as a request attribute.
+	 * 如果通过{@code RequestDispatcher}包含，当前资源将看到原始请求。它自己的请求URI作为请求属性公开。
 	 */
 	public static final String INCLUDE_REQUEST_URI_ATTRIBUTE = "jakarta.servlet.include.request_uri";
 
 	/**
 	 * Standard Servlet 2.3+ spec request attribute for include context path.
+	 * 标准Servlet 2.3+规范包含上下文路径的请求属性。
+	 *
 	 * <p>If included via a {@code RequestDispatcher}, the current resource will see the
 	 * originating context path. Its own context path is exposed as a request attribute.
+	 * 如果通过{@code RequestDispatcher}包含，当前资源将看到原始上下文路径。它自己的上下文路径被公开为请求属性。
 	 */
 	public static final String INCLUDE_CONTEXT_PATH_ATTRIBUTE = "jakarta.servlet.include.context_path";
 
@@ -217,7 +209,7 @@ public abstract class WebUtils {
 	/** Name suffixes in case of image buttons. */
 	public static final String[] SUBMIT_IMAGE_SUFFIXES = {".x", ".y"};
 
-	/** Key for the mutex session attribute. */
+	/** Key for the mutex session attribute.  互斥锁会话属性的键。*/
 	public static final String SESSION_MUTEX_ATTRIBUTE = WebUtils.class.getName() + ".MUTEX";
 
 
@@ -396,8 +388,12 @@ public abstract class WebUtils {
 
 	/**
 	 * Set the session attribute with the given name to the given value.
+	 * 将具有给定名称的会话属性设置为给定值。
+	 *
 	 * Removes the session attribute if value is null, if a session existed at all.
 	 * Does not create a new session if not necessary!
+	 * 如果存在会话，如果值为空则删除会话属性。如果没有必要，不创建新的会话!
+	 *
 	 * @param request current HTTP request
 	 * @param name the name of the session attribute
 	 * @param value the value of the session attribute
@@ -408,6 +404,9 @@ public abstract class WebUtils {
 			request.getSession().setAttribute(name, value);
 		}
 		else {
+			/**
+			 * 如果给定值为空，则从session中删除，不会引起session的创建
+			 */
 			HttpSession session = request.getSession(false);
 			if (session != null) {
 				session.removeAttribute(name);
@@ -448,6 +447,8 @@ public abstract class WebUtils {
 	/**
 	 * Return an appropriate request object of the specified type, if available,
 	 * unwrapping the given request as far as necessary.
+	 * 返回指定类型的适当请求对象(如果可用)，尽可能地展开给定的请求。
+	 *
 	 * @param request the servlet request to introspect
 	 * @param requiredType the desired type of request object
 	 * @return the matching request object, or {@code null} if none
@@ -492,9 +493,13 @@ public abstract class WebUtils {
 	/**
 	 * Determine whether the given request is an include request,
 	 * that is, not a top-level HTTP request coming in from the outside.
+	 * 确定给定的请求是否是包含请求，也就是说，不是来自外部的顶级HTTP请求。
+	 *
 	 * <p>Checks the presence of the "jakarta.servlet.include.request_uri"
 	 * request attribute. Could check any request attribute that is only
 	 * present in an include request.
+	 * 检查“jakarta.servlet.include.request_uri”是否存在请求属性。可以检查只在包含请求中出现的任何请求属性。
+	 *
 	 * @param request current servlet request
 	 * @return whether the given request is an include request
 	 */

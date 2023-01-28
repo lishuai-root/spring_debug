@@ -25,9 +25,11 @@ import java.util.Map;
 /**
  * Simple implementation of {@link MultiValueMap} that wraps a {@link LinkedHashMap},
  * storing multiple values in an {@link ArrayList}.
+ * {@link MultiValueMap}的简单实现，包装了一个{@link LinkedHashMap}，将多个值存储在一个{@link ArrayList}中。
  *
  * <p>This Map implementation is generally not thread-safe. It is primarily designed
  * for data structures exposed from request objects, for use in a single thread only.
+ * 这个Map实现通常不是线程安全的。它主要是为从请求对象公开的数据结构而设计的，仅用于单个线程。
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
@@ -64,6 +66,9 @@ public class LinkedMultiValueMap<K, V> extends MultiValueMapAdapter<K, V>  // ne
 	 * Copy constructor: Create a new LinkedMultiValueMap with the same mappings as
 	 * the specified Map. Note that this will be a shallow copy; its value-holding
 	 * List entries will get reused and therefore cannot get modified independently.
+	 * 复制构造函数:创建一个新的LinkedMultiValueMap，其映射与指定的Map相同。
+	 * 注意，这将是一个浅拷贝;它的值保存列表条目将被重用，因此不能被独立修改。
+	 *
 	 * @param otherMap the Map whose mappings are to be placed in this Map
 	 * @see #clone()
 	 * @see #deepCopy()

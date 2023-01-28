@@ -16,14 +16,15 @@
 
 package org.springframework.web.context.request;
 
-import java.io.Serializable;
-
 import jakarta.servlet.http.HttpSessionBindingEvent;
 import jakarta.servlet.http.HttpSessionBindingListener;
+
+import java.io.Serializable;
 
 /**
  * Adapter that implements the Servlet HttpSessionBindingListener interface,
  * wrapping a session destruction callback.
+ * 实现Servlet HttpSessionBindingListener接口的适配器，包装会话销毁回调。
  *
  * @author Juergen Hoeller
  * @since 3.0

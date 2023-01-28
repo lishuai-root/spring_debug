@@ -16,13 +16,6 @@
 
 package org.springframework.web.util.pattern;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
-
 import org.springframework.http.server.PathContainer;
 import org.springframework.http.server.PathContainer.Element;
 import org.springframework.http.server.PathContainer.Separator;
@@ -31,12 +24,16 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
+import java.util.*;
+
 /**
  * Representation of a parsed path pattern. Includes a chain of path elements
  * for fast matching and accumulates computed state for quick comparison of
  * patterns.
+ * 解析路径模式的表示形式。包括用于快速匹配的路径元素链，以及用于快速比较模式的累计计算状态。
  *
  * <p>{@code PathPattern} matches URL paths using the following rules:<br>
+ * {@code PathPattern}使用以下规则匹配URL路径:<br>
  * <ul>
  * <li>{@code ?} matches one character</li>
  * <li>{@code *} matches zero or more characters within a path segment</li>
@@ -53,6 +50,10 @@ import org.springframework.util.StringUtils;
  * {@code /pages/{**}/details} is not. The same applies also to the capturing
  * variant <code>{*spring}</code>. The aim is to eliminate ambiguity when
  * comparing patterns for specificity.
+ * <p><strong>注:<strong>相对于{@link org.springframework.util.AntPathMatcher}， {@code **}只在模式的结尾被支持。
+ * 例如，{@code /pages/{**}}是有效的，但{@code /pages/{**}details}是无效的。这同样适用于捕获变量<code>{*spring}<code>。
+ * 目的是在比较模式的特异性时消除歧义。
+ *
  *
  * <h3>Examples</h3>
  * <ul>
@@ -83,12 +84,19 @@ public class PathPattern implements Comparable<PathPattern> {
 
 	/**
 	 * Comparator that sorts patterns by specificity as follows:
+	 * 比较器，按特异性对模式进行排序，如下所示:
+	 *
 	 * <ol>
-	 * <li>Null instances are last.
-	 * <li>Catch-all patterns are last.
+	 * <li>Null instances are last.	空实例是最后一个。
+	 * <li>Catch-all patterns are last.	全面模式是最后一种。
 	 * <li>If both patterns are catch-all, consider the length (longer wins).
+	 * 如果两种模式都是万能的，那么考虑长度(较长的胜出)。
+	 *
 	 * <li>Compare wildcard and captured variable count (lower wins).
+	 * 比较通配符和捕获的变量计数(较低的获胜)。
+	 *
 	 * <li>Consider length (longer wins)
+	 * 考虑长度(越长越好)
 	 * </ol>
 	 */
 	public static final Comparator<PathPattern> SPECIFICITY_COMPARATOR =
@@ -107,7 +115,7 @@ public class PathPattern implements Comparable<PathPattern> {
 	/** The parser used to construct this pattern. */
 	private final PathPatternParser parser;
 
-	/** The options to use to parse a pattern. */
+	/** The options to use to parse a pattern.  用于解析模式的选项。*/
 	private final PathContainer.Options pathOptions;
 
 	/** If this pattern has no trailing slash, allow candidates to include one and still match successfully. */
@@ -217,6 +225,8 @@ public class PathPattern implements Comparable<PathPattern> {
 	/**
 	 * Match this pattern to the given URI path and return extracted URI template
 	 * variables as well as path parameters (matrix variables).
+	 * 将此模式与给定的URI路径匹配，并返回提取的URI模板变量以及路径参数(矩阵变量)。
+	 *
 	 * @param pathContainer the candidate path to attempt to match against
 	 * @return info object with the extracted variables, or {@code null} for no match
 	 */
@@ -278,6 +288,8 @@ public class PathPattern implements Comparable<PathPattern> {
 
 	/**
 	 * Determine the pattern-mapped part for the given path.
+	 * 确定给定路径的模式映射部分。
+	 *
 	 * <p>For example: <ul>
 	 * <li>'{@code /docs/cvs/commit.html}' and '{@code /docs/cvs/commit.html} &rarr; ''</li>
 	 * <li>'{@code /docs/*}' and '{@code /docs/cvs/commit}' &rarr; '{@code cvs/commit}'</li>
@@ -288,8 +300,11 @@ public class PathPattern implements Comparable<PathPattern> {
 	 * <ul>
 	 * <li>Assumes that {@link #matches} returns {@code true} for
 	 * the same path but does <strong>not</strong> enforce this.
+	 * 假设{@link #matches}对于相同的路径返回{@code true}，但是<strong>不<strong>强制执行此操作。
+	 *
 	 * <li>Duplicate occurrences of separators within the returned result are removed
 	 * <li>Leading and trailing separators are removed from the returned result
+	 * 在返回的结果中删除重复出现的分隔符<li>从返回的结果中删除前导和后导分隔符
 	 * </ul>
 	 * @param path a path that matches this pattern
 	 * @return the subset of the path that is matched by pattern or "" if none
@@ -301,6 +316,9 @@ public class PathPattern implements Comparable<PathPattern> {
 
 		int startIndex = 0;
 		// Find first path element that is not a separator or a literal (i.e. the first pattern based element)
+		/**
+		 * 找到第一个不是分隔符或文字的路径元素(即第一个基于模式的元素)
+		 */
 		PathElement elem = this.head;
 		while (elem != null) {
 			if (elem.getWildcardCount() != 0 || elem.getCaptureCount() != 0) {
@@ -315,12 +333,18 @@ public class PathPattern implements Comparable<PathPattern> {
 		}
 
 		// Skip leading separators that would be in the result
+		/**
+		 * 找到第一个不是分隔符或文字的路径元素(即第一个基于模式的元素)
+		 */
 		while (startIndex < pathElementsCount && (pathElements.get(startIndex) instanceof Separator)) {
 			startIndex++;
 		}
 
 		int endIndex = pathElements.size();
 		// Skip trailing separators that would be in the result
+		/**
+		 * 跳过将出现在结果中的尾随分隔符
+		 */
 		while (endIndex > 0 && (pathElements.get(endIndex - 1) instanceof Separator)) {
 			endIndex--;
 		}
@@ -336,6 +360,9 @@ public class PathPattern implements Comparable<PathPattern> {
 		PathContainer resultPath = null;
 		if (multipleAdjacentSeparators) {
 			// Need to rebuild the path without the duplicate adjacent separators
+			/**
+			 * 需要重新构建没有重复相邻分隔符的路径
+			 */
 			StringBuilder buf = new StringBuilder();
 			int i = startIndex;
 			while (i < endIndex) {

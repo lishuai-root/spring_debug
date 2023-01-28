@@ -823,7 +823,11 @@ public abstract class ClassUtils {
 	/**
 	 * Return all interfaces that the given class implements as a Set,
 	 * including ones implemented by superclasses.
+	 * 返回给定类作为Set实现的所有接口，包括由超类实现的接口。
+	 *
 	 * <p>If the class itself is an interface, it gets returned as sole interface.
+	 * 如果类本身是一个接口，它将作为唯一的接口返回。
+	 *
 	 * @param clazz the class to analyze for interfaces
 	 * @return all interfaces that the given object implements as a Set
 	 */
@@ -834,7 +838,11 @@ public abstract class ClassUtils {
 	/**
 	 * Return all interfaces that the given class implements as a Set,
 	 * including ones implemented by superclasses.
+	 * 返回给定类作为Set实现的所有接口，包括由超类实现的接口。
+	 *
 	 * <p>If the class itself is an interface, it gets returned as sole interface.
+	 * 如果类本身是一个接口，它将作为唯一接口返回。
+	 *
 	 * @param clazz the class to analyze for interfaces
 	 * @param classLoader the ClassLoader that the interfaces need to be visible in
 	 * (may be {@code null} when accepting all declared interfaces)
@@ -1351,7 +1359,7 @@ public abstract class ClassUtils {
 	/**
 	 * 该方法尝试在{@param targetClass}类及其父类中查找{@param method}方法的具体实现，
 	 * 如果{@param method}就是具体实现则返回{@param method},否则在父类中查找。
-	 * 如果{@param method}是桥接方法，不会对桥接方法进行解析，返回桥接方法。
+	 * <b>NODE:<b/>如果{@param method}是桥接方法，不会对桥接方法进行解析，返回桥接方法。
 	 *
 	 * Given a method, which may come from an interface, and a target class used
 	 * in the current reflective invocation, find the corresponding target method
@@ -1367,9 +1375,14 @@ public abstract class ClassUtils {
 	 * Call {@link org.springframework.core.BridgeMethodResolver#findBridgedMethod}
 	 * if bridge method resolution is desirable (e.g. for obtaining metadata from
 	 * the original method definition).
+	 * <b>注:<b>与{@link org.springframework.aop.support.AopUtils#getMostSpecificMethod}相反，这个方法是<i>不<i>自动解析Java 5桥接方法。
+	 * 调用{@link org.springframework.core.BridgeMethodResolver#findBridgedMethod}如果桥方法解析是需要的(例如从原始方法定义中获取元数据)。
+	 *
 	 * <p><b>NOTE:</b> Since Spring 3.1.1, if Java security settings disallow reflective
 	 * access (e.g. calls to {@code Class#getDeclaredMethods} etc, this implementation
 	 * will fall back to returning the originally provided method.
+	 * 从Spring 3.1.1开始，如果Java安全设置不允许反射访问(例如调用{@code Class#getDeclaredMethods}等)，此实现将返回最初提供的方法。
+	 *
 	 * @param method the method to be invoked, which may come from an interface
 	 * @param targetClass the target class for the current invocation
 	 * (may be {@code null} or may not even implement the method)
@@ -1379,12 +1392,15 @@ public abstract class ClassUtils {
 	 */
 	public static Method getMostSpecificMethod(Method method, @Nullable Class<?> targetClass) {
 		/**
-		 * 如果方法所属类不是当前类，且当前方法可重新，在当前类及其父类中查找具体实现方法
+		 * 如果方法所属类不是当前类，且当前方法可重写，在当前类及其父类中查找具体实现方法
 		 */
 		if (targetClass != null && targetClass != method.getDeclaringClass() && isOverridable(method, targetClass)) {
 			try {
 				if (Modifier.isPublic(method.getModifiers())) {
 					try {
+						/**
+						 * 首先在当前类中查找
+						 */
 						return targetClass.getMethod(method.getName(), method.getParameterTypes());
 					}
 					catch (NoSuchMethodException ex) {
@@ -1401,6 +1417,9 @@ public abstract class ClassUtils {
 			catch (SecurityException ex) {
 				// Security settings are disallowing reflective access; fall back to 'method' below.
 				// 安全设置不允许反射访问;回到下面的'method'。
+				/**
+				 * 如果java安全设置不允许通过反射访问方法，则使用原有的方法
+				 */
 			}
 		}
 		return method;
@@ -1408,8 +1427,12 @@ public abstract class ClassUtils {
 
 	/**
 	 * Determine a corresponding interface method for the given method handle, if possible.
+	 * 如果可能的话，为给定的方法句柄确定相应的接口方法。
+	 *
 	 * <p>This is particularly useful for arriving at a public exported type on Jigsaw
 	 * which can be reflectively invoked without an illegal access warning.
+	 * 这对于在Jigsaw上获得一个公共导出类型特别有用，可以在没有非法访问警告的情况下反射地调用该类型。
+	 *
 	 * @param method the method to be invoked, potentially from an implementation class
 	 * @return the corresponding interface method, or the original method if none found
 	 * @since 5.1

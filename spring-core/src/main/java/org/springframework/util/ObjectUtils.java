@@ -16,14 +16,10 @@
 
 package org.springframework.util;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.StringJoiner;
-
 import org.springframework.lang.Nullable;
+
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Miscellaneous object utility methods.
@@ -306,8 +302,12 @@ public abstract class ObjectUtils {
 	/**
 	 * Determine if the given objects are equal, returning {@code true} if
 	 * both are {@code null} or {@code false} if only one is {@code null}.
+	 * 确定给定的对象是否相等，如果两个对象都是{@code null}则返回{@code true}，如果只有一个对象是{@code null}则返回{@code false}。
+	 *
 	 * <p>Compares arrays with {@code Arrays.equals}, performing an equality
 	 * check based on the array elements rather than the array reference.
+	 * 比较数组和{@code数组。Equals}，根据数组元素而不是数组引用执行相等性检查。
+	 *
 	 * @param o1 first Object to compare
 	 * @param o2 second Object to compare
 	 * @return whether the given objects are equal

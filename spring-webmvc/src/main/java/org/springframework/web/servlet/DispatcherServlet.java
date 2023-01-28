@@ -19,6 +19,7 @@ package org.springframework.web.servlet;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -47,6 +48,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.async.WebAsyncManager;
 import org.springframework.web.context.request.async.WebAsyncUtils;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
@@ -205,7 +207,11 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Request attribute to hold the current web application context.
+	 * 请求属性保存当前web应用程序上下文。
+	 *
 	 * Otherwise only the global web app context is obtainable by tags etc.
+	 * 否则，只有全局web应用上下文可以通过标签等获得。
+	 *
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#findWebApplicationContext
 	 */
 	public static final String WEB_APPLICATION_CONTEXT_ATTRIBUTE = DispatcherServlet.class.getName() + ".CONTEXT";
@@ -231,6 +237,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	/**
 	 * Name of request attribute that holds a read-only {@code Map<String,?>}
 	 * with "input" flash attributes saved by a previous request, if any.
+	 * 持有只读{@code Map<String，?>}的"input" flash属性保存了以前的请求，如果有。
+	 *
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#getInputFlashMap(HttpServletRequest)
 	 */
 	public static final String INPUT_FLASH_MAP_ATTRIBUTE = DispatcherServlet.class.getName() + ".INPUT_FLASH_MAP";
@@ -238,12 +246,16 @@ public class DispatcherServlet extends FrameworkServlet {
 	/**
 	 * Name of request attribute that holds the "output" {@link FlashMap} with
 	 * attributes to save for a subsequent request.
+	 * 包含“输出”{@link FlashMap}的请求属性的名称，其中包含为后续请求保存的属性。
+	 *
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#getOutputFlashMap(HttpServletRequest)
 	 */
 	public static final String OUTPUT_FLASH_MAP_ATTRIBUTE = DispatcherServlet.class.getName() + ".OUTPUT_FLASH_MAP";
 
 	/**
 	 * Name of request attribute that holds the {@link FlashMapManager}.
+	 * 包含{@link FlashMapManager}的请求属性的名称。
+	 *
 	 * @see org.springframework.web.servlet.support.RequestContextUtils#getFlashMapManager(HttpServletRequest)
 	 */
 	public static final String FLASH_MAP_MANAGER_ATTRIBUTE = DispatcherServlet.class.getName() + ".FLASH_MAP_MANAGER";
@@ -270,6 +282,7 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Common prefix that DispatcherServlet's default strategy attributes start with.
+	 * DispatcherServlet默认策略属性的开头前缀。
 	 */
 	private static final String DEFAULT_STRATEGIES_PREFIX = "org.springframework.web.servlet";
 
@@ -326,11 +339,15 @@ public class DispatcherServlet extends FrameworkServlet {
 	@Nullable
 	private ThemeResolver themeResolver;
 
-	/** List of HandlerMappings used by this servlet. */
+	/** List of HandlerMappings used by this servlet.
+	 * 这个servlet使用的HandlerMappings的列表。
+	 * */
 	@Nullable
 	private List<HandlerMapping> handlerMappings;
 
-	/** List of HandlerAdapters used by this servlet. */
+	/** List of HandlerAdapters used by this servlet.
+	 * 这个servlet使用的handleradapter列表。
+	 * */
 	@Nullable
 	private List<HandlerAdapter> handlerAdapters;
 
@@ -342,7 +359,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	@Nullable
 	private RequestToViewNameTranslator viewNameTranslator;
 
-	/** FlashMapManager used by this servlet. */
+	/** FlashMapManager used by this servlet. 这个servlet使用的FlashMapManager。 */
 	@Nullable
 	private FlashMapManager flashMapManager;
 
@@ -562,7 +579,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			/**
 			 * 从工厂中获取"multipartResolver"bean
 			 *
-			 * {@link this#LOCALE_RESOLVER_BEAN_NAME}实在解析 <mvc:annotation-driven></mvc:annotation-driven>标签时，<em>不会</em>通过
+			 * {@link this#LOCALE_RESOLVER_BEAN_NAME}是在解析 <mvc:annotation-driven></mvc:annotation-driven>标签时，<em>不会</em>通过
 			 * {@link org.springframework.web.servlet.config.MvcNamespaceUtils#registerDefaultComponents(ParserContext, Object)}方法注入
 			 */
 			this.multipartResolver = context.getBean(MULTIPART_RESOLVER_BEAN_NAME, MultipartResolver.class);
@@ -1149,6 +1166,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	/**
 	 * Exposes the DispatcherServlet-specific request attributes and delegates to {@link #doDispatch}
 	 * for the actual dispatching.
+	 *
+	 * 将特定于DispatcherServlet的请求属性和委托公开给{@link #doDispatch}以进行实际调度。
 	 */
 	@Override
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -1156,12 +1175,21 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		// Keep a snapshot of the request attributes in case of an include,
 		// to be able to restore the original attributes after the include.
+		/**
+		 * 在包含的情况下保留请求属性的快照，以便能够在包含之后恢复原始属性。
+		 */
 		Map<String, Object> attributesSnapshot = null;
+		/**
+		 * 检查是否包含"jakarta.servlet.include.request_uri"属性，如果包含，为当前请求属性创建快照
+		 */
 		if (WebUtils.isIncludeRequest(request)) {
 			attributesSnapshot = new HashMap<>();
 			Enumeration<?> attrNames = request.getAttributeNames();
 			while (attrNames.hasMoreElements()) {
 				String attrName = (String) attrNames.nextElement();
+				/**
+				 * 保存所有以"org.springframework.web.servlet"开头的DispatcherServlet默认策略属性。
+				 */
 				if (this.cleanupAfterInclude || attrName.startsWith(DEFAULT_STRATEGIES_PREFIX)) {
 					attributesSnapshot.put(attrName, request.getAttribute(attrName));
 				}
@@ -1169,23 +1197,56 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		// Make framework objects available to handlers and view objects.
+		/**
+		 * 使框架对象对处理程序和视图对象可用。
+		 */
+		/**
+		 * 保存当前servlet的上下文对象，属性名称为"org.springframework.web.servlet.DispatcherServlet.CONTEXT"
+		 */
 		request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, getWebApplicationContext());
+		/**
+		 * 保存当前servlet的本地资源处理器，"org.springframework.web.servlet.DispatcherServlet.THEME_RESOLVER"
+		 */
 		request.setAttribute(LOCALE_RESOLVER_ATTRIBUTE, this.localeResolver);
+		/**
+		 * 保存当前servlet的主题处理器，"org.springframework.web.servlet.DispatcherServlet.THEME_RESOLVER"
+		 */
 		request.setAttribute(THEME_RESOLVER_ATTRIBUTE, this.themeResolver);
+		/**
+		 * 保存当前servlet的主题资源，"org.springframework.web.servlet.DispatcherServlet.THEME_SOURCE"
+		 */
 		request.setAttribute(THEME_SOURCE_ATTRIBUTE, getThemeSource());
 
 		if (this.flashMapManager != null) {
+			/**
+			 * 获取当前请求已经存在的{@link FlashMap}，如果由多个，则通过{@link FlashMap#compareTo(FlashMap)}排序，取第一个
+			 */
 			FlashMap inputFlashMap = this.flashMapManager.retrieveAndUpdate(request, response);
+			/**
+			 * 如果存在inputFlashMap，则保存到当前请求属性中，属性名称："org.springframework.web.servlet.DispatcherServlet.INPUT_FLASH_MAP'
+			 */
 			if (inputFlashMap != null) {
 				request.setAttribute(INPUT_FLASH_MAP_ATTRIBUTE, Collections.unmodifiableMap(inputFlashMap));
 			}
+			/**
+			 * org.springframework.web.servlet.DispatcherServlet.OUTPUT_FLASH_MAP
+			 */
 			request.setAttribute(OUTPUT_FLASH_MAP_ATTRIBUTE, new FlashMap());
+			/**
+			 * org.springframework.web.servlet.DispatcherServlet.FLASH_MAP_MANAGER
+			 */
 			request.setAttribute(FLASH_MAP_MANAGER_ATTRIBUTE, this.flashMapManager);
 		}
 
 		RequestPath previousRequestPath = null;
 		if (this.parseRequestPath) {
+			/**
+			 * 获取已经解析的请求路径，属性名称:"org.springframework.web.util.ServletRequestPathUtils.PATH"
+			 */
 			previousRequestPath = (RequestPath) request.getAttribute(ServletRequestPathUtils.PATH_ATTRIBUTE);
+			/**
+			 * 重新解析并缓存请求路径
+			 */
 			ServletRequestPathUtils.parseAndCache(request);
 		}
 
@@ -1195,11 +1256,17 @@ public class DispatcherServlet extends FrameworkServlet {
 		finally {
 			if (!WebAsyncUtils.getAsyncManager(request).isConcurrentHandlingStarted()) {
 				// Restore the original attribute snapshot, in case of an include.
+				/**
+				 * 在包含的情况下，恢复原始属性快照。
+				 */
 				if (attributesSnapshot != null) {
 					restoreAttributesAfterInclude(request, attributesSnapshot);
 				}
 			}
 			if (this.parseRequestPath) {
+				/**
+				 * 重置原有的请求路径
+				 */
 				ServletRequestPathUtils.setParsedRequestPath(previousRequestPath, request);
 			}
 		}
@@ -1244,11 +1311,19 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Process the actual dispatching to the handler.
+	 * 处理到处理程序的实际调度。
+	 *
 	 * <p>The handler will be obtained by applying the servlet's HandlerMappings in order.
+	 * 处理程序将通过按顺序应用servlet的HandlerMappings来获得。
+	 *
 	 * The HandlerAdapter will be obtained by querying the servlet's installed HandlerAdapters
 	 * to find the first that supports the handler class.
+	 * HandlerAdapter将通过查询servlet已安装的HandlerAdapter来获得，以找到第一个支持处理程序类的HandlerAdapter。
+	 *
 	 * <p>All HTTP methods are handled by this method. It's up to HandlerAdapters or handlers
 	 * themselves to decide which methods are acceptable.
+	 * 所有HTTP方法都由该方法处理。由HandlerAdapters或处理程序本身来决定哪些方法是可接受的。
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @throws Exception in case of any kind of processing failure
@@ -1259,6 +1334,10 @@ public class DispatcherServlet extends FrameworkServlet {
 		HandlerExecutionChain mappedHandler = null;
 		boolean multipartRequestParsed = false;
 
+		/**
+		 * 获取当前请求的同步管理器，在请求第一次到达{@link #processRequest(HttpServletRequest, HttpServletResponse)}时通过
+		 * {@link WebAsyncUtils#getAsyncManager(ServletRequest)}创建
+		 */
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 
 		try {
@@ -1266,41 +1345,96 @@ public class DispatcherServlet extends FrameworkServlet {
 			Exception dispatchException = null;
 
 			try {
+				/**
+				 * 检查当前请求是否一个上传请求，如果是则创建一个{@link org.springframework.web.multipart.support.StandardMultipartHttpServletRequest}对象，
+				 * 表示上传请求，并解析表单项
+				 * @see org.springframework.web.multipart.support.StandardMultipartHttpServletRequest#multipartParameterNames
+				 * @see org.springframework.web.multipart.support.StandardMultipartHttpServletRequest#multipartFiles
+				 *
+				 * 如果当前请求不是上传请求，则返回当前请求
+				 */
 				processedRequest = checkMultipart(request);
+				/**
+				 * 标识当前请求是否上传请求
+				 */
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
+				/**
+				 * 确定当前请求的处理程序。
+				 * 获取当前请求的执行链，包含拦截器
+				 */
 				mappedHandler = getHandler(processedRequest);
+				/**
+				 * 如果没有对应的处理程序，设置合适的相应结果，通常是"404"
+				 */
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
 					return;
 				}
 
 				// Determine handler adapter for the current request.
+				/**
+				 * 确定当前请求的处理程序适配器，默认使用以下四个之一
+				 * {@link org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter}
+				 * {@link org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter}
+				 * {@link org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter}
+				 * {@link org.springframework.web.servlet.function.support.HandlerFunctionAdapter}
+				 *
+				 */
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
+				/**
+				 * 如果处理程序支持，则处理上次修改的报头。
+				 *
+				 * 处理GET、HEAD请求的Last-Modified,当浏览器第一次跟服务器请求资源时，服务器会在返回的请求头里包含一个last_modified的属性，
+				 * 代表资源最后时什么时候修改的，在浏览器以后发送请求的时候，会同时发送之前接收到的Last_modified.服务器接收到带last_modified的请求后，
+				 * 会跟实际资源的最后修改时间做对比，如果过期了返回新的资源，否则直接返回304表示未过期，直接使用之前缓存的结果即可
+				 */
 				String method = request.getMethod();
 				boolean isGet = HttpMethod.GET.matches(method);
+				/**
+				 * 获取上次请求时间，如果上次请求后资源一直没有变，则通知前台资源可以继续使用，不重复相应资源
+				 */
 				if (isGet || HttpMethod.HEAD.matches(method)) {
+					/**
+					 *  获取请求中服务器端最后被修改时间
+					 */
 					long lastModified = ha.getLastModified(request, mappedHandler.getHandler());
 					if (new ServletWebRequest(request, response).checkNotModified(lastModified) && isGet) {
 						return;
 					}
 				}
 
+				/**
+				 * 执行拦截器的{@link HandlerInterceptor#preHandle(HttpServletRequest, HttpServletResponse, Object)}方法
+				 * 如果拦截器返回false，不在继续处理请求
+				 */
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
 				// Actually invoke the handler.
+				/**
+				 * 实际上调用处理程序。
+				 */
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
+				/**
+				 * 判断当前请求是否需要异步处理或者正在异步处理
+				 */
 				if (asyncManager.isConcurrentHandlingStarted()) {
 					return;
 				}
 
+				/**
+				 * 为视图设置默认名称
+				 */
 				applyDefaultViewName(processedRequest, mv);
+				/**
+				 * 执行拦截器的{@link HandlerInterceptor#postHandle(HttpServletRequest, HttpServletResponse, Object, ModelAndView)}回调
+				 */
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -1309,6 +1443,9 @@ public class DispatcherServlet extends FrameworkServlet {
 			catch (Throwable err) {
 				// As of 4.3, we're processing Errors thrown from handler methods as well,
 				// making them available for @ExceptionHandler methods and other scenarios.
+				/**
+				 * 从4.3开始，我们也在处理从处理程序方法抛出的错误，使它们可用于@ExceptionHandler方法和其他场景。
+				 */
 				dispatchException = new NestedServletException("Handler dispatch failed", err);
 			}
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
@@ -1323,13 +1460,24 @@ public class DispatcherServlet extends FrameworkServlet {
 		finally {
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				// Instead of postHandle and afterCompletion
+				/**
+				 * 而不是postHandle和afterCompletion
+				 *
+				 * 异步请求开始处理后调用{@link AsyncHandlerInterceptor#afterConcurrentHandlingStarted(HttpServletRequest, HttpServletResponse, Object)}回调
+				 */
 				if (mappedHandler != null) {
 					mappedHandler.applyAfterConcurrentHandlingStarted(processedRequest, response);
 				}
 			}
 			else {
 				// Clean up any resources used by a multipart request.
+				/**
+				 * 清理由多部分请求使用的任何资源。
+				 */
 				if (multipartRequestParsed) {
+					/**
+					 * 清理上传请求的文件缓存
+					 */
 					cleanupMultipart(processedRequest);
 				}
 			}
@@ -1337,7 +1485,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
-	 * Do we need view name translation?
+	 * Do we need view name translation? 我们需要视图名转换吗?
 	 */
 	private void applyDefaultViewName(HttpServletRequest request, @Nullable ModelAndView mv) throws Exception {
 		if (mv != null && !mv.hasView()) {
@@ -1351,6 +1499,8 @@ public class DispatcherServlet extends FrameworkServlet {
 	/**
 	 * Handle the result of handler selection and handler invocation, which is
 	 * either a ModelAndView or an Exception to be resolved to a ModelAndView.
+	 *
+	 * 处理处理程序选择和处理程序调用的结果，该结果要么是ModelAndView，要么是要解析为ModelAndView的异常。
 	 */
 	private void processDispatchResult(HttpServletRequest request, HttpServletResponse response,
 			@Nullable HandlerExecutionChain mappedHandler, @Nullable ModelAndView mv,
@@ -1414,12 +1564,19 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Convert the request into a multipart request, and make multipart resolver available.
+	 * 将请求转换为多部分请求，并使多部分解析器可用。
+	 *
 	 * <p>If no multipart resolver is set, simply use the existing request.
+	 * 如果没有设置多部分解析器，只需使用现有的请求。
+	 *
 	 * @param request current HTTP request
 	 * @return the processed request (multipart wrapper if necessary)
 	 * @see MultipartResolver#resolveMultipart
 	 */
 	protected HttpServletRequest checkMultipart(HttpServletRequest request) throws MultipartException {
+		/**
+		 * 检查当前请求是否上传请求，通过请求类型判断
+		 */
 		if (this.multipartResolver != null && this.multipartResolver.isMultipart(request)) {
 			if (WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class) != null) {
 				if (DispatcherType.REQUEST.equals(request.getDispatcherType())) {
@@ -1432,12 +1589,17 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 			else {
 				try {
+					/**
+					 * 创建{@link org.springframework.web.multipart.support.StandardMultipartHttpServletRequest}对象，
+					 * 表示multipart/form-data请求，并解析表单项
+					 */
 					return this.multipartResolver.resolveMultipart(request);
 				}
 				catch (MultipartException ex) {
 					if (request.getAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE) != null) {
 						logger.debug("Multipart resolution failed for error dispatch", ex);
 						// Keep processing error dispatch with regular request handle below
+						// 保持处理错误调度与常规请求处理如下
 					}
 					else {
 						throw ex;
@@ -1446,11 +1608,15 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 		// If not returned before: return original request.
+		/**
+		 * 如果之前没有返回:返回原始请求。
+		 */
 		return request;
 	}
 
 	/**
 	 * Check "jakarta.servlet.error.exception" attribute for a multipart exception.
+	 * 检查“jakarta.servlet.error。属性用于多部分异常。
 	 */
 	private boolean hasMultipartException(HttpServletRequest request) {
 		Throwable error = (Throwable) request.getAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE);
@@ -1465,6 +1631,8 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Clean up any resources used by the given multipart request (if any).
+	 * 清除给定多部分请求使用的任何资源(如果有的话)。
+	 *
 	 * @param request current HTTP request
 	 * @see MultipartResolver#cleanupMultipart
 	 */
@@ -1473,14 +1641,40 @@ public class DispatcherServlet extends FrameworkServlet {
 			MultipartHttpServletRequest multipartRequest =
 					WebUtils.getNativeRequest(request, MultipartHttpServletRequest.class);
 			if (multipartRequest != null) {
+				/**
+				 * 清理上传请求的文件缓存
+				 */
 				this.multipartResolver.cleanupMultipart(multipartRequest);
 			}
 		}
 	}
 
 	/**
+	 * 获取当前请求的执行链，包含拦截器
+	 * 通过{@link org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping}获取到的handler是bean实例
+	 * 通过{@link org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping}获取到的handler是
+	 * {@link org.springframework.web.method.HandlerMethod}类型
+	 *
+	 * 不管是handler是那种类型，如果是跨域预检请求，handler都会被替换成{@link org.springframework.web.servlet.handler.AbstractHandlerMapping.PreFlightHandler}类型
+	 *
+	 *
+	 * 如果是通过{@link org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping}对象获取的执行链，
+	 * 则会在{@link org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping#buildPathExposingHandler(Object, String, String, Map)}
+	 * 方法中为执行链添加{@link org.springframework.web.servlet.handler.AbstractUrlHandlerMapping.PathExposingHandlerInterceptor}拦截器
+	 * 和{@link org.springframework.web.servlet.handler.AbstractUrlHandlerMapping.UriTemplateVariablesHandlerInterceptor}拦截器
+	 *
+	 * 如果当前请求是跨域请求，会在{@link org.springframework.web.servlet.handler.AbstractHandlerMapping#getHandler(HttpServletRequest)}
+	 * 方法中为执行链添加{@link org.springframework.web.servlet.handler.AbstractHandlerMapping.PreFlightHandler (跨域预检请求)}处理程序或
+	 * {@link org.springframework.web.servlet.handler.AbstractHandlerMapping.CorsInterceptor (跨域请求)}拦截器
+	 * 
+	 * 跨域请求最终都会调用{@link org.springframework.web.cors.DefaultCorsProcessor#processRequest(CorsConfiguration, HttpServletRequest, HttpServletResponse)}
+	 *
 	 * Return the HandlerExecutionChain for this request.
+	 * 为这个请求返回HandlerExecutionChain。
+	 *
 	 * <p>Tries all handler mappings in order.
+	 * 按顺序尝试所有处理程序映射。
+	 *
 	 * @param request current HTTP request
 	 * @return the HandlerExecutionChain, or {@code null} if no handler could be found
 	 */
@@ -1499,6 +1693,8 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * No handler found -> set appropriate HTTP response status.
+	 * 没有找到处理程序->设置适当的HTTP响应状态。
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @throws Exception if preparing the response failed
@@ -1518,6 +1714,13 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Return the HandlerAdapter for this handler object.
+	 * 返回此处理程序对象的HandlerAdapter。
+	 *
+	 * {@link org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter}处理{@link org.springframework.web.HttpRequestHandler}类型的处理程序
+	 * {@link org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter}处理{@link org.springframework.web.servlet.mvc.Controller}类型的处理程序
+	 * {@link org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter}处理{@link org.springframework.web.method.HandlerMethod}类型的处理程序
+	 * {@link org.springframework.web.servlet.function.support.HandlerFunctionAdapter}处理{@link org.springframework.web.servlet.function.HandlerFunction}类型的处理程序
+	 *
 	 * @param handler the handler object to find an adapter for
 	 * @throws ServletException if no HandlerAdapter can be found for the handler. This is a fatal error.
 	 */
@@ -1688,6 +1891,8 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Restore the request attributes after an include.
+	 * 在include之后恢复请求属性。
+	 *
 	 * @param request current HTTP request
 	 * @param attributesSnapshot the snapshot of the request attributes before the include
 	 */
@@ -1695,20 +1900,37 @@ public class DispatcherServlet extends FrameworkServlet {
 	private void restoreAttributesAfterInclude(HttpServletRequest request, Map<?, ?> attributesSnapshot) {
 		// Need to copy into separate Collection here, to avoid side effects
 		// on the Enumeration when removing attributes.
+		/**
+		 * 此处需要复制到单独的集合中，以避免在删除属性时对枚举产生副作用。
+		 * 在生成请求属性快照时只保存了{@link DEFAULT_STRATEGIES_PREFIX}开头的属性，因此此处只回复{@link DEFAULT_STRATEGIES_PREFIX}开头的属性
+		 */
 		Set<String> attrsToCheck = new HashSet<>();
 		Enumeration<?> attrNames = request.getAttributeNames();
 		while (attrNames.hasMoreElements()) {
 			String attrName = (String) attrNames.nextElement();
+			/**
+			 * 保存需要从快照恢复的属性名称
+			 */
 			if (this.cleanupAfterInclude || attrName.startsWith(DEFAULT_STRATEGIES_PREFIX)) {
 				attrsToCheck.add(attrName);
 			}
 		}
 
 		// Add attributes that may have been removed
+		/**
+		 * 添加可能已删除的属性
+		 *
+		 * 快照中的属性可能在后续的操作中删除，此处需要添加上已经删除的属性
+		 */
 		attrsToCheck.addAll((Set<String>) attributesSnapshot.keySet());
 
 		// Iterate over the attributes to check, restoring the original value
 		// or removing the attribute, respectively, if appropriate.
+		/**
+		 * 遍历属性进行检查，如果合适，分别恢复原始值或删除属性。
+		 *
+		 * 恢复快照，以快照为准，如果请求中存在但是快照中不存在的，删除请求属性
+		 */
 		for (String attrName : attrsToCheck) {
 			Object attrValue = attributesSnapshot.get(attrName);
 			if (attrValue == null) {

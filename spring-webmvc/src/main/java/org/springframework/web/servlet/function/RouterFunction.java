@@ -16,15 +16,16 @@
 
 package org.springframework.web.servlet.function;
 
+import org.springframework.util.Assert;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import org.springframework.util.Assert;
-
 /**
  * Represents a function that routes to a {@linkplain HandlerFunction handler function}.
+ * 表示路由到{@linkplain HandlerFunction 处理函数}的函数。
  *
  * @author Arjen Poutsma
  * @since 5.2
@@ -36,6 +37,8 @@ public interface RouterFunction<T extends ServerResponse> {
 
 	/**
 	 * Return the {@linkplain HandlerFunction handler function} that matches the given request.
+	 * 返回匹配给定请求的{@linkplain HandlerFunction 处理函数}。
+	 *
 	 * @param request the request to route
 	 * @return an {@code Optional} describing the {@code HandlerFunction} that matches this request,
 	 * or an empty {@code Optional} if there is no match
@@ -59,6 +62,9 @@ public interface RouterFunction<T extends ServerResponse> {
 	 * Return a composed routing function that first invokes this function,
 	 * and then invokes the {@code other} function (of a different response type) if this route had
 	 * {@linkplain Optional#empty() no result}.
+	 * 返回一个复合路由函数，该函数首先调用该函数，然后如果此路由有{@linkplain Optional#empty() no结果}，
+	 * 则调用{@code other}函数(不同的响应类型)。
+	 *
 	 * @param other the function to apply when this function has no result
 	 * @return a composed function that first routes with this function and then the
 	 * {@code other} function if this function has no result
@@ -114,6 +120,10 @@ public interface RouterFunction<T extends ServerResponse> {
 	 * {@link RouterFunctions.Visitor#unknown(RouterFunction)}; composed {@code RouterFunction}
 	 * implementations are expected to call {@code accept} for all components that make up this
 	 * router function.
+	 * 接受给定的访问者。
+	 * 默认实现调用{@link RouterFunctions.Visitor#unknown(RouterFunction)};
+	 * 组合的{@code RouterFunction}实现被期望为组成这个路由器函数的所有组件调用{@code accept}。
+	 *
 	 * @param visitor the visitor to accept
 	 */
 	default void accept(RouterFunctions.Visitor visitor) {

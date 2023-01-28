@@ -16,18 +16,21 @@
 
 package org.springframework.http.server;
 
-import java.util.List;
-
 import org.springframework.util.MultiValueMap;
+
+import java.util.List;
 
 /**
  * Structured representation of a URI path parsed via {@link #parsePath(String)}
  * into a sequence of {@link Separator} and {@link PathSegment} elements.
+ * URI路径的结构化表示，通过{@link #parsePath(String)}解析为{@link Separator}和{@link PathSegment}元素的序列。
  *
  * <p>Each {@link PathSegment} exposes its content in decoded form and with path
  * parameters removed. This makes it safe to match one path segment at a time
  * without the risk of decoded reserved characters altering the structure of
  * the path.
+ * 每个{@link PathSegment}以解码的形式公开其内容，并删除路径参数。
+ * 这使得每次匹配一个路径段是安全的，而不会有解码后的保留字符改变路径结构的风险。
  *
  * @author Rossen Stoyanchev
  * @since 5.0
@@ -78,6 +81,8 @@ public interface PathContainer {
 	/**
 	 * Parse the path value into a sequence of {@link Separator Separator} and
 	 * {@link PathSegment PathSegment} elements.
+	 * 解析路径值为{@link Separator Separator}和{@link PathSegment PathSegment}元素序列。
+	 *
 	 * @param path the encoded, raw path value to parse
 	 * @param options to customize parsing
 	 * @return the parsed path

@@ -275,6 +275,7 @@ public abstract class MvcNamespaceUtils {
 	/**
 	 * Registers an {@link SessionFlashMapManager} under a well-known name
 	 * unless already registered.
+	 * 除非已经注册，否则将一个{@link SessionFlashMapManager}注册在一个众所周知的名称下。
 	 */
 	private static void registerFlashMapManager(ParserContext context, @Nullable Object source) {
 		if (!containsBeanInHierarchy(context, DispatcherServlet.FLASH_MAP_MANAGER_BEAN_NAME)) {

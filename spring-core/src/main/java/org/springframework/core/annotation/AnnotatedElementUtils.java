@@ -16,6 +16,12 @@
 
 package org.springframework.core.annotation;
 
+import org.springframework.core.BridgeMethodResolver;
+import org.springframework.core.annotation.MergedAnnotation.Adapt;
+import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
+import org.springframework.lang.Nullable;
+import org.springframework.util.MultiValueMap;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collections;
@@ -23,12 +29,6 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.springframework.core.BridgeMethodResolver;
-import org.springframework.core.annotation.MergedAnnotation.Adapt;
-import org.springframework.core.annotation.MergedAnnotations.SearchStrategy;
-import org.springframework.lang.Nullable;
-import org.springframework.util.MultiValueMap;
 
 /**
  * General utility methods for finding annotations, meta-annotations, and
@@ -508,13 +508,22 @@ public abstract class AnnotatedElementUtils {
 	}
 
 	/**
+	 * 检查指定元素上是否添加了指定类型的注解
+	 *
 	 * Determine if an annotation of the specified {@code annotationType}
 	 * is <em>available</em> on the supplied {@link AnnotatedElement} or
 	 * within the annotation hierarchy <em>above</em> the specified element.
+	 * 确定指定的{@code annotationType}的注释是否在提供的{@link AnnotatedElement}上<em>available(可用)<em>，
+	 * 或者在注释层次结构中<em>above(以上)<em>指定元素中。
+	 *
 	 * <p>If this method returns {@code true}, then {@link #findMergedAnnotationAttributes}
 	 * will return a non-null value.
+	 * 如果这个方法返回{@code true}，那么{@link #findMergedAnnotationAttributes}将返回一个非空值。
+	 *
 	 * <p>This method follows <em>find semantics</em> as described in the
 	 * {@linkplain AnnotatedElementUtils class-level javadoc}.
+	 * 该方法遵循{@linkplain AnnotatedElementUtils class-level javadoc}中描述的<em>find semantics<em>。
+	 *
 	 * @param element the annotated element
 	 * @param annotationType the annotation type to find
 	 * @return {@code true} if a matching annotation is present
@@ -523,11 +532,24 @@ public abstract class AnnotatedElementUtils {
 	 */
 	public static boolean hasAnnotation(AnnotatedElement element, Class<? extends Annotation> annotationType) {
 		// Shortcut: directly present on the element, with no merging needed?
+		/**
+		 * 快捷方式:直接呈现在元素上，不需要合并?
+		 *
+		 * 如果注解为"java.lang"或者 "org.springframework.lang"包下的注解
+		 * 或者元素类型为jdk自带的类(类的全限定名以"java"开头)以及{@link org.springframework.core.Ordered}接口类型(子类不算)
+		 * 则只检查类上是否存在指定注解
+		 */
 		if (AnnotationFilter.PLAIN.matches(annotationType) ||
 				AnnotationsScanner.hasPlainJavaAnnotationsOnly(element)) {
 			return element.isAnnotationPresent(annotationType);
 		}
 		// Exhaustive retrieval of merged annotations...
+		/**
+		 * 合并注释的详尽检索…
+		 *
+		 * 返回一个{@link TypeMappedAnnotations}对象，并通过调用{@link TypeMappedAnnotations#isPresent(Class)}方法检查是否存在指定类型的注解
+		 * 检查时会递归检查注解继承
+		 */
 		return findAnnotations(element).isPresent(annotationType);
 	}
 
@@ -609,10 +631,17 @@ public abstract class AnnotatedElementUtils {
 	 * merge that annotation's attributes with <em>matching</em> attributes from
 	 * annotations in lower levels of the annotation hierarchy, and synthesize
 	 * the result back into an annotation of the specified {@code annotationType}.
+	 * 在注释层次结构<em> <em> <提供的{@code element}中找到指定{@code annotationType}的第一个注释，
+	 * 将该注释的属性与注释层次结构较低级别注释中的<em>匹配<em>属性合并，并将结果合成回指定{@code annotationType}的注释。
+	 *
 	 * <p>{@link AliasFor @AliasFor} semantics are fully supported, both
 	 * within a single annotation and within the annotation hierarchy.
+	 * {@link AliasFor @AliasFor}语义是完全支持的，无论是在单个注释中还是在注释层次结构中。
+	 *
 	 * <p>This method follows <em>find semantics</em> as described in the
 	 * {@linkplain AnnotatedElementUtils class-level javadoc}.
+	 * 该方法遵循{@linkplain AnnotatedElementUtils class-level javadoc}中描述的<em>find semantics<em>。
+	 *
 	 * @param element the annotated element
 	 * @param annotationType the annotation type to find
 	 * @return the merged, synthesized {@code Annotation}, or {@code null} if not found
@@ -624,11 +653,21 @@ public abstract class AnnotatedElementUtils {
 	@Nullable
 	public static <A extends Annotation> A findMergedAnnotation(AnnotatedElement element, Class<A> annotationType) {
 		// Shortcut: directly present on the element, with no merging needed?
+		/**
+		 * 快捷方式:直接呈现在元素上，不需要合并?
+		 *
+		 * 如果注释是"java.lang", "org.springframework.lang"包下的
+		 * 或者元素是内部元素(元素的完全限定名以"java"开头或者{@link org.springframework.core.Ordered}接口)
+		 * 直接返回元素上的注释，不需要合并
+		 */
 		if (AnnotationFilter.PLAIN.matches(annotationType) ||
 				AnnotationsScanner.hasPlainJavaAnnotationsOnly(element)) {
 			return element.getDeclaredAnnotation(annotationType);
 		}
 		// Exhaustive retrieval of merged annotations...
+		/**
+		 * 合并注释的详尽检索…
+		 */
 		return findAnnotations(element)
 				.get(annotationType, null, MergedAnnotationSelectors.firstDirectlyDeclared())
 				.synthesize(MergedAnnotation::isPresent).orElse(null);
@@ -760,6 +799,13 @@ public abstract class AnnotatedElementUtils {
 		return MergedAnnotations.from(element, SearchStrategy.INHERITED_ANNOTATIONS, repeatableContainers);
 	}
 
+	/**
+	 * 创建一个{@link TypeMappedAnnotations}对象，并未对元素的注解进行解析，
+	 * 该类中包含了解析策略，过滤器等解析时所需的必要对象
+	 *
+	 * @param element
+	 * @return
+	 */
 	private static MergedAnnotations findAnnotations(AnnotatedElement element) {
 		return MergedAnnotations.from(element, SearchStrategy.TYPE_HIERARCHY, RepeatableContainers.none());
 	}

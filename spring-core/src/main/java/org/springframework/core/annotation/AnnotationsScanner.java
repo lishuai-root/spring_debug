@@ -16,14 +16,6 @@
 
 package org.springframework.core.annotation;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Map;
-
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.core.Ordered;
 import org.springframework.core.ResolvableType;
@@ -32,6 +24,14 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Scanner to search for relevant annotations in the annotation hierarchy of an
@@ -63,6 +63,8 @@ abstract class AnnotationsScanner {
 	/**
 	 * Scan the hierarchy of the specified element for relevant annotations and
 	 * call the processor as required.
+	 * 扫描指定元素的层次结构以获得相关注释，并根据需要调用处理器
+	 *
 	 * @param context an optional context object that will be passed back to the
 	 * processor
 	 * @param source the source element to scan
@@ -482,6 +484,9 @@ abstract class AnnotationsScanner {
 	}
 
 	static boolean isKnownEmpty(AnnotatedElement source, SearchStrategy searchStrategy) {
+		/**
+		 * 如果是jdk自带的类直接返回true
+		 */
 		if (hasPlainJavaAnnotationsOnly(source)) {
 			return true;
 		}

@@ -16,26 +16,9 @@
 
 package org.springframework.web.multipart.support;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
 import jakarta.mail.internet.MimeUtility;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
-
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
@@ -46,10 +29,17 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+
 /**
  * Spring MultipartHttpServletRequest adapter, wrapping a Servlet 3.0 HttpServletRequest
  * and its Part objects. Parameters get exposed through the native request's getParameter
  * methods - without any custom processing on our side.
+ * Spring MultipartHttpServletRequest适配器，封装了Servlet 3.0 HttpServletRequest及其Part对象。
+ * 参数是通过本机请求的getParameter方法公开的——我们这边没有任何自定义处理。
  *
  * @author Juergen Hoeller
  * @author Rossen Stoyanchev
@@ -58,6 +48,9 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpServletRequest {
 
+	/**
+	 * 保存表单中除文件项外其他表单项参数名称
+	 */
 	@Nullable
 	private Set<String> multipartParameterNames;
 
@@ -74,6 +67,8 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 
 	/**
 	 * Create a new StandardMultipartHttpServletRequest wrapper for the given request.
+	 * 为给定的请求创建一个新的StandardMultipartHttpServletRequest包装器。
+	 *
 	 * @param request the servlet request to wrap
 	 * @param lazyParsing whether multipart parsing should be triggered lazily on
 	 * first access of multipart files or parameters
@@ -85,6 +80,9 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 
 		super(request);
 		if (!lazyParsing) {
+			/**
+			 * 解析multipart/form-data请求中的表单项
+			 */
 			parseRequest(request);
 		}
 	}
@@ -92,13 +90,25 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 
 	private void parseRequest(HttpServletRequest request) {
 		try {
+			/**
+			 * {@link Part}该类表示在<code>multipart/form-data<code> POST请求中接收的部件或表单项。
+			 */
 			Collection<Part> parts = request.getParts();
 			this.multipartParameterNames = new LinkedHashSet<>(parts.size());
+			/**
+			 * 保存表单中上传的文件集合
+			 */
 			MultiValueMap<String, MultipartFile> files = new LinkedMultiValueMap<>(parts.size());
+			/**
+			 * 遍历表单项
+			 */
 			for (Part part : parts) {
 				String headerValue = part.getHeader(HttpHeaders.CONTENT_DISPOSITION);
 				ContentDisposition disposition = ContentDisposition.parse(headerValue);
 				String filename = disposition.getFilename();
+				/**
+				 * 如果当前表单项是文件，则添加到文件集合
+				 */
 				if (filename != null) {
 					if (filename.startsWith("=?") && filename.endsWith("?=")) {
 						filename = MimeDelegate.decode(filename);
@@ -109,6 +119,9 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 					this.multipartParameterNames.add(part.getName());
 				}
 			}
+			/**
+			 * 将上传中解析到的文件绑定到当前Multipart请求对象中
+			 */
 			setMultipartFiles(files);
 		}
 		catch (Throwable ex) {
@@ -203,6 +216,7 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 
 	/**
 	 * Spring MultipartFile adapter, wrapping a Servlet 3.0 Part object.
+	 * Spring MultipartFile适配器，包装了一个Servlet 3.0 Part对象。
 	 */
 	@SuppressWarnings("serial")
 	private static class StandardMultipartFile implements MultipartFile, Serializable {

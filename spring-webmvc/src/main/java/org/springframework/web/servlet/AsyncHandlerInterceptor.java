@@ -24,6 +24,7 @@ import org.springframework.web.method.HandlerMethod;
 /**
  * Extends {@code HandlerInterceptor} with a callback method invoked after the
  * start of asynchronous request handling.
+ * 扩展{@code HandlerInterceptor}，在异步请求处理开始后调用回调方法。
  *
  * <p>When a handler starts an asynchronous request, the {@link DispatcherServlet}
  * exits without invoking {@code postHandle} and {@code afterCompletion} as it

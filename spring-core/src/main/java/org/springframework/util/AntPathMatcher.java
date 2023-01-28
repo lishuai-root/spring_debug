@@ -16,21 +16,19 @@
 
 package org.springframework.util;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.lang.Nullable;
+
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.lang.Nullable;
-
 /**
  * {@link PathMatcher} implementation for Ant-style path patterns.
+ * {@link PathMatcher}实现ant风格的路径模式。
  *
  * <p>Part of this mapping code has been kindly borrowed from <a href="https://ant.apache.org">Apache Ant</a>.
+ * 此映射代码的一部分已善意地从<a href="https:ant.apache.org">Apache Ant<a>. org"借用。
  *
  * <p>The mapping matches URLs using the following rules:<br>
  * <ul>
@@ -210,6 +208,8 @@ public class AntPathMatcher implements PathMatcher {
 
 	/**
 	 * Actually match the given {@code path} against the given {@code pattern}.
+	 * 实际上匹配给定的{@code path}和给定的{@code pattern}。
+	 *
 	 * @param pattern the pattern to match against
 	 * @param path the path to test
 	 * @param fullMatch whether a full pattern match is required (else a pattern match
@@ -623,10 +623,16 @@ public class AntPathMatcher implements PathMatcher {
 	/**
 	 * Given a full path, returns a {@link Comparator} suitable for sorting patterns in order of
 	 * explicitness.
+	 * 给定一个完整的路径，返回一个{@link Comparator}，适合按显式顺序对模式进行排序。
+	 *
 	 * <p>This {@code Comparator} will {@linkplain java.util.List#sort(Comparator) sort}
 	 * a list so that more specific patterns (without URI templates or wild cards) come before
 	 * generic patterns. So given a list with the following patterns, the returned comparator
 	 * will sort this list so that the order will be as indicated.
+	 * 这个{@code Comparator}将{@linkplain java.util.List#sort(Comparator) 对列表进行排序，
+	 * 以便更具体的模式(没有URI模板或通配符)出现在泛型模式之前。
+	 * 因此，给定一个具有以下模式的列表，返回的比较器将对该列表进行排序，以便按照指示的顺序进行排序。
+	 *
 	 * <ol>
 	 * <li>{@code /hotels/new}</li>
 	 * <li>{@code /hotels/{hotel}}</li>
@@ -634,6 +640,9 @@ public class AntPathMatcher implements PathMatcher {
 	 * </ol>
 	 * <p>The full path given as parameter is used to test for exact matches. So when the given path
 	 * is {@code /hotels/2}, the pattern {@code /hotels/2} will be sorted before {@code /hotels/1}.
+	 * 作为参数给出的完整路径用于测试精确匹配。
+	 * 因此，当给定的路径是{@code hotels/2}时，模式{@code hotels/2}将被排序在{@code hotels/1}之前。
+	 *
 	 * @param path the full path to use for comparison
 	 * @return a comparator capable of sorting patterns in order of explicitness
 	 */

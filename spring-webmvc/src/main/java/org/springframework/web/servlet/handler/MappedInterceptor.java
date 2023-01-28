@@ -16,11 +16,8 @@
 
 package org.springframework.web.servlet.handler;
 
-import java.util.Arrays;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.http.server.PathContainer;
 import org.springframework.lang.Nullable;
 import org.springframework.util.AntPathMatcher;
@@ -36,9 +33,12 @@ import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 import org.springframework.web.util.pattern.PatternParseException;
 
+import java.util.Arrays;
+
 /**
  * Wraps a {@link HandlerInterceptor} and uses URL patterns to determine whether
  * it applies to a given request.
+ * 包装一个{@link HandlerInterceptor}并使用URL模式来确定它是否适用于给定的请求。
  *
  * <p>Pattern matching can be done with {@link PathMatcher} or with parsed
  * {@link PathPattern}. The syntax is largely the same with the latter being more
@@ -47,12 +47,21 @@ import org.springframework.web.util.pattern.PatternParseException;
  * {@code String} lookupPath or a {@link ServletRequestPathUtils#parseAndCache
  * parsed} {@code RequestPath} which in turn depends on the
  * {@link HandlerMapping} that matched the current request.
+ * 模式匹配可以用{@link PathMatcher}或用解析的{@link PathPattern}完成。
+ * 语法在很大程度上是相同的，后者更适合web使用，更高效。
+ * 这个选择是由{@link UrlPathHelper#resolveAndCacheLookupPath 解析}{@code String} lookupPath
+ * 或{@link ServletRequestPathUtils#parseAndCache 解析}{@code RequestPath}驱动的，
+ * 后者反过来取决于匹配当前请求的{@link HandlerMapping}。
+ *
  *
  * <p>{@code MappedInterceptor} is supported by sub-classes of
  * {@link org.springframework.web.servlet.handler.AbstractHandlerMethodMapping
  * AbstractHandlerMethodMapping} which detect beans of type
  * {@code MappedInterceptor} and also check if interceptors directly registered
  * with it are of this type.
+ * {@code MappedInterceptor}由{@link org.springframework.web.servlet.handler.AbstractHandlerMethodMapping}的子类支持，
+ * 它们检测{@code MappedInterceptor}类型的bean，并检查直接注册到它的拦截器是否属于这种类型。
+ *
  *
  * @author Keith Donald
  * @author Rossen Stoyanchev

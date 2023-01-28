@@ -16,12 +16,12 @@
 
 package org.springframework.web.servlet;
 
-import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
+
+import java.util.Map;
 
 /**
  * Holder for both Model and View in the web MVC framework.
@@ -184,6 +184,8 @@ public class ModelAndView {
 	 * Set a view name for this ModelAndView, to be resolved by the
 	 * DispatcherServlet via a ViewResolver. Will override any
 	 * pre-existing view name or View.
+	 *
+	 * 为这个ModelAndView设置一个视图名称，由DispatcherServlet通过ViewResolver解析。将覆盖任何预先存在的视图名称或视图。
 	 */
 	public void setViewName(@Nullable String viewName) {
 		this.view = viewName;
@@ -218,6 +220,8 @@ public class ModelAndView {
 	/**
 	 * Indicate whether or not this {@code ModelAndView} has a view, either
 	 * as a view name or as a direct {@link View} instance.
+	 *
+	 * 指示这个{@code ModelAndView}是否具有视图，可以作为视图名，也可以作为直接的{@link view}实例。
 	 */
 	public boolean hasView() {
 		return (this.view != null);

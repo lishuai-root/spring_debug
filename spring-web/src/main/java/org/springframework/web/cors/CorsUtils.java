@@ -37,6 +37,8 @@ public abstract class CorsUtils {
 	/**
 	 * Returns {@code true} if the request is a valid CORS one by checking {@code Origin}
 	 * header presence and ensuring that origins are different.
+	 *
+	 * 如果请求是一个有效的CORS请求，返回{@code true}，检查{@code Origin}头是否存在，并确保起源不同。
 	 */
 	public static boolean isCorsRequest(HttpServletRequest request) {
 		String origin = request.getHeader(HttpHeaders.ORIGIN);
@@ -66,8 +68,13 @@ public abstract class CorsUtils {
 	}
 
 	/**
+	 * 验证当前请求是否跨域预检请求
+	 *
 	 * Returns {@code true} if the request is a valid CORS pre-flight one by checking {code OPTIONS} method with
 	 * {@code Origin} and {@code Access-Control-Request-Method} headers presence.
+	 *
+	 * 如果请求是有效的CORS预飞行请求，则通过检查{code OPTIONS}方法的{@code Origin}
+	 * 和{@code Access-Control-Request-Method}头是否存在，返回{@code true}。
 	 */
 	public static boolean isPreFlightRequest(HttpServletRequest request) {
 		return (HttpMethod.OPTIONS.matches(request.getMethod()) &&

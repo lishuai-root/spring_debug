@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'org.springframework'
+version '6.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+//    api(project(":spring-webmvc"))
+    implementation(project(":spring-webmvc"))
+//    implementation 'org.projectlombok:lombok:1.18.18'
+    testImplementation 'junit:junit:4.11'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    implementation 'com.alibaba:fastjson:1.2.78'
+    implementation 'jakarta.servlet:jakarta.servlet-api'
+//    implementation("jakarta.servlet:jakarta.servlet-api")
+//    implementation("jakarta.servlet.jsp:jakarta.servlet.jsp-api")
+//    implementation("jakarta.el:jakarta.el-api")
+//    implementation("jakarta.faces:jakarta.faces-api")
+//    implementation("jakarta.json.bind:jakarta.json.bind-api")
+//    implementation("jakarta.mail:jakarta.mail-api")
+//    implementation("jakarta.validation:jakarta.validation-api")
+//    implementation("jakarta.xml.bind:jakarta.xml.bind-api")
+}
+
+test {
+    useJUnitPlatform()
+}

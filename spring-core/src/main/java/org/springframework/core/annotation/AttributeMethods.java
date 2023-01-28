@@ -16,16 +16,16 @@
 
 package org.springframework.core.annotation;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.ConcurrentReferenceHashMap;
+import org.springframework.util.ReflectionUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ConcurrentReferenceHashMap;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * Provides a quick way to access the attribute methods of an {@link Annotation}
@@ -99,6 +99,8 @@ final class AttributeMethods {
 	/**
 	 * Determine if values from the given annotation can be safely accessed without
 	 * causing any {@link TypeNotPresentException TypeNotPresentExceptions}.
+	 * 确定来自给定注释的值是否可以安全访问，而不会引起任何{@link TypeNotPresentException TypeNotPresentException}。
+	 *
 	 * @param annotation the annotation to check
 	 * @return {@code true} if all values are present
 	 * @see #validate(Annotation)
@@ -164,6 +166,8 @@ final class AttributeMethods {
 
 	/**
 	 * Get the attribute at the specified index.
+	 * 获取指定索引处的属性。
+	 *
 	 * @param index the index of the attribute to return
 	 * @return the attribute method
 	 * @throws IndexOutOfBoundsException if the index is out of range
@@ -176,6 +180,8 @@ final class AttributeMethods {
 	/**
 	 * Determine if the attribute at the specified index could throw a
 	 * {@link TypeNotPresentException} when accessed.
+	 * 确定在访问指定索引处的属性时是否会抛出{@link TypeNotPresentException}。
+	 *
 	 * @param index the index of the attribute to check
 	 * @return {@code true} if the attribute can throw a
 	 * {@link TypeNotPresentException}
@@ -242,6 +248,8 @@ final class AttributeMethods {
 
 	/**
 	 * Get the attribute methods for the given annotation type.
+	 * 获取给定注释类型的属性方法。
+	 *
 	 * @param annotationType the annotation type
 	 * @return the attribute methods for the annotation type
 	 */

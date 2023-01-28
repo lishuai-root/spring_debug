@@ -1,4 +1,4 @@
-package com.shuai.controller;
+package com.shuai.controller.annotation;
 
 import com.shuai.common.FileMessage;
 import com.shuai.common.User;
@@ -21,7 +21,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping
 @CrossOrigin
-public class UserController {
+public class AnnotationController {
 
 	@GetMapping("hello")
 	public String hello(){

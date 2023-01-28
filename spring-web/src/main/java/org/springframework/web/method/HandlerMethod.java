@@ -16,18 +16,8 @@
 
 package org.springframework.web.method;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -39,23 +29,34 @@ import org.springframework.core.annotation.SynthesizingMethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Encapsulates information about a handler method consisting of a
  * {@linkplain #getMethod() method} and a {@linkplain #getBean() bean}.
+ * 封装有关处理程序方法的信息，该方法由{@linkplain #getMethod() 方法}和{@linkplain #getBean() bean}组成。
+ *
  * Provides convenient access to method parameters, the method return value,
  * method annotations, etc.
+ * 提供对方法参数、方法返回值、方法注释等的方便访问。
  *
  * <p>The class may be created with a bean instance or with a bean name
  * (e.g. lazy-init bean, prototype bean). Use {@link #createWithResolvedBean()}
  * to obtain a {@code HandlerMethod} instance with a bean instance resolved
  * through the associated {@link BeanFactory}.
+ * 类可以使用bean实例或bean名称创建(例如lazy-init bean, prototype bean)。
+ * 使用{@link #createWithResolvedBean()}获得一个{@code HandlerMethod}实例，其中一个bean实例通过关联的{@link BeanFactory}解析。
+ *
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -278,6 +279,8 @@ public class HandlerMethod {
 	/**
 	 * If the bean method is a bridge method, this method returns the bridged
 	 * (user-defined) method. Otherwise it returns the same method as {@link #getMethod()}.
+	 *
+	 * 如果bean方法是桥接方法，则该方法返回桥接(用户定义的)方法。否则返回与{@link #getMethod()}相同的方法。
 	 */
 	protected Method getBridgedMethod() {
 		return this.bridgedMethod;
@@ -302,6 +305,8 @@ public class HandlerMethod {
 
 	/**
 	 * Return the associated response status reason, if any.
+	 * 返回相关的响应状态原因(如果有的话)。
+	 *
 	 * @since 4.3.8
 	 * @see ResponseStatus#reason()
 	 */
@@ -367,6 +372,8 @@ public class HandlerMethod {
 	/**
 	 * If the provided instance contains a bean name rather than an object instance,
 	 * the bean name is resolved before a {@link HandlerMethod} is created and returned.
+	 *
+	 * 如果提供的实例包含bean名而不是对象实例，则在创建和返回{@link HandlerMethod}之前解析bean名。
 	 */
 	public HandlerMethod createWithResolvedBean() {
 		Object handler = this.bean;

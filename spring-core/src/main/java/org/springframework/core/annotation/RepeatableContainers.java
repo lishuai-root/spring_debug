@@ -16,27 +16,31 @@
 
 package org.springframework.core.annotation;
 
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Repeatable;
-import java.lang.reflect.Method;
-import java.util.Map;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ConcurrentReferenceHashMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Repeatable;
+import java.lang.reflect.Method;
+import java.util.Map;
+
 /**
  * Strategy used to determine annotations that act as containers for other
  * annotations. The {@link #standardRepeatables()} method provides a default
  * strategy that respects Java's {@link Repeatable @Repeatable} support and
  * should be suitable for most situations.
+ * 用于确定充当其他注释容器的注释的策略。
+ * {@link #standardRepeatables()}方法提供了一个默认策略，它尊重Java的{@link Repeatable @Repeatable}支持，应该适用于大多数情况。
  *
  * <p>The {@link #of} method can be used to register relationships for
  * annotations that do not wish to use {@link Repeatable @Repeatable}.
+ * {@link #of}方法可用于为不希望使用{@link Repeatable @Repeatable}的注释注册关系。
  *
  * <p>To completely disable repeatable support use {@link #none()}.
+ * 要完全禁用可重复支持，请使用{@link #none()}。
  *
  * @author Phillip Webb
  * @since 5.2
@@ -120,6 +124,8 @@ public abstract class RepeatableContainers {
 	/**
 	 * Create a {@link RepeatableContainers} instance that does not expand any
 	 * repeatable annotations.
+	 * 创建一个不展开任何可重复注释的{@link RepeatableContainers}实例。
+	 *
 	 * @return a {@link RepeatableContainers} instance
 	 */
 	public static RepeatableContainers none() {
@@ -260,7 +266,7 @@ public abstract class RepeatableContainers {
 
 
 	/**
-	 * No repeatable containers.
+	 * No repeatable containers. 没有可重复的容器。
 	 */
 	private static class NoRepeatableContainers extends RepeatableContainers {
 

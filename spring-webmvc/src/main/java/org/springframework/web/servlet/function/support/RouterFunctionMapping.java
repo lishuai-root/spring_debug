@@ -16,13 +16,7 @@
 
 package org.springframework.web.servlet.function.support;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -42,13 +36,23 @@ import org.springframework.web.servlet.handler.AbstractHandlerMapping;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 /**
  * {@code HandlerMapping} implementation that supports {@link RouterFunction RouterFunctions}.
+ * {@code HandlerMapping}实现，支持{@link RouterFunction RouterFunctions}。
  *
  * <p>If no {@link RouterFunction} is provided at
  * {@linkplain #RouterFunctionMapping(RouterFunction) construction time}, this mapping
  * will detect all router functions in the application context, and consult them in
  * {@linkplain org.springframework.core.annotation.Order order}.
+ *
+ * 如果在{@linkplain RouterFunctionMapping(RouterFunction) 构造时}没有提供{@link RouterFunction}，
+ * 这个映射将检测应用程序上下文中的所有路由器函数，并在{@linkplain org.springframework.core.annotation.Order order}中查阅它们。
+ *
  *
  * @author Arjen Poutsma
  * @author Sebastien Deleuze
@@ -60,6 +64,8 @@ public class RouterFunctionMapping extends AbstractHandlerMapping implements Ini
 	/**
 	 * Boolean flag controlled by a {@code spring.xml.ignore} system property that instructs Spring to
 	 * ignore XML, i.e. to not initialize the XML-related infrastructure.
+	 * 由{@code spring.xml.ignore}系统属性，指示Spring忽略XML，即不初始化XML相关的基础设施。
+	 *
 	 * <p>The default is "false".
 	 */
 	private static final boolean shouldIgnoreXml = SpringProperties.getFlag("spring.xml.ignore");
@@ -153,16 +159,24 @@ public class RouterFunctionMapping extends AbstractHandlerMapping implements Ini
 	/**
 	 * Detect a all {@linkplain RouterFunction router functions} in the
 	 * current application context.
+	 *
+	 * 检测当前应用上下文中所有{@linkplain RouterFunction 路由器函数}。
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void initRouterFunction() {
 		ApplicationContext applicationContext = obtainApplicationContext();
+		/**
+		 * 获取工厂中所有{@link RouterFunction}类型的bean实例
+		 */
 		Map<String, RouterFunction> beans =
 				(this.detectHandlerFunctionsInAncestorContexts ?
 						BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, RouterFunction.class) :
 						applicationContext.getBeansOfType(RouterFunction.class));
 		List<RouterFunction> routerFunctions = new ArrayList<>(beans.values());
 		this.routerFunction = routerFunctions.stream().reduce(RouterFunction::andOther).orElse(null);
+		/**
+		 * 记录日志
+		 */
 		logRouterFunctions(routerFunctions);
 	}
 
@@ -190,6 +204,7 @@ public class RouterFunctionMapping extends AbstractHandlerMapping implements Ini
 
 	/**
 	 * Initializes a default set of {@linkplain HttpMessageConverter message converters}.
+	 * 初始化{@linkplain HttpMessageConverter 消息转换器}的默认集合。
 	 */
 	private void initMessageConverters() {
 		List<HttpMessageConverter<?>> messageConverters = new ArrayList<>(4);

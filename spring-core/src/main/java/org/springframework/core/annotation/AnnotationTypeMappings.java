@@ -16,15 +16,11 @@
 
 package org.springframework.core.annotation;
 
-import java.lang.annotation.Annotation;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.ConcurrentReferenceHashMap;
+
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * Provides {@link AnnotationTypeMapping} information for a single source
@@ -162,6 +158,8 @@ final class AnnotationTypeMappings {
 
 	/**
 	 * Create {@link AnnotationTypeMappings} for the specified annotation type.
+	 * 为指定的注释类型创建{@link annotationtypemaps}。
+	 *
 	 * @param annotationType the source annotation type
 	 * @return type mappings for the annotation type
 	 */

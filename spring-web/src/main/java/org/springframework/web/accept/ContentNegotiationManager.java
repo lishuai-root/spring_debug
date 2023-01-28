@@ -16,17 +16,6 @@
 
 package org.springframework.web.accept;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-
 import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -34,14 +23,21 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import java.util.*;
+import java.util.function.Function;
+
 /**
  * Central class to determine requested {@linkplain MediaType media types}
  * for a request. This is done by delegating to a list of configured
  * {@code ContentNegotiationStrategy} instances.
+ * 用于确定请求的请求{@linkplain MediaType 媒体类型}的中心类。
+ * 这是通过委托给一组已配置的{@code ContentNegotiationStrategy}实例来完成的。
  *
  * <p>Also provides methods to look up file extensions for a media type.
  * This is done by delegating to the list of configured
  * {@code MediaTypeFileExtensionResolver} instances.
+ * 还提供查找媒体类型的文件扩展名的方法。
+ * 这是通过委托给已配置的{@code MediaTypeFileExtensionResolver}实例列表来完成的。
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -90,6 +86,8 @@ public class ContentNegotiationManager implements ContentNegotiationStrategy, Me
 
 	/**
 	 * Return the configured content negotiation strategies.
+	 * 返回已配置的内容协商策略。
+	 *
 	 * @since 3.2.16
 	 */
 	public List<ContentNegotiationStrategy> getStrategies() {
@@ -98,6 +96,8 @@ public class ContentNegotiationManager implements ContentNegotiationStrategy, Me
 
 	/**
 	 * Find a {@code ContentNegotiationStrategy} of the given type.
+	 * 找到给定类型的{@code ContentNegotiationStrategy}。
+	 *
 	 * @param strategyType the strategy type
 	 * @return the first matching strategy, or {@code null} if none
 	 * @since 4.3
@@ -116,6 +116,8 @@ public class ContentNegotiationManager implements ContentNegotiationStrategy, Me
 	/**
 	 * Register more {@code MediaTypeFileExtensionResolver} instances in addition
 	 * to those detected at construction.
+	 * 除了在构造时检测到的实例之外，注册更多的{@code MediaTypeFileExtensionResolver}实例。
+	 *
 	 * @param resolvers the resolvers to add
 	 */
 	public void addFileExtensionResolvers(MediaTypeFileExtensionResolver... resolvers) {
@@ -174,6 +176,8 @@ public class ContentNegotiationManager implements ContentNegotiationStrategy, Me
 
 	/**
 	 * Return all registered lookup key to media type mappings by iterating
+	 * 通过迭代返回所有已注册的查找键到媒体类型映射
+	 *
 	 * {@link MediaTypeFileExtensionResolver}s.
 	 * @since 5.2.4
 	 */

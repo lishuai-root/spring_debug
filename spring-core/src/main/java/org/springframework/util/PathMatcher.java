@@ -21,13 +21,20 @@ import java.util.Map;
 
 /**
  * Strategy interface for {@code String}-based path matching.
+ * 基于{@code String}的路径匹配策略接口。
  *
  * <p>Used by {@link org.springframework.core.io.support.PathMatchingResourcePatternResolver},
  * {@link org.springframework.web.servlet.handler.AbstractUrlHandlerMapping},
  * and {@link org.springframework.web.servlet.mvc.WebContentInterceptor}.
  *
+ * 由{@link org.springframework.core.io.support.PathMatchingResourcePatternResolver}，
+ * {@link org.springframework.web.servlet.handler.AbstractUrlHandlerMapping}
+ * 和{@link org.springframework.web.servlet.mvc.WebContentInterceptor}。
+ *
+ *
  * <p>The default implementation is {@link AntPathMatcher}, supporting the
  * Ant-style pattern syntax.
+ * 默认的实现是{@link AntPathMatcher}，支持ant风格的模式语法。
  *
  * @author Juergen Hoeller
  * @since 1.2
@@ -38,9 +45,13 @@ public interface PathMatcher {
 	/**
 	 * Does the given {@code path} represent a pattern that can be matched
 	 * by an implementation of this interface?
+	 * 给定的{@code path}是否表示该接口的实现可以匹配的模式?
+	 *
 	 * <p>If the return value is {@code false}, then the {@link #match}
 	 * method does not have to be used because direct equality comparisons
 	 * on the static path Strings will lead to the same result.
+	 * 如果返回值是{@code false}，则不需要使用{@link #match}方法，因为对静态路径字符串进行直接相等比较将导致相同的结果。
+	 *
 	 * @param path the path to check
 	 * @return {@code true} if the given {@code path} represents a pattern
 	 */
@@ -49,6 +60,8 @@ public interface PathMatcher {
 	/**
 	 * Match the given {@code path} against the given {@code pattern},
 	 * according to this PathMatcher's matching strategy.
+	 * 根据这个PathMatcher的匹配策略，匹配给定的{@code path}和给定的{@code pattern}。
+	 *
 	 * @param pattern the pattern to match against
 	 * @param path the path to test
 	 * @return {@code true} if the supplied {@code path} matched,
@@ -93,8 +106,12 @@ public interface PathMatcher {
 	/**
 	 * Given a pattern and a full path, extract the URI template variables. URI template
 	 * variables are expressed through curly brackets ('{' and '}').
+	 * 给定模式和完整路径，提取URI模板变量。URI模板变量通过花括号('{'and'}')表示。
+	 *
 	 * <p>For example: For pattern "/hotels/{hotel}" and path "/hotels/1", this method will
 	 * return a map containing "hotel"->"1".
+	 * 例如:对于模式“/hotels/{hotel}”和路径“/hotels/1”，此方法将返回包含“hotel”->“1”的映射。
+	 *
 	 * @param pattern the path pattern, possibly containing URI templates
 	 * @param path the full path to extract template variables from
 	 * @return a map, containing variable names as keys; variables values as values

@@ -26,6 +26,8 @@ package org.springframework.beans.factory;
  * <p>An alternative to implementing {@code InitializingBean} is specifying a custom
  * init method, for example in an XML bean definition. For a list of all bean
  * lifecycle methods, see the {@link BeanFactory BeanFactory javadocs}.
+ * 实现{@code InitializingBean}的另一种方法是指定一个自定义的init方法，例如在XML bean定义中。
+ * 有关所有bean生命周期方法的列表，请参阅{@link BeanFactory BeanFactory javadocs}。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -38,8 +40,12 @@ public interface InitializingBean {
 	/**
 	 * Invoked by the containing {@code BeanFactory} after it has set all bean properties
 	 * and satisfied {@link BeanFactoryAware}, {@code ApplicationContextAware} etc.
+	 * 在包含它的{@code BeanFactory}设置了所有bean属性并满足{@link BeanFactoryAware}， {@code ApplicationContextAware}等之后，由它调用。
+	 *
 	 * <p>This method allows the bean instance to perform validation of its overall
 	 * configuration and final initialization when all bean properties have been set.
+	 * 此方法允许bean实例在设置完所有bean属性后执行其总体配置验证和最终初始化。
+	 *
 	 * @throws Exception in the event of misconfiguration (such as failure to set an
 	 * essential property) or if initialization fails for any other reason
 	 */

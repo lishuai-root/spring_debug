@@ -34,6 +34,7 @@ public interface RequestAttributes {
 
 	/**
 	 * Constant that indicates request scope.
+	 * 指示请求范围的常量。
 	 */
 	int SCOPE_REQUEST = 0;
 

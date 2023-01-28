@@ -25,9 +25,12 @@ import org.springframework.lang.Nullable;
 /**
  * Provides additional methods for dealing with multipart content within a
  * servlet request, allowing to access uploaded files.
+ * 提供额外的方法来处理servlet请求中的多部分内容，允许访问上传的文件。
+ *
  * Implementations also need to override the standard
  * {@link jakarta.servlet.ServletRequest} methods for parameter access, making
  * multipart parameters available.
+ * 实现还需要重写标准{@link jakarta.servlet.ServletRequest}方法用于参数访问，使多个部分的参数可用。
  *
  * <p>A concrete implementation is
  * {@link org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest}.

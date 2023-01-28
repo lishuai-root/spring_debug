@@ -16,12 +16,12 @@
 
 package org.springframework.context.i18n;
 
-import java.util.Locale;
-import java.util.TimeZone;
-
 import org.springframework.core.NamedInheritableThreadLocal;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.lang.Nullable;
+
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Simple holder class that associates a LocaleContext instance
@@ -44,9 +44,15 @@ import org.springframework.lang.Nullable;
  */
 public final class LocaleContextHolder {
 
+	/**
+	 * 用来暴露不可以被子线程继承的LocaleContext
+	 */
 	private static final ThreadLocal<LocaleContext> localeContextHolder =
 			new NamedThreadLocal<>("LocaleContext");
 
+	/**
+	 * 用来暴露可以被子线程继承的LocaleContext
+	 */
 	private static final ThreadLocal<LocaleContext> inheritableLocaleContextHolder =
 			new NamedInheritableThreadLocal<>("LocaleContext");
 
@@ -65,6 +71,7 @@ public final class LocaleContextHolder {
 
 	/**
 	 * Reset the LocaleContext for the current thread.
+	 * 重置当前线程的LocaleContext。
 	 */
 	public static void resetLocaleContext() {
 		localeContextHolder.remove();
@@ -87,8 +94,12 @@ public final class LocaleContextHolder {
 
 	/**
 	 * Associate the given LocaleContext with the current thread.
+	 * 将给定的LocaleContext与当前线程关联起来。
+	 *
 	 * <p>The given LocaleContext may be a {@link TimeZoneAwareLocaleContext},
 	 * containing a locale with associated time zone information.
+	 * 给定的LocaleContext可以是一个{@link TimeZoneAwareLocaleContext}，包含一个带有相关时区信息的区域设置。
+	 *
 	 * @param localeContext the current LocaleContext,
 	 * or {@code null} to reset the thread-bound context
 	 * @param inheritable whether to expose the LocaleContext as inheritable
@@ -114,6 +125,8 @@ public final class LocaleContextHolder {
 
 	/**
 	 * Return the LocaleContext associated with the current thread, if any.
+	 * 返回与当前线程关联的LocaleContext(如果有的话)。
+	 *
 	 * @return the current LocaleContext, or {@code null} if none
 	 */
 	@Nullable

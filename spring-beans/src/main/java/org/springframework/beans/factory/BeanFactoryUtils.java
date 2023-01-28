@@ -228,11 +228,18 @@ public abstract class BeanFactoryUtils {
 	/**
 	 * Get all bean names for the given type, including those defined in ancestor
 	 * factories. Will return unique names in case of overridden bean definitions.
+	 * 获取给定类型的所有bean名称，包括在祖先工厂中定义的名称。在重写bean定义的情况下将返回唯一的名称。
+	 *
 	 * <p>Does consider objects created by FactoryBeans, which means that FactoryBeans
 	 * will get initialized. If the object created by the FactoryBean doesn't match,
 	 * the raw FactoryBean itself will be matched against the type.
+	 * 考虑由FactoryBeans创建的对象，这意味着FactoryBeans将被初始化。
+	 * 如果FactoryBean创建的对象不匹配，原始FactoryBean本身将根据类型进行匹配。
+	 *
 	 * <p>This version of {@code beanNamesForTypeIncludingAncestors} automatically
 	 * includes prototypes and FactoryBeans.
+	 * 这个版本的{@code beanNamesForTypeIncludingAncestors}自动包含原型和FactoryBeans。
+	 *
 	 * @param lbf the bean factory
 	 * @param type the type that beans must match (as a {@code Class})
 	 * @return the array of matching bean names, or an empty array if none
@@ -335,17 +342,32 @@ public abstract class BeanFactoryUtils {
 	// Retrieval of bean instances
 
 	/**
+	 * 在指定工厂及其父工厂中查找指定雷响的bean实例(不管是否单例)，如果存在同名的bean实例，优先取子工厂中的实例，即使类型都匹配
+	 * 查找过程可能引起factoryBean的创建
+	 *
 	 * Return all beans of the given type or subtypes, also picking up beans defined in
 	 * ancestor bean factories if the current bean factory is a HierarchicalBeanFactory.
+	 * 返回给定类型或子类型的所有bean，如果当前bean工厂是HierarchicalBeanFactory，还将拾取祖先bean工厂中定义的bean。
+	 *
 	 * The returned Map will only contain beans of this type.
+	 * 返回的Map将只包含这种类型的bean。
+	 *
 	 * <p>Does consider objects created by FactoryBeans, which means that FactoryBeans
 	 * will get initialized. If the object created by the FactoryBean doesn't match,
 	 * the raw FactoryBean itself will be matched against the type.
+	 * <p>是否考虑FactoryBeans创建的对象，这意味着FactoryBeans将被初始化。
+	 * 如果FactoryBean创建的对象不匹配，原始FactoryBean本身将根据类型进行匹配。
+	 *
 	 * <p><b>Note: Beans of the same name will take precedence at the 'lowest' factory level,
 	 * i.e. such beans will be returned from the lowest factory that they are being found in,
 	 * hiding corresponding beans in ancestor factories.</b> This feature allows for
 	 * 'replacing' beans by explicitly choosing the same bean name in a child factory;
+	 * 注意:同名的bean将在“最低”工厂级别优先，即这样的bean将从它们所在的最低工厂返回，在祖先工厂中隐藏相应的bean。
+	 * 这个特性允许通过显式地在子工厂中选择相同的bean名称来“替换”bean;
+	 *
 	 * the bean in the ancestor factory won't be visible then, not even for by-type lookups.
+	 * 那时，祖先工厂中的bean将不可见，即使是按类型查找也不可见。
+	 *
 	 * @param lbf the bean factory
 	 * @param type type of bean to match
 	 * @return the Map of matching bean instances, or an empty Map if none
@@ -363,6 +385,9 @@ public abstract class BeanFactoryUtils {
 			if (hbf.getParentBeanFactory() instanceof ListableBeanFactory) {
 				Map<String, T> parentResult = beansOfTypeIncludingAncestors(
 						(ListableBeanFactory) hbf.getParentBeanFactory(), type);
+				/**
+				 * 排除子工厂中已经存在的父工厂中同名的bean实例
+				 */
 				parentResult.forEach((beanName, beanInstance) -> {
 					if (!result.containsKey(beanName) && !hbf.containsLocalBean(beanName)) {
 						result.put(beanName, beanInstance);

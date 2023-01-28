@@ -34,6 +34,7 @@ public abstract class WebAsyncUtils {
 
 	/**
 	 * The name attribute containing the {@link WebAsyncManager}.
+	 * name属性包含{@link WebAsyncManager}。
 	 */
 	public static final String WEB_ASYNC_MANAGER_ATTRIBUTE =
 			WebAsyncManager.class.getName() + ".WEB_ASYNC_MANAGER";
@@ -42,6 +43,8 @@ public abstract class WebAsyncUtils {
 	/**
 	 * Obtain the {@link WebAsyncManager} for the current request, or if not
 	 * found, create and associate it with the request.
+	 *
+	 * 获取当前请求的{@link WebAsyncManager}，如果没有找到，则创建它并将其与请求关联。
 	 */
 	public static WebAsyncManager getAsyncManager(ServletRequest servletRequest) {
 		WebAsyncManager asyncManager = null;
@@ -49,6 +52,9 @@ public abstract class WebAsyncUtils {
 		if (asyncManagerAttr instanceof WebAsyncManager) {
 			asyncManager = (WebAsyncManager) asyncManagerAttr;
 		}
+		/**
+		 * 为当前请求创建一异步管理器，并和当前请求绑定
+		 */
 		if (asyncManager == null) {
 			asyncManager = new WebAsyncManager();
 			servletRequest.setAttribute(WEB_ASYNC_MANAGER_ATTRIBUTE, asyncManager);

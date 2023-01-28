@@ -16,10 +16,10 @@
 
 package org.springframework.web.context.request;
 
+import org.springframework.util.Assert;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.springframework.util.Assert;
 
 /**
  * Abstract support class for RequestAttributes implementations,
@@ -32,7 +32,9 @@ import org.springframework.util.Assert;
  */
 public abstract class AbstractRequestAttributes implements RequestAttributes {
 
-	/** Map from attribute name String to destruction callback Runnable. */
+	/** Map from attribute name String to destruction callback Runnable.
+	 * 从属性名字符串映射到销毁回调可运行。
+	 * */
 	protected final Map<String, Runnable> requestDestructionCallbacks = new LinkedHashMap<>(8);
 
 	private volatile boolean requestActive = true;
@@ -40,8 +42,11 @@ public abstract class AbstractRequestAttributes implements RequestAttributes {
 
 	/**
 	 * Signal that the request has been completed.
+	 * 发出请求已完成的信号。
+	 *
 	 * <p>Executes all request destruction callbacks and updates the
 	 * session attributes that have been accessed during request processing.
+	 * 执行所有请求销毁回调，并更新在请求处理期间访问过的会话属性。
 	 */
 	public void requestCompleted() {
 		executeRequestDestructionCallbacks();
@@ -59,6 +64,8 @@ public abstract class AbstractRequestAttributes implements RequestAttributes {
 
 	/**
 	 * Register the given callback as to be executed after request completion.
+	 * 将给定的回调注册为在请求完成后执行。
+	 *
 	 * @param name the name of the attribute to register the callback for
 	 * @param callback the callback to be executed for destruction
 	 */
@@ -84,6 +91,8 @@ public abstract class AbstractRequestAttributes implements RequestAttributes {
 	/**
 	 * Execute all callbacks that have been registered for execution
 	 * after request completion.
+	 *
+	 * 在请求完成后执行所有已注册的回调。
 	 */
 	private void executeRequestDestructionCallbacks() {
 		synchronized (this.requestDestructionCallbacks) {
@@ -97,6 +106,8 @@ public abstract class AbstractRequestAttributes implements RequestAttributes {
 	/**
 	 * Update all session attributes that have been accessed during request processing,
 	 * to expose their potentially updated state to the underlying session manager.
+	 *
+	 * 更新在请求处理期间访问过的所有会话属性，以便将其可能更新的状态暴露给底层会话管理器。
 	 */
 	protected abstract void updateAccessedSessionAttributes();
 

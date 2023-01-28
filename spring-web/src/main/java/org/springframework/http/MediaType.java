@@ -16,28 +16,18 @@
 
 package org.springframework.http;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.*;
+
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.InvalidMimeTypeException;
-import org.springframework.util.MimeType;
-import org.springframework.util.MimeTypeUtils;
-import org.springframework.util.StringUtils;
+import java.util.*;
 
 /**
  * A subclass of {@link MimeType} that adds support for quality parameters
  * as defined in the HTTP specification.
+ * {@link MimeType}的子类，它添加了对HTTP规范中定义的质量参数的支持。
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
@@ -55,6 +45,7 @@ public class MediaType extends MimeType implements Serializable {
 
 	/**
 	 * Public constant media type that includes all media ranges (i.e. "&#42;/&#42;").
+	 * 公共常量媒体类型，包括所有媒体范围(即。“42;42”)。
 	 */
 	public static final MediaType ALL;
 

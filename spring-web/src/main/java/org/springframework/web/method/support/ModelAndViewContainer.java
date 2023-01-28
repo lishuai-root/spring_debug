@@ -16,10 +16,6 @@
 
 package org.springframework.web.method.support;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.ui.Model;
@@ -27,6 +23,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.support.BindingAwareModelMap;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.bind.support.SimpleSessionStatus;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Records model and view related decisions made by
@@ -254,6 +254,10 @@ public class ModelAndViewContainer {
 	 * {@code @ResponseBody} method, and therefore view resolution is not
 	 * necessary. This flag can also be set when controller methods declare an
 	 * argument of type {@code ServletResponse} or {@code OutputStream}).
+	 *
+	 * 请求是否在处理程序中被完全处理，例如{@code @ResponseBody}方法，因此视图解析是不必要的。
+	 * 当控制器方法声明类型为{@code ServletResponse}或{@code OutputStream}的参数时，也可以设置此标志。
+	 *
 	 * <p>The default value is {@code false}.
 	 */
 	public void setRequestHandled(boolean requestHandled) {

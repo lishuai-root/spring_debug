@@ -16,13 +16,13 @@
 
 package org.springframework.web.servlet;
 
-import java.util.HashMap;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
 
 /**
  * A FlashMap provides a way for one request to store attributes intended for
@@ -30,6 +30,10 @@ import org.springframework.util.StringUtils;
  * to another -- e.g. the Post/Redirect/Get pattern. A FlashMap is saved before
  * the redirect (typically in the session) and is made available after the
  * redirect and removed immediately.
+ * FlashMap为一个请求提供了一种存储用于另一个请求的属性的方法。
+ * 这在从一个URL重定向到另一个URL时是最常见的——例如PostRedirectGet模式。
+ * 在重定向之前(通常在会话中)保存FlashMap，在重定向之后可用并立即删除。
+ *
  *
  * <p>A FlashMap can be set up with a request path and request parameters to
  * help identify the target request. Without this information, a FlashMap is
@@ -37,10 +41,15 @@ import org.springframework.util.StringUtils;
  * recipient. On a redirect, the target URL is known and a FlashMap can be
  * updated with that information. This is done automatically when the
  * {@code org.springframework.web.servlet.view.RedirectView} is used.
+ * 可以使用请求路径和请求参数来设置FlashMap，以帮助识别目标请求。
+ * 如果没有这些信息，下一个请求就可以使用FlashMap，这个请求可能是也可能不是预期的接收方。
+ * 在重定向中，目标URL是已知的，可以用该信息更新FlashMap。当{@code org.springframework.web.servlet.view.RedirectView}使用。
+ *
  *
  * <p>Note: annotated controllers will usually not use FlashMap directly.
  * See {@code org.springframework.web.servlet.mvc.support.RedirectAttributes}
  * for an overview of using flash attributes in annotated controllers.
+ * 注意:带注释的控制器通常不会直接使用FlashMap。参见{@code org.springframework.web.servlet.mvc.support.RedirectAttributes}提供了在带注释的控制器中使用flash属性的概述。
  *
  * @author Rossen Stoyanchev
  * @since 3.1
@@ -59,8 +68,11 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 
 	/**
 	 * Provide a URL path to help identify the target request for this FlashMap.
+	 * 提供一个URL路径来帮助识别这个FlashMap的目标请求。
+	 *
 	 * <p>The path may be absolute (e.g. "/application/resource") or relative to the
 	 * current request (e.g. "../resource").
+	 * 路径可能是绝对的(例如。"/applicationresource")或相对于当前请求(例如。“../resource”)。
 	 */
 	public void setTargetRequestPath(@Nullable String path) {
 		this.targetRequestPath = path;
@@ -68,6 +80,7 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 
 	/**
 	 * Return the target URL path (or {@code null} if none specified).
+	 * 返回目标URL路径(如果没有指定，则返回{@code null})。
 	 */
 	@Nullable
 	public String getTargetRequestPath() {
@@ -110,6 +123,8 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 
 	/**
 	 * Start the expiration period for this instance.
+	 * 启动此实例的过期期限。
+	 *
 	 * @param timeToLive the number of seconds before expiration
 	 */
 	public void startExpirationPeriod(int timeToLive) {
@@ -147,6 +162,8 @@ public final class FlashMap extends HashMap<String, Object> implements Comparabl
 	 * Compare two FlashMaps and prefer the one that specifies a target URL
 	 * path or has more target URL parameters. Before comparing FlashMap
 	 * instances ensure that they match a given request.
+	 *
+	 * 比较两个flashMap，选择指定目标URL路径或具有更多目标URL参数的flashMap。在比较FlashMap实例之前，确保它们匹配给定的请求。
 	 */
 	@Override
 	public int compareTo(FlashMap other) {

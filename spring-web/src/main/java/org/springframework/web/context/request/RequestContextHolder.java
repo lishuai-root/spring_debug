@@ -47,15 +47,23 @@ public abstract class RequestContextHolder  {
 	private static final boolean jsfPresent =
 			ClassUtils.isPresent("jakarta.faces.context.FacesContext", RequestContextHolder.class.getClassLoader());
 
+	/**
+	 * 用来暴露不可以被子线程继承的RequestAttributes
+	 */
 	private static final ThreadLocal<RequestAttributes> requestAttributesHolder =
 			new NamedThreadLocal<>("Request attributes");
 
+	/**
+	 * 用来暴露可以被子线程继承的RequestAttributes
+	 */
 	private static final ThreadLocal<RequestAttributes> inheritableRequestAttributesHolder =
 			new NamedInheritableThreadLocal<>("Request context");
 
 
 	/**
 	 * Reset the RequestAttributes for the current thread.
+	 *
+	 * 重置当前线程的RequestAttributes。
 	 */
 	public static void resetRequestAttributes() {
 		requestAttributesHolder.remove();
@@ -65,6 +73,8 @@ public abstract class RequestContextHolder  {
 	/**
 	 * Bind the given RequestAttributes to the current thread,
 	 * <i>not</i> exposing it as inheritable for child threads.
+	 * 将给定的RequestAttributes绑定到当前线程，<i>而不是<i>将其暴露为可继承的子线程。
+	 *
 	 * @param attributes the RequestAttributes to expose
 	 * @see #setRequestAttributes(RequestAttributes, boolean)
 	 */
@@ -74,10 +84,15 @@ public abstract class RequestContextHolder  {
 
 	/**
 	 * Bind the given RequestAttributes to the current thread.
+	 * 将给定的RequestAttributes绑定到当前线程
+	 *
 	 * @param attributes the RequestAttributes to expose,
 	 * or {@code null} to reset the thread-bound context
+	 *                   公开RequestAttributes，或者{@code null}重置线程绑定上下文
+	 *
 	 * @param inheritable whether to expose the RequestAttributes as inheritable
 	 * for child threads (using an {@link InheritableThreadLocal})
+	 *                    是否为子线程公开RequestAttributes为可继承的(使用{@link InheritableThreadLocal})
 	 */
 	public static void setRequestAttributes(@Nullable RequestAttributes attributes, boolean inheritable) {
 		if (attributes == null) {
@@ -97,6 +112,8 @@ public abstract class RequestContextHolder  {
 
 	/**
 	 * Return the RequestAttributes currently bound to the thread.
+	 * 返回当前绑定到线程的RequestAttributes。
+	 *
 	 * @return the RequestAttributes currently bound to the thread,
 	 * or {@code null} if none bound
 	 */

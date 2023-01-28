@@ -16,20 +16,19 @@
 
 package org.springframework.web.context.request;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.WebUtils;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Servlet-based implementation of the {@link RequestAttributes} interface.
@@ -83,6 +82,8 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 
 	/**
 	 * Create a new ServletRequestAttributes instance for the given request.
+	 * 为给定的请求创建一个新的ServletRequestAttributes实例。
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response (for optional exposure)
 	 */
@@ -101,6 +102,7 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 
 	/**
 	 * Exposes the native {@link HttpServletResponse} that we're wrapping (if any).
+	 * 暴露我们正在包装的原生{@link HttpServletResponse}(如果有的话)。
 	 */
 	@Nullable
 	public final HttpServletResponse getResponse() {
@@ -109,6 +111,8 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 
 	/**
 	 * Exposes the {@link HttpSession} that we're wrapping.
+	 * 公开我们正在包装的{@link HttpSession}
+	 *
 	 * @param allowCreate whether to allow creation of a new session if none exists yet
 	 */
 	@Nullable
@@ -268,6 +272,8 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 	/**
 	 * Update all accessed session attributes through {@code session.setAttribute}
 	 * calls, explicitly indicating to the container that they might have been modified.
+	 *
+	 * 更新所有访问的会话属性{@code session.setAttribute}调用，显式地向容器指示它们可能已被修改。
 	 */
 	@Override
 	protected void updateAccessedSessionAttributes() {
@@ -286,7 +292,7 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 					}
 				}
 				catch (IllegalStateException ex) {
-					// Session invalidated - shouldn't usually happen.
+					// Session invalidated - shouldn't usually happen. 会话无效-通常不应该发生。
 				}
 			}
 			this.sessionAttributesToUpdate.clear();

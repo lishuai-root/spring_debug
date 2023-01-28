@@ -16,16 +16,16 @@
 
 package org.springframework.core;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * Defines the algorithm for searching for metadata-associated methods exhaustively
@@ -66,10 +66,16 @@ public final class MethodIntrospector {
 		Set<Class<?>> handlerTypes = new LinkedHashSet<>();
 		Class<?> specificHandlerType = null;
 
+		/**
+		 * 检查目标类是否jdk代理类
+		 */
 		if (!Proxy.isProxyClass(targetType)) {
 			specificHandlerType = ClassUtils.getUserClass(targetType);
 			handlerTypes.add(specificHandlerType);
 		}
+		/**
+		 * 获取目标类及其所有父类实现的所有接口
+		 */
 		handlerTypes.addAll(ClassUtils.getAllInterfacesForClassAsSet(targetType));
 
 		for (Class<?> currentHandlerType : handlerTypes) {
@@ -81,6 +87,7 @@ public final class MethodIntrospector {
 			ReflectionUtils.doWithMethods(currentHandlerType, method -> {
 				/**
 				 * 获取targetClass类中的method方法的具体实现
+				 * 此处不会解析桥接方法
 				 */
 				Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
 				/**
@@ -119,8 +126,12 @@ public final class MethodIntrospector {
 	 * Select an invocable method on the target type: either the given method itself
 	 * if actually exposed on the target type, or otherwise a corresponding method
 	 * on one of the target type's interfaces or on the target type itself.
+	 * 在目标类型上选择一个可调用的方法:如果实际在目标类型上公开，则可以是给定的方法本身，或者在目标类型的接口之一或目标类型本身上选择相应的方法。
+	 *
 	 * <p>Matches on user-declared interfaces will be preferred since they are likely
 	 * to contain relevant metadata that corresponds to the method on the target class.
+	 * 用户声明的接口上的匹配将是首选的，因为它们可能包含与目标类上的方法对应的相关元数据。
+	 *
 	 * @param method the method to check
 	 * @param targetType the target type to search methods on
 	 * (typically an interface-based JDK proxy)
@@ -135,6 +146,9 @@ public final class MethodIntrospector {
 		try {
 			String methodName = method.getName();
 			Class<?>[] parameterTypes = method.getParameterTypes();
+			/**
+			 * 在目标类的接口上获取目标方法
+			 */
 			for (Class<?> ifc : targetType.getInterfaces()) {
 				try {
 					return ifc.getMethod(methodName, parameterTypes);
@@ -144,6 +158,9 @@ public final class MethodIntrospector {
 				}
 			}
 			// A final desperate attempt on the proxy class itself...
+			/**
+			 * 代理类本身的最后一次绝望尝试……
+			 */
 			return targetType.getMethod(methodName, parameterTypes);
 		}
 		catch (NoSuchMethodException ex) {
@@ -159,6 +176,8 @@ public final class MethodIntrospector {
 
 	/**
 	 * A callback interface for metadata lookup on a given method.
+	 * 在给定方法上查找元数据的回调接口。
+	 *
 	 * @param <T> the type of metadata returned
 	 */
 	@FunctionalInterface
@@ -166,6 +185,8 @@ public final class MethodIntrospector {
 
 		/**
 		 * Perform a lookup on the given method and return associated metadata, if any.
+		 * 对给定的方法执行查找并返回相关的元数据(如果有的话)。
+		 *
 		 * @param method the method to inspect
 		 * @return non-null metadata to be associated with a method if there is a match,
 		 * or {@code null} for no match

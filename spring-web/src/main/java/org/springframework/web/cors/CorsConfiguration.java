@@ -16,23 +16,17 @@
 
 package org.springframework.web.cors;
 
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.time.Duration;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * A container for CORS configuration along with methods to check against the
@@ -54,7 +48,9 @@ import org.springframework.util.StringUtils;
  */
 public class CorsConfiguration {
 
-	/** Wildcard representing <em>all</em> origins, methods, or headers. */
+	/** Wildcard representing <em>all</em> origins, methods, or headers.
+	 * 通配符表示<em>all<em>起源、方法或头。
+	 * */
 	public static final String ALL = "*";
 
 	private static final List<String> ALL_LIST = Collections.singletonList(ALL);
@@ -269,6 +265,8 @@ public class CorsConfiguration {
 	/**
 	 * Return the allowed HTTP methods, or {@code null} in which case
 	 * only {@code "GET"} and {@code "HEAD"} allowed.
+	 * 返回允许的HTTP方法，或{@code null}，在这种情况下只允许{@code "GET"}和{@code "HEAD"}。
+	 *
 	 * @see #addAllowedMethod(HttpMethod)
 	 * @see #addAllowedMethod(String)
 	 * @see #setAllowedMethods(List)
@@ -426,32 +424,60 @@ public class CorsConfiguration {
 
 
 	/**
+	 * 为必要的跨域配置设置默认值
+	 *
 	 * By default {@code CorsConfiguration} does not permit any cross-origin
 	 * requests and must be configured explicitly. Use this method to switch to
 	 * defaults that permit all cross-origin requests for GET, HEAD, and POST,
 	 * but not overriding any values that have already been set.
+	 * 默认情况下，{@code CorsConfiguration}不允许任何跨源请求，必须显式配置。
+	 * 使用此方法可切换到允许GET、HEAD和POST的所有跨源请求的默认值，但不覆盖已设置的任何值。
+	 *
 	 * <p>The following defaults are applied for values that are not set:
+	 * 以下默认值应用于未设置的值:
 	 * <ul>
 	 * <li>Allow all origins with the special value {@code "*"} defined in the
 	 * CORS spec. This is set only if neither {@link #setAllowedOrigins origins}
 	 * nor {@link #setAllowedOriginPatterns originPatterns} are already set.</li>
+	 * 允许所有具有CORS规范中定义的特殊值{@code "*"}的原点。
+	 * 只有当{@link #setAllowedOrigins}和{@link #setAllowedOriginPatterns originPatterns}都没有设置时，才会设置此值
+	 *
 	 * <li>Allow "simple" methods {@code GET}, {@code HEAD} and {@code POST}.</li>
+	 * 允许“简单”方法{@code GET}， {@code HEAD}和{@code POST}.<li>
+	 *
 	 * <li>Allow all headers.</li>
+	 * 允许所有头文件。
+	 *
 	 * <li>Set max age to 1800 seconds (30 minutes).</li>
+	 * 设置最大年龄1800秒(30分钟)。
+	 *
 	 * </ul>
 	 */
 	public CorsConfiguration applyPermitDefaultValues() {
+		/**
+		 * 如果{@link org.springframework.web.bind.annotation.CrossOrigin}注解没有配置允许跨域的请求路径
+		 * 默认设置允许所有路径跨域
+		 */
 		if (this.allowedOrigins == null && this.allowedOriginPatterns == null) {
 			this.allowedOrigins = DEFAULT_PERMIT_ALL;
 		}
+		/**
+		 * 默认允许{@link HttpMethod#GET}, {@link HttpMethod#HEAD}, {@link HttpMethod#POST}请求方法可以跨域
+		 */
 		if (this.allowedMethods == null) {
 			this.allowedMethods = DEFAULT_PERMIT_METHODS;
 			this.resolvedMethods = DEFAULT_PERMIT_METHODS
 					.stream().map(HttpMethod::resolve).collect(Collectors.toList());
 		}
+		/**
+		 * 默认允许所有头文件可以跨域
+		 */
 		if (this.allowedHeaders == null) {
 			this.allowedHeaders = DEFAULT_PERMIT_ALL;
 		}
+		/**
+		 *
+		 */
 		if (this.maxAge == null) {
 			this.maxAge = 1800L;
 		}
@@ -463,6 +489,9 @@ public class CorsConfiguration {
 	 * {@link #setAllowedOrigins allowedOrigins} does not contain the special
 	 * value {@code "*"} since in that case the "Access-Control-Allow-Origin"
 	 * cannot be set to {@code "*"}.
+	 * 验证当{@link #setAllowCredentials allowCredentials}为true时，{@link #setAllowedOrigins allowedOrigins}不包含特殊值{@code "*"}，
+	 * 因为在这种情况下，"Access-Control-Allow-Origin"不能设置为{@code "*"}。
+	 *
 	 * @throws IllegalArgumentException if the validation fails
 	 * @since 5.3
 	 */
@@ -481,9 +510,13 @@ public class CorsConfiguration {
 	/**
 	 * Combine the non-null properties of the supplied
 	 * {@code CorsConfiguration} with this one.
+	 * 将提供的{@code CorsConfiguration}的非空属性与此属性结合起来。
+	 *
 	 * <p>When combining single values like {@code allowCredentials} or
 	 * {@code maxAge}, {@code this} properties are overridden by non-null
 	 * {@code other} properties if any.
+	 * 当组合单个值时，如{@code allowCredentials}或{@code maxAge}， {@code this}属性会被非空的{@code other}属性覆盖。
+	 *
 	 * <p>Combining lists like {@code allowedOrigins}, {@code allowedMethods},
 	 * {@code allowedHeaders} or {@code exposedHeaders} is done in an additive
 	 * way. For example, combining {@code ["GET", "POST"]} with

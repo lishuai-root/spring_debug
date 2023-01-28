@@ -15,9 +15,9 @@
  */
 package org.springframework.http.server;
 
-import java.net.URI;
-
 import org.springframework.lang.Nullable;
+
+import java.net.URI;
 
 /**
  * Specialization of {@link PathContainer} that sub-divides the path into a
@@ -46,6 +46,8 @@ public interface RequestPath extends PathContainer {
 	/**
 	 * The portion of the request path after the context path which is typically
 	 * used for request mapping within the application .
+	 *
+	 * 上下文路径之后的请求路径的一部分，通常用于应用程序中的请求映射。
 	 */
 	PathContainer pathWithinApplication();
 
