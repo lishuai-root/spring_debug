@@ -16,28 +16,11 @@
 
 package org.springframework.beans.factory.annotation;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
 import org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -47,6 +30,16 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} implementation
@@ -146,7 +139,28 @@ public class InitDestroyAnnotationBeanPostProcessor
 
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
+		/**
+		 * 查找用户通过@PostConstruct和@PreDestroy注解自定义的初始化和销毁方法
+		 */
 		LifecycleMetadata metadata = findLifecycleMetadata(beanType);
+		/**
+		 * 1.将用户自定义的初始化方法注册到{@link RootBeanDefinition#externallyManagedInitMethods}集合中
+		 * 避免用户自定义的初始化方法和spring提供的初始化方法是同一个
+		 * eg：
+		 * 		当bean实现了{@link org.springframework.beans.factory.InitializingBean}接口，同时在
+		 * 		{@link InitializingBean#afterPropertiesSet()}方法上加了{@link PostConstruct}注解，那么该方法就会执行两次，
+		 * 		因此需要记录下用户自定义的初始化方法，如果用户自定义的初始化方法和spring提供的初始化方法冲突时，以用户定义的执行顺序为准
+		 *
+		 * 		比如上述情况，在本应该执行	{@link InitializingBean#afterPropertiesSet()}初始化方法时不会执行，
+		 * 		而是在应该执行{@link PostConstruct}注解时再执行{@link InitializingBean#afterPropertiesSet()}方法
+		 *
+		 *
+		 * 2.将用户自定义的销毁方法注册到{@link RootBeanDefinition#externallyManagedDestroyMethods}集合中
+		 * 	 与上述同理，在将bean实例注册到销毁集合时使用
+		 * @see {@link org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#getBean(String)}  ->
+		 * @see {@link org.springframework.beans.factory.support.AbstractBeanFactory#registerDisposableBeanIfNecessary(String, Object, RootBeanDefinition)}  ->
+		 * @see {@link org.springframework.beans.factory.support.DisposableBeanAdapter#DisposableBeanAdapter(Object, String, RootBeanDefinition, List)}
+		 */
 		metadata.checkConfigMembers(beanDefinition);
 	}
 

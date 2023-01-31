@@ -118,17 +118,26 @@ public interface MultipartFile extends InputStreamSource {
 
 	/**
 	 * Transfer the received file to the given destination file.
+	 * 将接收到的文件传输到给定的目标文件。
+	 *
 	 * <p>This may either move the file in the filesystem, copy the file in the
 	 * filesystem, or save memory-held contents to the destination file. If the
 	 * destination file already exists, it will be deleted first.
+	 * 这可能移动文件系统中的文件，复制文件系统中的文件，或者将内存中的内容保存到目标文件。如果目标文件已经存在，将首先删除它。
+	 *
 	 * <p>If the target file has been moved in the filesystem, this operation
 	 * cannot be invoked again afterwards. Therefore, call this method just once
 	 * in order to work with any storage mechanism.
+	 * 如果目标文件已经在文件系统中移动，那么以后不能再次调用此操作。因此，为了使用任何存储机制，只需调用此方法一次。
+	 *
 	 * <p><b>NOTE:</b> Depending on the underlying provider, temporary storage
 	 * may be container-dependent, including the base directory for relative
 	 * destinations specified here (e.g. with Servlet 3.0 multipart handling).
 	 * For absolute destinations, the target file may get renamed/moved from its
 	 * temporary location or newly copied, even if a temporary copy already exists.
+	 * 根据底层提供者的不同，临时存储可能是容器依赖的，包括这里指定的相对目的地的基本目录(例如，使用Servlet 3.0的多部分处理)。
+	 * 对于绝对目的地，目标文件可以重命名、从其临时位置移动或重新复制，即使已经存在临时副本。
+	 *
 	 * @param dest the destination file (typically absolute)
 	 * @throws IOException in case of reading or writing errors
 	 * @throws IllegalStateException if the file has already been moved
@@ -140,7 +149,11 @@ public interface MultipartFile extends InputStreamSource {
 
 	/**
 	 * Transfer the received file to the given destination file.
+	 * 将接收到的文件传输到给定的目标文件。
+	 *
 	 * <p>The default implementation simply copies the file input stream.
+	 * 默认实现只是复制文件输入流。
+	 *
 	 * @since 5.1
 	 * @see #getInputStream()
 	 * @see #transferTo(File)

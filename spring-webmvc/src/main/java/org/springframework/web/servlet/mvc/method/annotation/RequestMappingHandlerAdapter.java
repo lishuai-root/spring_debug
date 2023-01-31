@@ -757,6 +757,10 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
 
 		ModelAndView mav;
+		/**
+		 * 检查是否支持请求方法和是否需要会话
+		 * 默认支持GET, HEAD和POST请求
+		 */
 		checkRequest(request);
 
 		// Execute invokeHandlerMethod in synchronized block if required.
@@ -766,13 +770,16 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		if (this.synchronizeOnSession) {
 			HttpSession session = request.getSession(false);
 			if (session != null) {
+				/**
+				 * 返回会话的互斥量
+				 */
 				Object mutex = WebUtils.getSessionMutex(session);
 				synchronized (mutex) {
 					mav = invokeHandlerMethod(request, response, handlerMethod);
 				}
 			}
 			else {
-				// No HttpSession available -> no mutex necessary
+				// No HttpSession available -> no mutex necessary 没有可用的HttpSession ->不需要互斥
 				mav = invokeHandlerMethod(request, response, handlerMethod);
 			}
 		}

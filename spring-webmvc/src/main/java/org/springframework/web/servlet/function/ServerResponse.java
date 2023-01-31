@@ -16,6 +16,19 @@
 
 package org.springframework.web.servlet.function;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.reactivestreams.Publisher;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.ReactiveAdapterRegistry;
+import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.lang.Nullable;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.servlet.ModelAndView;
+
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
@@ -29,24 +42,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.reactivestreams.Publisher;
-
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.ReactiveAdapterRegistry;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.lang.Nullable;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Represents a typed server-side HTTP response, as returned
@@ -68,6 +63,8 @@ public interface ServerResponse {
 
 	/**
 	 * Return the (potentially non-standard) status code of this response.
+	 * 返回此响应的(可能是非标准的)状态代码。
+	 *
 	 * @return the status as an integer
 	 * @see #statusCode()
 	 * @see HttpStatus#valueOf(int)
@@ -76,16 +73,20 @@ public interface ServerResponse {
 
 	/**
 	 * Return the headers of this response.
+	 * 返回此响应的头信息。
 	 */
 	HttpHeaders headers();
 
 	/**
 	 * Return the cookies of this response.
+	 * 返回此响应的cookie。
 	 */
 	MultiValueMap<String, Cookie> cookies();
 
 	/**
 	 * Write this response to the given servlet response.
+	 * 将此响应写入给定的servlet响应。
+	 *
 	 * @param request the current request
 	 * @param response the response to write to
 	 * @param context the context to use when writing
@@ -100,6 +101,8 @@ public interface ServerResponse {
 
 	/**
 	 * Create a builder with the status code and headers of the given response.
+	 * 使用给定响应的状态代码和报头创建一个构建器。
+	 *
 	 * @param other the response to copy the status and headers from
 	 * @return the created builder
 	 */

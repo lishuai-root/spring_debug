@@ -76,7 +76,7 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	protected static final String HEADER_CACHE_CONTROL = "Cache-Control";
 
 
-	/** Set of supported HTTP methods. */
+	/** Set of supported HTTP methods. 支持的HTTP方法集。 */
 	@Nullable
 	private Set<String> supportedMethods;
 
@@ -143,8 +143,11 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 
 	/**
 	 * Set the HTTP methods that this content generator should support.
+	 * 设置此内容生成器应支持的HTTP方法。
+	 *
 	 * <p>Default is GET, HEAD and POST for simple form controller types;
 	 * unrestricted for general controllers and interceptors.
+	 * 对于简单的表单控制器类型，默认为GET, HEAD和POST;一般控制器和拦截器不受限制。
 	 */
 	public final void setSupportedMethods(@Nullable String... methods) {
 		if (!ObjectUtils.isEmpty(methods)) {
@@ -373,7 +376,7 @@ public abstract class WebContentGenerator extends WebApplicationObjectSupport {
 	protected final void checkRequest(HttpServletRequest request) throws ServletException {
 		// Check whether we should support the request method.
 		/**
-		 * 检查是否应该支持请求方法。
+		 * 检查是否应该支持请求方法。默认支持GET, HEAD和POST
 		 */
 		String method = request.getMethod();
 		if (this.supportedMethods != null && !this.supportedMethods.contains(method)) {

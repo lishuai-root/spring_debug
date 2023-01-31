@@ -417,18 +417,29 @@ public abstract class WebUtils {
 	/**
 	 * Return the best available mutex for the given session:
 	 * that is, an object to synchronize on for the given session.
+	 * 返回给定会话的最佳可用互斥量:也就是说，为给定会话同步一个对象。
+	 *
 	 * <p>Returns the session mutex attribute if available; usually,
 	 * this means that the HttpSessionMutexListener needs to be defined
 	 * in {@code web.xml}. Falls back to the HttpSession itself
 	 * if no mutex attribute found.
+	 * 返回会话互斥锁属性(如果可用);通常，这意味着HttpSessionMutexListener需要定义在{@code web.xml}中。
+	 * 如果没有找到互斥锁属性，则退回到HttpSession本身。
+	 *
 	 * <p>The session mutex is guaranteed to be the same object during
 	 * the entire lifetime of the session, available under the key defined
 	 * by the {@code SESSION_MUTEX_ATTRIBUTE} constant. It serves as a
 	 * safe reference to synchronize on for locking on the current session.
+	 * 会话互斥锁保证在会话的整个生命周期内都是相同的对象，在常量{@code SESSION_MUTEX_ATTRIBUTE}定义的键下可用。
+	 * 它作为一个安全的参考来同步锁定当前会话。
+	 *
 	 * <p>In many cases, the HttpSession reference itself is a safe mutex
 	 * as well, since it will always be the same object reference for the
 	 * same active logical session. However, this is not guaranteed across
 	 * different servlet containers; the only 100% safe way is a session mutex.
+	 * 在许多情况下，HttpSession引用本身也是一个安全的互斥量，因为它总是同一个活动逻辑会话的同一个对象引用。
+	 * 然而，这在不同的servlet容器之间是不能保证的;唯一100%安全的方法是会话互斥。
+	 *
 	 * @param session the HttpSession to find a mutex for
 	 * @return the mutex object (never {@code null})
 	 * @see #SESSION_MUTEX_ATTRIBUTE

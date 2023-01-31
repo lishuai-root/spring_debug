@@ -2258,6 +2258,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			throws Throwable {
 
 		boolean isInitializingBean = (bean instanceof InitializingBean);
+		/**
+		 * 判断bean是否实现了{@link InitializingBean}接口，并且{@link InitializingBean#afterPropertiesSet()} 方法是否用户自定义的初始化方法
+		 * 也就是{@link InitializingBean#afterPropertiesSet()}方法上是否加了{@link PostConstruct}注解
+		 */
 		if (isInitializingBean && (mbd == null || !mbd.isExternallyManagedInitMethod("afterPropertiesSet"))) {
 			if (logger.isTraceEnabled()) {
 				logger.trace("Invoking afterPropertiesSet() on bean with name '" + beanName + "'");

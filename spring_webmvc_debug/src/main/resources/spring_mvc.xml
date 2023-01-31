@@ -39,6 +39,9 @@
 <!--		网络拦截器，拦截所有请求 -->
 		<bean id="networkSecurityInterceptor" class="com.shuai.interceptor.NetworkSecurityInterceptor"/>
 
+<!--		日志拦截器 -->
+		<bean id="serverLogInterceptor" class="com.shuai.interceptor.ServerLogInterceptor"/>
+
 <!--		权限拦截器 -->
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>

@@ -20,6 +20,8 @@ dependencies {
 //    annotationProcessor 'org.projectlombok:lombok:1.18.20'
     implementation 'com.alibaba:fastjson:1.2.78'
     implementation 'jakarta.servlet:jakarta.servlet-api'
+//    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha1'
+//    implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.14.0'
 //    implementation("jakarta.servlet:jakarta.servlet-api")
 //    implementation("jakarta.servlet.jsp:jakarta.servlet.jsp-api")
 //    implementation("jakarta.el:jakarta.el-api")
