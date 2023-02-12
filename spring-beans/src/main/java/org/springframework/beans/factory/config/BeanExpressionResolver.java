@@ -36,6 +36,8 @@ public interface BeanExpressionResolver {
 	/**
 	 * Evaluate the given value as an expression, if applicable;
 	 * return the value as-is otherwise.
+	 * 将给定的值计算为表达式(如果适用);否则，按原样返回值。
+	 *
 	 * @param value the value to check
 	 * @param evalContext the evaluation context
 	 * @return the resolved value (potentially the given value as-is)

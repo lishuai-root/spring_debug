@@ -126,6 +126,8 @@ public abstract class ScopedProxyUtils {
 	/**
 	 * Determine if the {@code beanName} is the name of a bean that references
 	 * the target bean within a scoped proxy.
+	 * 确定{@code beanName}是否是在作用域代理中引用目标bean的bean的名称。
+	 *
 	 * @since 4.1.4
 	 */
 	public static boolean isScopedTarget(@Nullable String beanName) {

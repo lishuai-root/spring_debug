@@ -58,6 +58,8 @@ public class StandardMultipartHttpServletRequest extends AbstractMultipartHttpSe
 	/**
 	 * Create a new StandardMultipartHttpServletRequest wrapper for the given request,
 	 * immediately parsing the multipart content.
+	 * 为给定的请求创建一个新的StandardMultipartHttpServletRequest包装器，立即解析多部分内容。
+	 *
 	 * @param request the servlet request to wrap
 	 * @throws MultipartException if parsing failed
 	 */

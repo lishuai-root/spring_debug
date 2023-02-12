@@ -23,8 +23,11 @@ import jakarta.servlet.http.HttpServletRequest;
  * with <a href="https://www.ietf.org/rfc/rfc1867.txt">RFC 1867</a>.
  * Implementations are typically usable both within an application context
  * and standalone.
+ * 根据< A href="https:www.ietf.orgrfcrfc1867.txt">RFC 1867< A >的多部分文件上传解析策略接口。
+ * 实现通常可以在应用程序上下文中使用，也可以独立使用。
  *
  * <p>There are two concrete implementations included in Spring, as of Spring 3.1:
+ * 从Spring 3.1开始，Spring包含了两个具体的实现:
  * <ul>
  * <li>{@link org.springframework.web.multipart.commons.CommonsMultipartResolver}
  * for Apache Commons FileUpload
@@ -40,12 +43,24 @@ import jakarta.servlet.http.HttpServletRequest;
  * application context. Such a resolver gets applied to all requests handled
  * by that {@link org.springframework.web.servlet.DispatcherServlet}.
  *
+ * Spring {@link org.springframework.web.servlet.DispatcherServlet}没有使用默认的解析器实现，因为应用程序可能会选择自己解析它的多部分请求。
+ * 为了定义一个实现，在{@link org.springframework.web.servlet.DispatcherServlet}的应用程序上下文中创建一个id为“multipartResolver”的bean。
+ * 这样的解析器应用于由该{@link org.springframework.web.servlet.DispatcherServlet}处理的所有请求。
+ *
+ *
+ *
  * <p>If a {@link org.springframework.web.servlet.DispatcherServlet} detects a
  * multipart request, it will resolve it via the configured {@link MultipartResolver}
  * and pass on a wrapped {@link jakarta.servlet.http.HttpServletRequest}. Controllers
  * can then cast their given request to the {@link MultipartHttpServletRequest}
  * interface, which allows for access to any {@link MultipartFile MultipartFiles}.
  * Note that this cast is only supported in case of an actual multipart request.
+ *
+ * 如果一个{@link org.springframework.web.servlet.DispatcherServlet}检测到一个多部分请求，
+ * 它将通过配置的{@link MultipartResolver}解析它，并传递一个包装的{@link jakarta.servlet.http.HttpServletRequest}。
+ * 然后，控制器可以将给定的请求转换到{@link MultipartHttpServletRequest}接口，该接口允许访问任何{@link MultipartFile MultipartFiles}。
+ * 注意，这种类型转换仅在实际的多部分请求的情况下支持。
+ *
  *
  * <pre class="code">
  * public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) {
@@ -60,6 +75,11 @@ import jakarta.servlet.http.HttpServletRequest;
  * with their data binder, to automatically apply multipart content to form
  * bean properties.
  *
+ * 而不是直接访问，命令或表单控制器可以注册一个{@link org.springframework.web.multipart.support.ByteArrayMultipartFileEditor}
+ * 或{@link org.springframework.web.multipart.support.StringMultipartFileEditor}和它们的数据绑定器，
+ * 以自动应用多部分内容来形成bean属性。
+ *
+ *
  * <p>As an alternative to using a {@link MultipartResolver} with a
  * {@link org.springframework.web.servlet.DispatcherServlet},
  * a {@link org.springframework.web.multipart.support.MultipartFilter} can be
@@ -67,10 +87,19 @@ import jakarta.servlet.http.HttpServletRequest;
  * {@link MultipartResolver} bean in the root application context. This is mainly
  * intended for applications that do not use Spring's own web MVC framework.
  *
+ * 作为使用{@link MultipartResolver}和{@link org.springframework.web.servlet.DispatcherServlet}的替代方案，
+ * 一个{@link org.springframework.web.multipart.support.MultipartFilter}可以在{@code web.xml}中注册。
+ * 它将委托给根应用程序上下文中对应的{@link MultipartResolver} bean。这主要适用于不使用Spring自己的web MVC框架的应用程序。
+ *
+ *
  * <p>Note: There is hardly ever a need to access the {@link MultipartResolver}
  * itself from application code. It will simply do its work behind the scenes,
  * making {@link MultipartHttpServletRequest MultipartHttpServletRequests}
  * available to controllers.
+ *
+ * 注意:几乎不需要从应用程序代码中访问{@link MultipartResolver}本身。它将简单地在幕后完成它的工作，
+ * 使{@link MultipartHttpServletRequest MultipartHttpServletRequest}对控制器可用。
+ *
  *
  * @author Juergen Hoeller
  * @author Trevor D. Cook

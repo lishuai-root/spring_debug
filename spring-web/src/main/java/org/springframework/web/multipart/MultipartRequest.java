@@ -45,6 +45,8 @@ public interface MultipartRequest {
 	/**
 	 * Return the contents plus description of an uploaded file in this request,
 	 * or {@code null} if it does not exist.
+	 * 在此请求中返回上传文件的内容和描述，如果不存在则返回{@code null}。
+	 *
 	 * @param name a String specifying the parameter name of the multipart file
 	 * @return the uploaded content in the form of a {@link MultipartFile} object
 	 */
@@ -54,6 +56,8 @@ public interface MultipartRequest {
 	/**
 	 * Return the contents plus description of uploaded files in this request,
 	 * or an empty list if it does not exist.
+	 * 在此请求中返回上传文件的内容和描述，如果不存在则返回空列表。
+	 *
 	 * @param name a String specifying the parameter name of the multipart file
 	 * @return the uploaded content in the form of a {@link MultipartFile} list
 	 * @since 3.0
@@ -69,6 +73,8 @@ public interface MultipartRequest {
 
 	/**
 	 * Return a {@link MultiValueMap} of the multipart files contained in this request.
+	 * 返回该请求中包含的多部分文件的{@link MultiValueMap}。
+	 *
 	 * @return a map containing the parameter names as keys, and a list of
 	 * {@link MultipartFile} objects as values
 	 * @since 3.0

@@ -34,12 +34,22 @@ import org.springframework.web.multipart.MultipartFile;
  * the Servlet API; serves as base class for more specific DataBinder variants,
  * such as {@link org.springframework.web.bind.ServletRequestDataBinder}.
  *
+ * 特殊{@link DataBinder}用于从web请求参数到JavaBean对象的数据绑定。
+ * 专为web环境设计，但不依赖于Servlet API;作为更具体的DataBinder变体的基类，
+ * 例如{@link org.springframework.web.bind.ServletRequestDataBinder}。
+ *
+ *
  * <p>Includes support for field markers which address a common problem with
  * HTML checkboxes and select options: detecting that a field was part of
  * the form, but did not generate a request parameter because it was empty.
  * A field marker allows to detect that state and reset the corresponding
  * bean property accordingly. Default values, for parameters that are otherwise
  * not present, can specify a value for the field other then empty.
+ * 包括对字段标记的支持，它解决了HTML复选框和选择选项的一个常见问题:
+ * 检测到一个字段是表单的一部分，但没有生成请求参数，因为它是空的。
+ * 字段标记允许检测该状态并相应地重置相应的bean属性。
+ * 对于不存在的参数，默认值可以为字段指定一个值，而不是为空。
+ *
  *
  * @author Juergen Hoeller
  * @author Scott Andrews

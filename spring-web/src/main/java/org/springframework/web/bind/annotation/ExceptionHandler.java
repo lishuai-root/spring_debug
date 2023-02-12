@@ -25,10 +25,13 @@ import java.lang.annotation.Target;
 /**
  * Annotation for handling exceptions in specific handler classes and/or
  * handler methods.
+ * 用于处理特定处理程序类和或处理程序方法中的异常的注释。
  *
  * <p>Handler methods which are annotated with this annotation are allowed to
  * have very flexible signatures. They may have parameters of the following
  * types, in arbitrary order:
+ * 使用此注释注释的处理程序方法允许具有非常灵活的签名。它们可以有以下类型的参数，顺序任意:
+ *
  * <ul>
  * <li>An exception argument: declared as a general Exception or as a more
  * specific exception. This also serves as a mapping hint if the annotation
@@ -68,6 +71,8 @@ import java.lang.annotation.Target;
  * </ul>
  *
  * <p>The following return types are supported for handler methods:
+ * 处理程序方法支持以下返回类型:
+ *
  * <ul>
  * <li>A {@code ModelAndView} object (from Servlet MVC).
  * <li>A {@link org.springframework.ui.Model} object, with the view name implicitly
@@ -96,6 +101,7 @@ import java.lang.annotation.Target;
  *
  * <p>You may combine the {@code ExceptionHandler} annotation with
  * {@link ResponseStatus @ResponseStatus} for a specific HTTP error status.
+ * 您可以将{@code ExceptionHandler}注释与{@link ResponseStatus @ResponseStatus}结合起来用于特定的HTTP错误状态。
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
@@ -110,6 +116,8 @@ public @interface ExceptionHandler {
 	/**
 	 * Exceptions handled by the annotated method. If empty, will default to any
 	 * exceptions listed in the method argument list.
+	 *
+	 * 由注释方法处理的异常。如果为空，将默认使用方法参数列表中列出的任何异常。
 	 */
 	Class<? extends Throwable>[] value() default {};
 

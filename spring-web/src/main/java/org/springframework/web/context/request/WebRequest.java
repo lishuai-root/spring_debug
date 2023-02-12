@@ -72,7 +72,11 @@ public interface WebRequest extends RequestAttributes {
 	/**
 	 * Return the request parameter values for the given parameter name,
 	 * or {@code null} if none.
+	 * 返回给定参数名的请求参数值，如果没有则返回{@code null}。
+	 *
 	 * <p>A single-value parameter will be exposed as an array with a single element.
+	 * 单值参数将作为具有单个元素的数组公开。
+	 *
 	 * @see jakarta.servlet.http.HttpServletRequest#getParameterValues(String)
 	 */
 	@Nullable
@@ -88,8 +92,13 @@ public interface WebRequest extends RequestAttributes {
 	/**
 	 * Return a immutable Map of the request parameters, with parameter names as map keys
 	 * and parameter values as map values. The map values will be of type String array.
+	 * 返回请求参数的不可变Map，参数名作为Map键，参数值作为Map值。映射值将是String数组类型。
+	 *
 	 * <p>A single-value parameter will be exposed as an array with a single element.
 	 * @see jakarta.servlet.http.HttpServletRequest#getParameterMap()
+	 * 单值参数将被公开为具有单个元素的数组。
+	 * @see jakarta.servlet.http.HttpServletRequest#getParameterMap()
+	 *
 	 */
 	Map<String, String[]> getParameterMap();
 

@@ -16,19 +16,8 @@
 
 package org.springframework.beans;
 
-import java.beans.PropertyEditor;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.CollectionFactory;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConversionService;
@@ -38,6 +27,16 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.beans.PropertyEditor;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Internal helper class for converting property values to target types.
@@ -366,9 +365,12 @@ class TypeConverterDelegate {
 
 		if (editor != null && !(convertedValue instanceof String)) {
 			// Not a String -> use PropertyEditor's setValue.
+			// 不是字符串->使用PropertyEditor的setValue。
 			// With standard PropertyEditors, this will return the very same object;
 			// we just want to allow special PropertyEditors to override setValue
 			// for type conversion from non-String values to the required type.
+			// 对于标准的PropertyEditors，这将返回完全相同的对象;我们只是想允许特殊的PropertyEditors重写setValue，
+			// 用于从非string值到所需类型的类型转换。
 			try {
 				editor.setValue(convertedValue);
 				Object newConvertedValue = editor.getValue();

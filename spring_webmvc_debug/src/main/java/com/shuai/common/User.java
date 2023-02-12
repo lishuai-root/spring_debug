@@ -1,7 +1,5 @@
 package com.shuai.common;
 
-import org.springframework.stereotype.Component;
-
 /**
  * @description:
  * @author: LISHUAI
@@ -10,7 +8,7 @@ import org.springframework.stereotype.Component;
  */
 
 //@Data
-@Component
+//@Component
 public class User {
 
 	private static int count = 0;

@@ -123,6 +123,8 @@ public final class SpringProperties {
 
 	/**
 	 * Retrieve the flag for the given property key.
+	 * 检索给定属性键的标志。
+	 *
 	 * @param key the property key
 	 * @return {@code true} if the property is set to "true",
 	 * {@code} false otherwise

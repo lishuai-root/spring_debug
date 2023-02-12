@@ -16,9 +16,6 @@
 
 package org.springframework.context.expression;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanExpressionException;
 import org.springframework.beans.factory.config.BeanExpressionContext;
@@ -36,6 +33,9 @@ import org.springframework.expression.spel.support.StandardTypeLocator;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Standard implementation of the
@@ -179,6 +179,8 @@ public class StandardBeanExpressionResolver implements BeanExpressionResolver {
 	/**
 	 * Template method for customizing the expression evaluation context.
 	 * <p>The default implementation is empty.
+	 *
+	 * 用于自定义表达式求值上下文的模板方法。<p>默认实现为空。
 	 */
 	protected void customizeEvaluationContext(StandardEvaluationContext evalContext) {
 	}

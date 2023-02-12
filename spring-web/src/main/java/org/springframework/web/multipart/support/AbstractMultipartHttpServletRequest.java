@@ -136,6 +136,8 @@ public abstract class AbstractMultipartHttpServletRequest extends HttpServletReq
 	/**
 	 * Obtain the MultipartFile Map for retrieval,
 	 * lazily initializing it if necessary.
+	 * 获取MultipartFile Map进行检索，必要时对其进行惰性初始化。
+	 *
 	 * @see #initializeMultipart()
 	 */
 	protected MultiValueMap<String, MultipartFile> getMultipartFiles() {

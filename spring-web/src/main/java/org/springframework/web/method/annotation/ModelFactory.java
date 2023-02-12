@@ -248,6 +248,8 @@ public final class ModelFactory {
 	 * Derive the model attribute name for the given method parameter based on
 	 * a {@code @ModelAttribute} parameter annotation (if present) or falling
 	 * back on parameter type based conventions.
+	 * 根据{@code @ModelAttribute}参数注释(如果存在)或退回到基于参数类型的约定，为给定的方法参数派生模型属性名。
+	 *
 	 * @param parameter a descriptor for the method parameter
 	 * @return the derived name
 	 * @see Conventions#getVariableNameForParameter(MethodParameter)

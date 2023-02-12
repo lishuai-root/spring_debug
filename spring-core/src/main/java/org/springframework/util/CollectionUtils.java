@@ -16,21 +16,9 @@
 
 package org.springframework.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.SortedSet;
-
 import org.springframework.lang.Nullable;
+
+import java.util.*;
 
 /**
  * Miscellaneous collection utility methods.
@@ -92,10 +80,15 @@ public abstract class CollectionUtils {
 	 * Instantiate a new {@link LinkedHashMap} with an initial capacity
 	 * that can accommodate the specified number of elements without
 	 * any immediate resize/rehash operations to be expected.
+	 * 实例化一个新的{@link LinkedHashMap}，其初始容量可以容纳指定数量的元素，而不需要进行任何立即的resize/rehash操作。
+	 *
 	 * <p>This differs from the regular {@link LinkedHashMap} constructor
 	 * which takes an initial capacity relative to a load factor but is
 	 * aligned with Spring's own {@link LinkedCaseInsensitiveMap} and
 	 * {@link LinkedMultiValueMap} constructor semantics as of 5.3.
+	 * 这与常规的{@link LinkedHashMap}构造函数不同，后者采用相对于负载因子的初始容量，
+	 * 但与Spring自己的{@link LinkedCaseInsensitiveMap}和{@link LinkedMultiValueMap}构造函数语义在5.3中一致。
+	 *
 	 * @param expectedSize the expected number of elements (with a corresponding
 	 * capacity to be derived so that no resize/rehash operations are needed)
 	 * @since 5.3

@@ -16,29 +16,9 @@
 
 package org.springframework.validation;
 
-import java.beans.PropertyEditor;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.springframework.beans.ConfigurablePropertyAccessor;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyAccessException;
-import org.springframework.beans.PropertyAccessorUtils;
-import org.springframework.beans.PropertyBatchUpdateException;
-import org.springframework.beans.PropertyEditorRegistry;
-import org.springframework.beans.PropertyValue;
-import org.springframework.beans.PropertyValues;
-import org.springframework.beans.SimpleTypeConverter;
-import org.springframework.beans.TypeConverter;
-import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.*;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
@@ -50,11 +30,18 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 
+import java.beans.PropertyEditor;
+import java.lang.reflect.Field;
+import java.util.*;
+
 /**
  * Binder that allows for setting property values onto a target object,
  * including support for validation and binding result analysis.
+ * 绑定器，允许在目标对象上设置属性值，包括支持验证和绑定结果分析。
+ *
  * The binding process can be customized through specifying allowed fields,
  * required fields, custom editors, etc.
+ * 可以通过指定允许字段、必需字段、自定义编辑器等来定制绑定过程。
  *
  * <p>Note that there are potential security implications in failing to set an array
  * of allowed fields. In the case of HTTP form POST data for example, malicious clients
@@ -63,11 +50,19 @@ import org.springframework.util.StringUtils;
  * set on command objects <i>or their nested objects</i>. For this reason, it is
  * <b>highly recommended to specify the {@link #setAllowedFields allowedFields} property</b>
  * on the DataBinder.
+ * <p>请注意，如果未能设置允许字段的数组，则存在潜在的安全隐患。
+ * 例如，对于HTTP表单POST数据，恶意客户端可以通过为表单上不存在的字段或属性提供值来试图破坏应用程序。
+ * 在某些情况下，这可能导致在命令对象<i>或其嵌套对象<i>上设置非法数据。
+ * 因此，强烈建议在DataBinder上指定{@link #setAllowedFields allowedFields}属性<b>。
+ *
  *
  * <p>The binding results can be examined via the {@link BindingResult} interface,
  * extending the {@link Errors} interface: see the {@link #getBindingResult()} method.
  * Missing fields and property access exceptions will be converted to {@link FieldError FieldErrors},
  * collected in the Errors instance, using the following error codes:
+ * 绑定结果可以通过{@link BindingResult}接口检查，它扩展了{@link Errors}接口:参见{@link #getBindingResult()}方法。
+ * 缺失的字段和属性访问异常将被转换为{@link FieldError FieldErrors}，在Errors实例中收集，使用以下错误代码:
+ *
  *
  * <ul>
  * <li>Missing field error: "required"
@@ -79,6 +74,9 @@ import org.springframework.util.StringUtils;
  * strategy, processing for missing fields and property access exceptions: see the
  * {@link #setBindingErrorProcessor} method. You can override the default strategy
  * if needed, for example to generate different error codes.
+ * 默认情况下，绑定错误通过{@link BindingErrorProcessor}策略得到解决，处理缺失的字段和属性访问异常:
+ * 参见{@link #setBindingErrorProcessor}方法。如果需要，您可以覆盖默认策略，例如生成不同的错误代码。
+ *
  *
  * <p>Custom validation errors can be added afterwards. You will typically want to resolve
  * such error codes into proper user-visible error messages; this can be achieved through
@@ -88,8 +86,14 @@ import org.springframework.util.StringUtils;
  * method. The list of message codes can be customized through the {@link MessageCodesResolver}
  * strategy: see the {@link #setMessageCodesResolver} method. {@link DefaultMessageCodesResolver}'s
  * javadoc states details on the default resolution rules.
+ * <p>之后可以添加自定义验证错误。
+ * 您通常希望将此类错误代码解析为适当的用户可见的错误消息;这可以通过{@link org.springframework.context.MessageSource}解决每个错误来实现，
+ * 它能够通过它的{@link org.springframework.context.MessageSource#getMessage(org.springframework.context.MessageSourceResolvable, java.util.Locale)}方法。
+ * 消息码列表可以通过{@link MessageCodesResolver}策略定制:参见{@link #setMessageCodesResolver}方法。的javadoc声明了默认解析规则的详细信息。
+ *
  *
  * <p>This generic data binder can be used in any kind of environment.
+ * 这个通用数据绑定器可以在任何环境中使用。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -201,11 +205,17 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 
 	/**
 	 * Set whether this binder should attempt to "auto-grow" a nested path that contains a null value.
+	 * 设置该绑定器是否尝试“自动增长”包含空值的嵌套路径。
+	 *
 	 * <p>If "true", a null path location will be populated with a default object value and traversed
 	 * instead of resulting in an exception. This flag also enables auto-growth of collection elements
 	 * when accessing an out-of-bounds index.
+	 * <p>如果"true"，空路径位置将用默认对象值填充并遍历，而不是导致异常。该标志还支持在访问越界索引时自动增长集合元素。
+	 *
 	 * <p>Default is "true" on a standard DataBinder. Note that since Spring 4.1 this feature is supported
 	 * for bean property access (DataBinder's default mode) and field access.
+	 * <p>在标准DataBinder上的默认值为“true”。注意，从Spring 4.1开始，bean属性访问(DataBinder的默认模式)和字段访问支持该特性。
+	 *
 	 * @see #initBeanPropertyAccess()
 	 * @see org.springframework.beans.BeanWrapper#setAutoGrowNestedPaths
 	 */
@@ -350,6 +360,8 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 
 	/**
 	 * Return the underlying TypeConverter of this binder's BindingResult.
+	 *
+	 * 返回该绑定器BindingResult的底层TypeConverter。
 	 */
 	protected TypeConverter getTypeConverter() {
 		if (getTarget() != null) {
@@ -421,9 +433,15 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	 * Register fields that should be allowed for binding. Default is all
 	 * fields. Restrict this for example to avoid unwanted modifications
 	 * by malicious users when binding HTTP request parameters.
+	 * 注册应该允许绑定的字段。默认为所有字段。例如，在绑定HTTP请求参数时，可以限制这一点，以避免恶意用户进行不必要的修改。
+	 *
 	 * <p>Supports "xxx*", "*xxx" and "*xxx*" patterns. More sophisticated matching
 	 * can be implemented by overriding the {@code isAllowed} method.
+	 * <p>支持“xxx”，“xxx”和“xxx”模式。更复杂的匹配可以通过覆盖{@code isAllowed}方法来实现。
+	 *
 	 * <p>Alternatively, specify a list of <i>disallowed</i> fields.
+	 * 或者，指定一个<i>不允许<i>字段的列表。
+	 *
 	 * @param allowedFields array of field names
 	 * @see #setDisallowedFields
 	 * @see #isAllowed(String)

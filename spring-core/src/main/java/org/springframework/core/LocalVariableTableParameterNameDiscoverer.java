@@ -16,6 +16,12 @@
 
 package org.springframework.core;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.asm.*;
+import org.springframework.lang.Nullable;
+import org.springframework.util.ClassUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -24,19 +30,6 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.asm.ClassReader;
-import org.springframework.asm.ClassVisitor;
-import org.springframework.asm.Label;
-import org.springframework.asm.MethodVisitor;
-import org.springframework.asm.Opcodes;
-import org.springframework.asm.SpringAsmInfo;
-import org.springframework.asm.Type;
-import org.springframework.lang.Nullable;
-import org.springframework.util.ClassUtils;
 
 /**
  * 局部变量表参数名称发现器
@@ -66,9 +59,15 @@ public class LocalVariableTableParameterNameDiscoverer implements ParameterNameD
 	private static final Log logger = LogFactory.getLog(LocalVariableTableParameterNameDiscoverer.class);
 
 	// marker object for classes that do not have any debug info
+	/**
+	 * 标记对象，用于没有任何调试信息的类
+	 */
 	private static final Map<Executable, String[]> NO_DEBUG_INFO_MAP = Collections.emptyMap();
 
 	// the cache uses a nested index (value is a map) to keep the top level cache relatively small in size
+	/**
+	 * 缓存使用嵌套索引(值为映射)来保持顶级缓存相对较小的大小
+	 */
 	private final Map<Class<?>, Map<Executable, String[]>> parameterNamesCache = new ConcurrentHashMap<>(32);
 
 

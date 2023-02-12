@@ -29,6 +29,7 @@ import javax.annotation.meta.When;
 /**
  * A common Spring annotation to declare that annotated elements can be {@code null} under
  * some circumstance.
+ * 一个通用的Spring注释，用于声明在某些情况下注释的元素可以是{@code null}。
  *
  * <p>Leverages JSR-305 meta-annotations to indicate nullability in Java to common
  * tools with JSR-305 support and used by Kotlin to infer nullability of Spring API.

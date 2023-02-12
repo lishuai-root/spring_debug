@@ -16,8 +16,6 @@
 
 package org.springframework.beans.factory.config;
 
-import java.beans.PropertyEditor;
-
 import org.springframework.beans.PropertyEditorRegistrar;
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.TypeConverter;
@@ -29,6 +27,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.metrics.ApplicationStartup;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringValueResolver;
+
+import java.beans.PropertyEditor;
 
 /**
  * Configuration interface to be implemented by most bean factories. Provides
@@ -149,6 +149,8 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 
 	/**
 	 * Return the resolution strategy for expressions in bean definition values.
+	 * 返回bean定义值中表达式的解析策略。
+	 *
 	 * @since 3.0
 	 */
 	@Nullable
@@ -233,6 +235,8 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 
 	/**
 	 * Resolve the given embedded value, e.g. an annotation attribute.
+	 * 解析给定的嵌入值，例如注释属性。
+	 *
 	 * @param value the value to resolve
 	 * @return the resolved value (may be the original value as-is)
 	 * @since 3.0

@@ -16,9 +16,9 @@
 
 package org.springframework.beans;
 
-import java.beans.PropertyEditor;
-
 import org.springframework.lang.Nullable;
+
+import java.beans.PropertyEditor;
 
 /**
  * Encapsulates methods for registering JavaBeans {@link PropertyEditor PropertyEditors}.
@@ -38,6 +38,8 @@ public interface PropertyEditorRegistry {
 
 	/**
 	 * Register the given custom property editor for all properties of the given type.
+	 * 为给定类型的所有属性注册给定的自定义属性编辑器。
+	 *
 	 * @param requiredType the type of the property
 	 * @param propertyEditor the editor to register
 	 */

@@ -56,16 +56,26 @@ public class InitBinderDataBinderFactory extends DefaultDataBinderFactory {
 
 	/**
 	 * Initialize a WebDataBinder with {@code @InitBinder} methods.
+	 * 使用{@code @InitBinder}方法初始化WebDataBinder。
+	 *
 	 * <p>If the {@code @InitBinder} annotation specifies attributes names,
 	 * it is invoked only if the names include the target object name.
+	 * 如果{@code @InitBinder}注释指定了属性名称，则只有当名称包含目标对象名称时才会调用该注释。
+	 *
 	 * @throws Exception if one of the invoked @{@link InitBinder} methods fails
 	 * @see #isBinderMethodApplicable
 	 */
 	@Override
 	public void initBinder(WebDataBinder dataBinder, NativeWebRequest request) throws Exception {
 		for (InvocableHandlerMethod binderMethod : this.binderMethods) {
+			/**
+			 * 如果当前带有{@link InitBinder}的方法对当前参数使用，调用带有{@link InitBinder}注解的方法
+			 */
 			if (isBinderMethodApplicable(binderMethod, dataBinder)) {
 				Object returnValue = binderMethod.invokeForRequest(request, null, dataBinder);
+				/**
+				 * @InitBinder方法不能返回值(应该是void)
+				 */
 				if (returnValue != null) {
 					throw new IllegalStateException(
 							"@InitBinder methods must not return a value (should be void): " + binderMethod);
@@ -75,9 +85,15 @@ public class InitBinderDataBinderFactory extends DefaultDataBinderFactory {
 	}
 
 	/**
+	 * 通过属性名称检查当前带有{@link InitBinder}方法是否对当前参数适用
+	 *
 	 * Determine whether the given {@code @InitBinder} method should be used
 	 * to initialize the given {@link WebDataBinder} instance. By default we
 	 * check the specified attribute names in the annotation value, if any.
+	 *
+	 * 确定是否应该使用给定的{@code @InitBinder}方法来初始化给定的{@link WebDataBinder}实例。
+	 * 默认情况下，我们检查注释值中指定的属性名(如果有的话)。
+	 *
 	 */
 	protected boolean isBinderMethodApplicable(HandlerMethod initBinderMethod, WebDataBinder dataBinder) {
 		InitBinder ann = initBinderMethod.getMethodAnnotation(InitBinder.class);

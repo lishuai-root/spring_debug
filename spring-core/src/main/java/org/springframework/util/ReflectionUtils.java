@@ -75,6 +75,8 @@ public abstract class ReflectionUtils {
 	/**
 	 * Cache for {@link Class#getDeclaredMethods()} plus equivalent default methods
 	 * from Java 8 based interfaces, allowing for fast iteration.
+	 *
+	 * {@link Class#getDeclaredMethods()}的缓存加上基于Java 8接口的等效默认方法，允许快速迭代。
 	 */
 	private static final Map<Class<?>, Method[]> declaredMethodsCache = new ConcurrentReferenceHashMap<>(256);
 
@@ -385,6 +387,9 @@ public abstract class ReflectionUtils {
 		// Keep backing up the inheritance hierarchy. 继续备份继承层次结构。
 		Method[] methods = getDeclaredMethods(clazz, false);
 		for (Method method : methods) {
+			/**
+			 * 跳过桥接方法和合成方法
+			 */
 			if (mf != null && !mf.matches(method)) {
 				continue;
 			}
@@ -472,6 +477,9 @@ public abstract class ReflectionUtils {
 	 * order to avoid new Method instances. In addition, it also includes Java 8
 	 * default methods from locally implemented interfaces, since those are
 	 * effectively to be treated just like declared methods.
+	 * {@link Class#getDeclaredMethods()}的变体，使用本地缓存以避免新的Method实例。
+	 * 此外，它还包括来自本地实现的接口的Java 8默认方法，因为这些方法实际上就像声明的方法一样。
+	 *
 	 * @param clazz the class to introspect
 	 * @return the cached array of methods
 	 * @throws IllegalStateException if introspection fails
@@ -493,6 +501,9 @@ public abstract class ReflectionUtils {
 				 */
 				List<Method> defaultMethods = findConcreteMethodsOnInterfaces(clazz);
 				if (defaultMethods != null) {
+					/**
+					 * 使用当前类及其所有接口中的默认方法创建新的候选方法结果集
+					 */
 					result = new Method[declaredMethods.length + defaultMethods.size()];
 					System.arraycopy(declaredMethods, 0, result, 0, declaredMethods.length);
 					int index = declaredMethods.length;
@@ -504,6 +515,9 @@ public abstract class ReflectionUtils {
 				else {
 					result = declaredMethods;
 				}
+				/**
+				 * 缓存类中所有方法，包括接口中的默认方法
+				 */
 				declaredMethodsCache.put(clazz, (result.length == 0 ? EMPTY_METHOD_ARRAY : result));
 			}
 			catch (Throwable ex) {
@@ -514,6 +528,12 @@ public abstract class ReflectionUtils {
 		return (result.length == 0 || !defensive) ? result : result.clone();
 	}
 
+	/**
+	 * 获取给定类的所有接口中的默认方法
+	 *
+	 * @param clazz
+	 * @return
+	 */
 	@Nullable
 	private static List<Method> findConcreteMethodsOnInterfaces(Class<?> clazz) {
 		List<Method> result = null;
@@ -839,13 +859,15 @@ public abstract class ReflectionUtils {
 
 
 	/**
-	 * Action to take on each method.
+	 * Action to take on each method.	对每种方法采取的行动。
 	 */
 	@FunctionalInterface
 	public interface MethodCallback {
 
 		/**
 		 * Perform an operation using the given method.
+		 * 使用给定的方法执行操作。
+		 *
 		 * @param method the method to operate on
 		 */
 		void doWith(Method method) throws IllegalArgumentException, IllegalAccessException;
@@ -854,19 +876,26 @@ public abstract class ReflectionUtils {
 
 	/**
 	 * Callback optionally used to filter methods to be operated on by a method callback.
+	 *
+	 * 回调可选地用于筛选方法回调要操作的方法。
 	 */
 	@FunctionalInterface
 	public interface MethodFilter {
 
 		/**
 		 * Determine whether the given method matches.
+		 * 确定给定的方法是否匹配。
 		 * @param method the method to check
 		 */
 		boolean matches(Method method);
 
 		/**
 		 * Create a composite filter based on this filter <em>and</em> the provided filter.
+		 * 基于此过滤器<em>和<em>创建一个复合过滤器。
+		 *
 		 * <p>If this filter does not match, the next filter will not be applied.
+		 * 如果此筛选器不匹配，则不会应用下一个筛选器。
+		 *
 		 * @param next the next {@code MethodFilter}
 		 * @return a composite {@code MethodFilter}
 		 * @throws IllegalArgumentException if the MethodFilter argument is {@code null}

@@ -27,6 +27,7 @@ import org.springframework.core.annotation.AliasFor;
 /**
  * Annotation for mapping web requests onto methods in request-handling classes
  * with flexible method signatures.
+ * 用于将web请求映射到具有灵活方法签名的请求处理类中的方法的注释。
  *
  * <p>Both Spring MVC and Spring WebFlux support this annotation through a
  * {@code RequestMappingHandlerMapping} and {@code RequestMappingHandlerAdapter}

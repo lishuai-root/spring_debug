@@ -46,6 +46,8 @@ public class DefaultDataBinderFactory implements WebDataBinderFactory {
 	/**
 	 * Create a new {@link WebDataBinder} for the given target object and
 	 * initialize it through a {@link WebBindingInitializer}.
+	 * 为给定的目标对象创建一个新的{@link WebDataBinder}，并通过{@link WebBindingInitializer}初始化它。
+	 *
 	 * @throws Exception in case of invalid state or arguments
 	 */
 	@Override
@@ -57,6 +59,10 @@ public class DefaultDataBinderFactory implements WebDataBinderFactory {
 		if (this.initializer != null) {
 			this.initializer.initBinder(dataBinder, webRequest);
 		}
+		/**
+		 * 初始化
+		 * 调用对当前参数可用的带有给{@link org.springframework.web.bind.annotation.InitBinder}注解的方法
+		 */
 		initBinder(dataBinder, webRequest);
 		return dataBinder;
 	}
@@ -64,6 +70,8 @@ public class DefaultDataBinderFactory implements WebDataBinderFactory {
 	/**
 	 * Extension point to create the WebDataBinder instance.
 	 * By default this is {@code WebRequestDataBinder}.
+	 * 扩展点来创建WebDataBinder实例。默认情况下是{@code WebRequestDataBinder}。
+	 *
 	 * @param target the binding target or {@code null} for type conversion only
 	 * @param objectName the binding target object name
 	 * @param webRequest the current request
@@ -79,6 +87,8 @@ public class DefaultDataBinderFactory implements WebDataBinderFactory {
 	 * Extension point to further initialize the created data binder instance
 	 * (e.g. with {@code @InitBinder} methods) after "global" initialization
 	 * via {@link WebBindingInitializer}.
+	 * 在通过{@link WebBindingInitializer}进行“全局”初始化之后，扩展点进一步初始化创建的数据绑定实例(例如，使用{@code @InitBinder}方法)。
+	 *
 	 * @param dataBinder the data binder instance to customize
 	 * @param webRequest the current request
 	 * @throws Exception if initialization fails

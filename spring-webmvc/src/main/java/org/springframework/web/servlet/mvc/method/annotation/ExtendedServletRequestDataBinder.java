@@ -16,18 +16,19 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.util.Map;
-
 import jakarta.servlet.ServletRequest;
-
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.HandlerMapping;
 
+import java.util.Map;
+
 /**
  * Subclass of {@link ServletRequestDataBinder} that adds URI template variables
  * to the values used for data binding.
+ *
+ * {@link ServletRequestDataBinder}的子类，它将URI模板变量添加到用于数据绑定的值中。
  *
  * @author Rossen Stoyanchev
  * @since 3.1

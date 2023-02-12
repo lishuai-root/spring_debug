@@ -16,16 +16,11 @@
 
 package org.springframework.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.lang.Nullable;
+
+import java.util.*;
 
 /**
  * Utility class for working with Strings that have placeholder values in them.
@@ -117,6 +112,8 @@ public class PropertyPlaceholderHelper {
 	/**
 	 * Replaces all placeholders of format {@code ${name}} with the value returned
 	 * from the supplied {@link PlaceholderResolver}.
+	 * 将格式为{@code ${name}}的所有占位符替换为从提供的{@link PlaceholderResolver}返回的值。
+	 *
 	 * @param value the value containing the placeholders to be replaced
 	 * @param placeholderResolver the {@code PlaceholderResolver} to use for replacement
 	 * @return the supplied value with placeholders replaced inline
@@ -156,8 +153,14 @@ public class PropertyPlaceholderHelper {
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
 				// Recursive invocation, parsing placeholders contained in the placeholder key.
+				/**
+				 * 递归调用，解析占位符键中包含的占位符。
+				 */
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
 				// Now obtain the value for the fully resolved key...
+				/**
+				 * 现在获取完全解析键的值…
+				 */
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
 				if (propVal == null && this.valueSeparator != null) {
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);

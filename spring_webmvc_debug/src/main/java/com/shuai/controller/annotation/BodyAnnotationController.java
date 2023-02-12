@@ -3,12 +3,14 @@ package com.shuai.controller.annotation;
 import com.shuai.common.FileMessage;
 import com.shuai.common.User;
 import com.shuai.util.FileUploadUtil;
-import jakarta.servlet.annotation.MultipartConfig;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @description:
@@ -17,15 +19,41 @@ import java.io.IOException;
  * @version: 1.0
  */
 
-@MultipartConfig(location = FileUploadUtil.LOCATION, maxFileSize = FileUploadUtil.MAX_FILE_SIZE)
+
 @RestController
-@RequestMapping
+@RequestMapping(value = "/body")
 @CrossOrigin
-public class AnnotationController {
+public class BodyAnnotationController {
+
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+	@GetMapping("exprName")
+	public String exprName(@RequestParam("${USERNAME}") String name) {
+		return name;
+	}
 
 	@GetMapping("hello")
-	public String hello(){
+	public String hello(Date date){
+		System.out.println("Hello World! " + DATE_FORMAT.format(date));
 		return "Hello World!";
+	}
+
+	@GetMapping("hello2")
+	public String hello2(Date day){
+		System.out.println("Hello World2! " + DATE_FORMAT.format(day));
+		return "Hello World!";
+	}
+
+	@GetMapping("hello3")
+	public String hello3(Date currDate){
+		System.out.println("Hello World3! " + DATE_FORMAT.format(currDate));
+		return "Hello World!";
+	}
+
+	@GetMapping("testView")
+	public String testView(){
+		System.out.println("testView");
+		return "testView";
 	}
 
 	@PostMapping("user/{username}")
@@ -38,7 +66,7 @@ public class AnnotationController {
 
 
 	@PostMapping("uploadFile")
-	public FileMessage uploadFile(@RequestParam MultipartFile testUpload) throws IOException {
+	public FileMessage uploadFile(/*@RequestParam*/ MultipartFile testUpload) throws IOException {
 		long start = System.currentTimeMillis();
 		String fileName = testUpload.getName();
 		long fileSize = testUpload.getSize();

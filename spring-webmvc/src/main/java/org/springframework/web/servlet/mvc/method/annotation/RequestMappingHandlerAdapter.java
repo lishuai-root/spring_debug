@@ -85,18 +85,22 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	/**
 	 * Boolean flag controlled by a {@code spring.xml.ignore} system property that instructs Spring to
 	 * ignore XML, i.e. to not initialize the XML-related infrastructure.
+	 * 由{@code spring.xml。ignore}系统属性，指示Spring忽略XML，即不初始化XML相关的基础设施。
+	 *
 	 * <p>The default is "false".
 	 */
 	private static final boolean shouldIgnoreXml = SpringProperties.getFlag("spring.xml.ignore");
 
 	/**
 	 * MethodFilter that matches {@link InitBinder @InitBinder} methods.
+	 * 匹配{@link InitBinder @InitBinder}方法的MethodFilter。
 	 */
 	public static final MethodFilter INIT_BINDER_METHODS = method ->
 			AnnotatedElementUtils.hasAnnotation(method, InitBinder.class);
 
 	/**
 	 * MethodFilter that matches {@link ModelAttribute @ModelAttribute} methods.
+	 * 匹配{@link ModelAttribute @ModelAttribute}方法的MethodFilter。
 	 */
 	public static final MethodFilter MODEL_ATTRIBUTE_METHODS = method ->
 			(!AnnotatedElementUtils.hasAnnotation(method, RequestMapping.class) &&
@@ -125,6 +129,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	private List<HttpMessageConverter<?>> messageConverters;
 
+	/**
+	 * 缓存全局实现了{@link RequestBodyAdvice}接口或者{@link ResponseBodyAdvice}接口的bean实例
+	 */
 	private final List<Object> requestResponseBodyAdvice = new ArrayList<>();
 
 	@Nullable
@@ -158,10 +165,16 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 
 	private final Map<Class<?>, Set<Method>> initBinderCache = new ConcurrentHashMap<>(64);
 
+	/**
+	 * 缓存全局带有{@link InitBinder}注解的方法
+	 */
 	private final Map<ControllerAdviceBean, Set<Method>> initBinderAdviceCache = new LinkedHashMap<>();
 
 	private final Map<Class<?>, Set<Method>> modelAttributeCache = new ConcurrentHashMap<>(64);
 
+	/**
+	 * 缓存全局带有{@link ModelAttribute}注解的方法
+	 */
 	private final Map<ControllerAdviceBean, Set<Method>> modelAttributeAdviceCache = new LinkedHashMap<>();
 
 
@@ -185,6 +198,9 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	 * Provide resolvers for custom argument types. Custom resolvers are ordered
 	 * after built-in ones. To override the built-in support for argument
 	 * resolution use {@link #setArgumentResolvers} instead.
+	 *
+	 * 为自定义参数类型提供解析器。自定义解析器排在内置解析器之后。
+	 * 要覆盖对参数解析的内置支持，请使用{@link #setArgumentResolvers}代替。
 	 */
 	public void setCustomArgumentResolvers(@Nullable List<HandlerMethodArgumentResolver> argumentResolvers) {
 		this.customArgumentResolvers = argumentResolvers;
@@ -201,6 +217,8 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	/**
 	 * Configure the complete list of supported argument types thus overriding
 	 * the resolvers that would otherwise be configured by default.
+	 *
+	 * 配置支持的参数类型的完整列表，从而覆盖默认情况下配置的解析器。
 	 */
 	public void setArgumentResolvers(@Nullable List<HandlerMethodArgumentResolver> argumentResolvers) {
 		if (argumentResolvers == null) {
@@ -480,18 +498,29 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	/**
 	 * Set if controller execution should be synchronized on the session,
 	 * to serialize parallel invocations from the same client.
+	 * 设置控制器执行是否应在会话上同步，以序列化来自同一客户端的并行调用。
+	 *
 	 * <p>More specifically, the execution of the {@code handleRequestInternal}
 	 * method will get synchronized if this flag is "true". The best available
 	 * session mutex will be used for the synchronization; ideally, this will
 	 * be a mutex exposed by HttpSessionMutexListener.
+	 * 更具体地说，如果该标志为“true”，{@code handleRequestInternal}方法的执行将同步。
+	 * 最好的会话互斥量将用于同步;理想情况下，这将是一个由HttpSessionMutexListener公开的互斥量。
+	 *
 	 * <p>The session mutex is guaranteed to be the same object during
 	 * the entire lifetime of the session, available under the key defined
 	 * by the {@code SESSION_MUTEX_ATTRIBUTE} constant. It serves as a
 	 * safe reference to synchronize on for locking on the current session.
+	 * 会话互斥锁保证在会话的整个生命周期内都是相同的对象，在常量{@code SESSION_MUTEX_ATTRIBUTE}定义的键下可用。
+	 * 它作为一个安全的参考来同步锁定当前会话。
+	 *
 	 * <p>In many cases, the HttpSession reference itself is a safe mutex
 	 * as well, since it will always be the same object reference for the
 	 * same active logical session. However, this is not guaranteed across
 	 * different servlet containers; the only 100% safe way is a session mutex.
+	 * 在许多情况下，HttpSession引用本身也是一个安全的互斥量，因为它总是同一个活动逻辑会话的同一个对象引用。
+	 * 然而，这在不同的servlet容器之间是不能保证的;唯一100%安全的方法是会话互斥。
+	 *
 	 * @see org.springframework.web.util.HttpSessionMutexListener
 	 * @see org.springframework.web.util.WebUtils#getSessionMutex(jakarta.servlet.http.HttpSession)
 	 */
@@ -531,6 +560,14 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	@Override
 	public void afterPropertiesSet() {
 		// Do this first, it may add ResponseBody advice beans
+		/**
+		 * 先做这个，是否会添加ResponseBody建议bean
+		 *
+		 * 1.查找并缓存带有{@link org.springframework.web.bind.annotation.ControllerAdvice}注解的bean
+		 * 分别缓存带有{@link ModelAttribute}或者{@link InitBinder}注解的方法
+		 *
+		 * 2.和实现了{@link RequestBodyAdvice}或者{@link ResponseBodyAdvice}接口的bean
+		 */
 		initControllerAdviceCache();
 
 		if (this.argumentResolvers == null) {
@@ -552,6 +589,10 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			return;
 		}
 
+		/**
+		 * 在给定的{@link ApplicationContext}中找到带有{@link ControllerAdvice @ControllerAdvice}注释的bean，
+		 * 并将它们包装为{@code ControllerAdviceBean}实例。
+		 */
 		List<ControllerAdviceBean> adviceBeans = ControllerAdviceBean.findAnnotatedBeans(getApplicationContext());
 
 		List<Object> requestResponseBodyAdviceBeans = new ArrayList<>();
@@ -561,19 +602,34 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			if (beanType == null) {
 				throw new IllegalStateException("Unresolvable type for ControllerAdviceBean: " + adviceBean);
 			}
+			/**
+			 * 查找类中带有{@link ModelAttribute}注解，但是不带有{@link RequestMapping}注解的方法
+			 * 带有{@link ModelAttribute}注解的方法会在Controller调用完成后调用，用来给{@link ModelAndView}设置自定义参数，
+			 * 如果{@link ModelAttribute}注解的方法同时带有{@link RequestMapping}注解，则会重复调用
+			 */
 			Set<Method> attrMethods = MethodIntrospector.selectMethods(beanType, MODEL_ATTRIBUTE_METHODS);
 			if (!attrMethods.isEmpty()) {
 				this.modelAttributeAdviceCache.put(adviceBean, attrMethods);
 			}
+			/**
+			 * 获取带有{@link InitBinder}注解的方法
+			 */
 			Set<Method> binderMethods = MethodIntrospector.selectMethods(beanType, INIT_BINDER_METHODS);
 			if (!binderMethods.isEmpty()) {
 				this.initBinderAdviceCache.put(adviceBean, binderMethods);
 			}
+			/**
+			 * 保存通过{@link org.springframework.web.bind.annotation.ControllerAdvice}注入的实现了{@link RequestBodyAdvice}或者
+			 * {@link ResponseBodyAdvice}接口的bean
+			 */
 			if (RequestBodyAdvice.class.isAssignableFrom(beanType) || ResponseBodyAdvice.class.isAssignableFrom(beanType)) {
 				requestResponseBodyAdviceBeans.add(adviceBean);
 			}
 		}
 
+		/**
+		 * 缓存全局实现了{@link RequestBodyAdvice}接口或者{@link ResponseBodyAdvice}接口的bean实例
+		 */
 		if (!requestResponseBodyAdviceBeans.isEmpty()) {
 			this.requestResponseBodyAdvice.addAll(0, requestResponseBodyAdviceBeans);
 		}
@@ -605,12 +661,32 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 	/**
 	 * Return the list of argument resolvers to use including built-in resolvers
 	 * and custom resolvers provided via {@link #setCustomArgumentResolvers}.
+	 *
+	 * 返回要使用的参数解析器列表，包括内置解析器和通过{@link #setCustomArgumentResolvers}提供的自定义解析器。
 	 */
 	private List<HandlerMethodArgumentResolver> getDefaultArgumentResolvers() {
 		List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>(30);
 
 		// Annotation-based argument resolution
+		/**
+		 * 基于注释的参数解析
+		 */
+		/**
+		 * {@link RequestParamMethodArgumentResolver}支持以下类型的参数解析：
+		 *
+		 * 1. 带有{@link RequestParam}注解，且指定参数名称的{@link Map}类型的参数
+		 * 2. 带有{@link RequestParam}注解，且参数类型是{@link Map}以外的其他类型
+		 * 3. 没有带{@link RequestParam}注解，且参数类型是表单项类型，或者参数类型为表单项类型的集合
+		 * 4. 没有带{@link RequestParam}注解，且允许使用默认解析策略，且参数类型为简单类型或者简单类型的数组
+		 *
+		 * 不适用默认参数解析策略
+		 */
 		resolvers.add(new RequestParamMethodArgumentResolver(getBeanFactory(), false));
+		/**
+		 * 用于解析带有{@link org.springframework.web.bind.annotation.RequestParam}注解，
+		 * 但是没有指定{@link org.springframework.web.bind.annotation.RequestParam#name()}参数，
+		 * 且方法参数类型为{@link Map}类型的方法参数
+		 */
 		resolvers.add(new RequestParamMapMethodArgumentResolver());
 		resolvers.add(new PathVariableMethodArgumentResolver());
 		resolvers.add(new PathVariableMapMethodArgumentResolver());
@@ -939,11 +1015,20 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		Class<?> handlerType = handlerMethod.getBeanType();
 		Set<Method> methods = this.initBinderCache.get(handlerType);
 		if (methods == null) {
+			/**
+			 * 查找当前类中及其父接口中所有带有{@link InitBinder}注解的方法和默认方法
+			 */
 			methods = MethodIntrospector.selectMethods(handlerType, INIT_BINDER_METHODS);
+			/**
+			 * 缓存类中带有{@link InitBinder}注解的方法集合，避免多次查找
+			 */
 			this.initBinderCache.put(handlerType, methods);
 		}
 		List<InvocableHandlerMethod> initBinderMethods = new ArrayList<>();
 		// Global methods first
+		/**
+		 * 全局方法优先
+		 */
 		this.initBinderAdviceCache.forEach((controllerAdviceBean, methodSet) -> {
 			if (controllerAdviceBean.isApplicableToBeanType(handlerType)) {
 				Object bean = controllerAdviceBean.resolveBean();

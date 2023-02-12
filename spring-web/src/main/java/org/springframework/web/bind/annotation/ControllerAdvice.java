@@ -31,6 +31,9 @@ import org.springframework.stereotype.Component;
  * {@link ExceptionHandler @ExceptionHandler}, {@link InitBinder @InitBinder}, or
  * {@link ModelAttribute @ModelAttribute} methods to be shared across
  * multiple {@code @Controller} classes.
+ * 对于声明{@link ExceptionHandler @ExceptionHandler}、{@link InitBinder @InitBinder}或{@link ModelAttribute @ModelAttribute}
+ * 方法的类{@link Component @Component}专门化，以便在多个{@code @Controller}类之间共享。
+ *
  *
  * <p>Classes annotated with {@code @ControllerAdvice} can be declared explicitly
  * as Spring beans or auto-detected via classpath scanning. All such beans are
@@ -39,6 +42,11 @@ import org.springframework.stereotype.Component;
  * {@link jakarta.annotation.Priority @Priority} declarations, with {@code Ordered}
  * semantics taking precedence over {@code @Order} / {@code @Priority} declarations.
  * {@code @ControllerAdvice} beans are then applied in that order at runtime.
+ * 用{@code @ControllerAdvice}注释的类可以显式地声明为Spring bean，也可以通过类路径扫描自动检测。
+ * 所有这样的bean都是基于{@link org.springframework.core.annotation.Order @Order} {@link jakarta.annotation.Priority @Priority}
+ * 声明进行排序的，其中{@code Ordered}语义优先于{@code @Order} {@code @Priority}声明。
+ * 然后在运行时按此顺序应用{@code @ControllerAdvice} bean。
+ *
  * Note, however, that {@code @ControllerAdvice} beans that implement
  * {@link org.springframework.core.PriorityOrdered PriorityOrdered} are <em>not</em>
  * given priority over {@code @ControllerAdvice} beans that implement {@code Ordered}.
@@ -48,6 +56,13 @@ import org.springframework.stereotype.Component;
  * will be picked on the first advice with a matching exception handler method. For
  * model attributes and data binding initialization, {@code @ModelAttribute} and
  * {@code @InitBinder} methods will follow {@code @ControllerAdvice} order.
+ * 但是请注意，实现{@code @ControllerAdvice}的{@code @ControllerAdvice} bean的优先级比实现{@code Ordered}
+ * 的{@code @ControllerAdvice} bean的优先级是<em>而不是<em>。
+ * 此外，{@code Ordered}对于作用域{@code @ControllerAdvice} bean和mdash不受尊重;
+ * 例如，如果这样一个bean被配置为请求范围的bean或会话范围的bean。
+ * 为了处理异常，将在第一个通知中使用匹配的异常处理方法选择{@code @ExceptionHandler}。
+ * 对于模型属性和数据绑定初始化，{@code @ModelAttribute}和{@code @InitBinder}方法将遵循{@code @ControllerAdvice}的顺序。
+ *
  *
  * <p>Note: For {@code @ExceptionHandler} methods, a root exception match will be
  * preferred to just matching a cause of the current exception, among the handler
@@ -55,15 +70,25 @@ import org.springframework.stereotype.Component;
  * advice will still be preferred over any match (whether root or cause level)
  * on a lower-priority advice bean. As a consequence, please declare your primary
  * root exception mappings on a prioritized advice bean with a corresponding order.
+ * 注意:对于{@code @ExceptionHandler}方法，在特定通知bean的处理程序方法中，根异常匹配将优先于匹配当前异常的原因。
+ * 但是，高优先级通知上的原因匹配仍然优先于低优先级通知bean上的任何匹配(无论是根级别还是原因级别)。
+ * 因此，请以相应的顺序在优先级建议bean上声明您的主根异常映射。
+ *
  *
  * <p>By default, the methods in an {@code @ControllerAdvice} apply globally to
  * all controllers. Use selectors such as {@link #annotations},
  * {@link #basePackageClasses}, and {@link #basePackages} (or its alias
  * {@link #value}) to define a more narrow subset of targeted controllers.
+ * 默认情况下，{@code @ControllerAdvice}中的方法全局应用于所有控制器。
+ * 使用诸如{@link #annotation}、{@link #basePackageClasses}和{@link #basePackages}(或其别名{@link #value})这样的选择器来定义目标控制器的更窄子集。
+ *
  * If multiple selectors are declared, boolean {@code OR} logic is applied, meaning
  * selected controllers should match at least one selector. Note that selector checks
  * are performed at runtime, so adding many selectors may negatively impact
  * performance and add complexity.
+ * 如果声明了多个选择器，则应用布尔{@code OR}逻辑，这意味着所选控制器应该至少匹配一个选择器。
+ * 请注意，选择器检查是在运行时执行的，因此添加许多选择器可能会对性能产生负面影响并增加复杂性。
+ *
  *
  * @author Rossen Stoyanchev
  * @author Brian Clozel
@@ -80,9 +105,13 @@ public @interface ControllerAdvice {
 
 	/**
 	 * Alias for the {@link #basePackages} attribute.
+	 * {@link basePackages}属性的别名。
+	 *
 	 * <p>Allows for more concise annotation declarations &mdash; for example,
 	 * {@code @ControllerAdvice("org.my.pkg")} is equivalent to
 	 * {@code @ControllerAdvice(basePackages = "org.my.pkg")}.
+	 * 允许更简洁的注释声明&mdash;例如，{@code @ControllerAdvice("org.my.pkg")}等价于{@code @ControllerAdvice(basePackages = "org.my.pkg")}。
+	 *
 	 * @since 4.0
 	 * @see #basePackages
 	 */

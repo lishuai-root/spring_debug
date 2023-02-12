@@ -154,6 +154,8 @@ public abstract class ApplicationObjectSupport implements ApplicationContextAwar
 
 	/**
 	 * Return the ApplicationContext that this object is associated with.
+	 * 返回此对象关联的ApplicationContext。
+	 *
 	 * @throws IllegalStateException if not running in an ApplicationContext
 	 */
 	@Nullable

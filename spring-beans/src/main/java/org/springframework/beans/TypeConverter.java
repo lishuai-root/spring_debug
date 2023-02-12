@@ -16,19 +16,22 @@
 
 package org.springframework.beans;
 
-import java.lang.reflect.Field;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.lang.Nullable;
 
+import java.lang.reflect.Field;
+
 /**
  * Interface that defines type conversion methods. Typically (but not necessarily)
  * implemented in conjunction with the {@link PropertyEditorRegistry} interface.
+ * 接口，该接口定义类型转换方法。通常(但不一定)与{@link PropertyEditorRegistry}接口一起实现。
  *
  * <p><b>Note:</b> Since TypeConverter implementations are typically based on
  * {@link java.beans.PropertyEditor PropertyEditors} which aren't thread-safe,
  * TypeConverters themselves are <em>not</em> to be considered as thread-safe either.
+ * 由于TypeConverter实现通常是基于{@link java.beans.PropertyEditor propertyeditor}，而这些不是线程安全的，
+ * TypeConverters本身是<em>而不是<em>，因此也被认为是线程安全的。
  *
  * @author Juergen Hoeller
  * @since 2.0
@@ -59,8 +62,12 @@ public interface TypeConverter {
 
 	/**
 	 * Convert the value to the required type (if necessary from a String).
+	 * 将值转换为所需的类型(如果需要从String转换)。
+	 *
 	 * <p>Conversions from String to any type will typically use the {@code setAsText}
 	 * method of the PropertyEditor class, or a Spring Converter in a ConversionService.
+	 * 从String到任何类型的转换通常会使用PropertyEditor类的{@code setAsText}方法，或者ConversionService中的Spring Converter。
+	 *
 	 * @param value the value to convert
 	 * @param requiredType the type we must convert to
 	 * (or {@code null} if not known, for example in case of a collection element)

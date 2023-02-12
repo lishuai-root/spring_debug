@@ -41,6 +41,8 @@ public interface ExpressionParser {
 
 	/**
 	 * Parse the expression string and return an Expression object you can use for repeated evaluation.
+	 * 解析表达式字符串并返回可用于重复求值的expression对象。
+	 *
 	 * <p>Some examples:
 	 * <pre class="code">
 	 *     3 + 4

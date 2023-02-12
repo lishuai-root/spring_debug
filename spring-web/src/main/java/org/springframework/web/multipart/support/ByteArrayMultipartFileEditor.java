@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Custom {@link java.beans.PropertyEditor} for converting
  * {@link MultipartFile MultipartFiles} to byte arrays.
+ * 自定义{@link java.beans.PropertyEditor}用于将{@link MultipartFile MultipartFiles}转换为字节数组。
  *
  * @author Juergen Hoeller
  * @since 13.10.2003

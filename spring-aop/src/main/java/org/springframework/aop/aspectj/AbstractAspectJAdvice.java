@@ -16,22 +16,12 @@
 
 package org.springframework.aop.aspectj;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.weaver.tools.JoinPointMatch;
 import org.aspectj.weaver.tools.PointcutParameter;
-
 import org.springframework.aop.AopInvocationException;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
@@ -43,11 +33,16 @@ import org.springframework.aop.support.StaticMethodMatcher;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Base class for AOP Alliance {@link org.aopalliance.aop.Advice} classes
@@ -143,6 +138,8 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 	/**
 	 * Index for thisJoinPointStaticPart argument (currently only
 	 * supported at index 0 if present at all).
+	 *
+	 * thisJoinPointStaticPart参数的索引(如果存在，目前仅支持索引0)。
 	 */
 	private int joinPointStaticPartArgumentIndex = -1;
 
@@ -578,6 +575,8 @@ public abstract class AbstractAspectJAdvice implements Advice, AspectJPrecedence
 	/**
 	 * Take the arguments at the method execution join point and output a set of arguments
 	 * to the advice method.
+	 * 获取方法执行连接点上的参数，并向通知方法输出一组参数。
+	 *
 	 * @param jp the current JoinPoint
 	 * @param jpMatch the join point match that matched this execution join point
 	 * @param returnValue the return value from the method execution (may be null)

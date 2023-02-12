@@ -80,6 +80,8 @@ public interface Expression {
 	/**
 	 * Evaluate this expression in the provided context and return the result
 	 * of evaluation.
+	 * 在提供的上下文中计算此表达式并返回计算结果。
+	 *
 	 * @param context the context in which to evaluate the expression
 	 * @return the evaluation result
 	 * @throws EvaluationException if there is a problem during evaluation

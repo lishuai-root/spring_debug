@@ -25,8 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Custom {@link java.beans.PropertyEditor} for converting
  * {@link MultipartFile MultipartFiles} to Strings.
+ * 自定义{@link java.beans.PropertyEditor}用于将{@link MultipartFile MultipartFiles}转换为字符串。
  *
  * <p>Allows one to specify the charset to use.
+ * 允许指定要使用的字符集。
  *
  * @author Juergen Hoeller
  * @since 13.10.2003

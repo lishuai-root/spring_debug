@@ -1,0 +1,25 @@
+[Scia Reto](https://sciareto.org) mind map   
+> __version__=`1.1`
+---
+
+# doDispatch<br/>处理请求
+> collapsed=`true`
+
+
+## WebAsyncUtils\.getAsyncManager\(request\)<br/>获取异步管理器
+
+## checkMultipart\(request\)<br/>检查当前请求是否上传请求<br/>如果是创建一个新的MultipartHttpServletRequest类型的请求对象<br/>如果不是返回原来的request对象
+
+## getHandler\(processedRequest\)<br/>获取当前请求的处理器链，包含拦截器
+
+## getHandlerAdapter\(mappedHandler\.getHandler\(\)\)<br/>获取当前请求的HandlerAdapter
+
+## HandlerExecutionChain::applyPreHandle<br/>执行拦截器的preHandle方法<br/>如果有任何一个拦截器的preHandle方法返回false，将不再执行后续的处理流程
+
+## HandlerAdapter::handle<br/>执行请求的处理函数
+- FILE
+<pre>spring_webmvc_debug/mind/method/RequestMappingHandlerAdapter/handle.mmd</pre>
+
+## applyDefaultViewName\(processedRequest, mv\)<br/>设置视图名称
+
+## HandlerExecutionChain::applyPostHandle<br/>执行拦截器的postHandle方法

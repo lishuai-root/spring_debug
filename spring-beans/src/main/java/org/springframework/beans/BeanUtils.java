@@ -672,9 +672,13 @@ public abstract class BeanUtils {
 	/**
 	 * Check if the given type represents a "simple" property: a simple value
 	 * type or an array of simple value types.
+	 * 检查给定的类型是否表示“简单”属性:简单值类型或简单值类型数组。
+	 *
 	 * <p>See {@link #isSimpleValueType(Class)} for the definition of <em>simple
 	 * value type</em>.
 	 * <p>Used to determine properties to check for a "simple" dependency-check.
+	 * 用于确定要进行“简单”依赖项检查的属性。
+	 *
 	 * @param type the type to check
 	 * @return whether the given type represents a "simple" property
 	 * @see org.springframework.beans.factory.support.RootBeanDefinition#DEPENDENCY_CHECK_SIMPLE
@@ -683,6 +687,9 @@ public abstract class BeanUtils {
 	 */
 	public static boolean isSimpleProperty(Class<?> type) {
 		Assert.notNull(type, "'type' must not be null");
+		/**
+		 * 参数是简单类型，或者参数是数组类型，且数组类型是简单类型
+		 */
 		return isSimpleValueType(type) || (type.isArray() && isSimpleValueType(type.getComponentType()));
 	}
 
@@ -690,6 +697,8 @@ public abstract class BeanUtils {
 	 * Check if the given type represents a "simple" value type: a primitive or
 	 * primitive wrapper, an enum, a String or other CharSequence, a Number, a
 	 * Date, a Temporal, a URI, a URL, a Locale, or a Class.
+	 * 检查给定的类型是否代表“简单”值类型:原语或原语包装器、枚举、字符串或其他CharSequence、数字、日期、时态、URI、URL、区域设置或类。
+	 *
 	 * <p>{@code Void} and {@code void} are not considered simple value types.
 	 * @param type the type to check
 	 * @return whether the given type represents a "simple" value type

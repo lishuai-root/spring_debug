@@ -164,8 +164,12 @@ public class OrderComparator implements Comparator<Object> {
 
 	/**
 	 * Sort the given List with a default OrderComparator.
+	 * 使用默认的OrderComparator对给定的List进行排序。
+	 *
 	 * <p>Optimized to skip sorting for lists with size 0 or 1,
 	 * in order to avoid unnecessary array extraction.
+	 * 优化为跳过大小为0或1的列表排序，以避免不必要的数组提取。
+	 *
 	 * @param list the List to sort
 	 * @see java.util.List#sort(java.util.Comparator)
 	 */

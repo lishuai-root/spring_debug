@@ -16,23 +16,29 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.lang.Nullable;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
 
 /**
  * Allows customizing the request before its body is read and converted into an
  * Object and also allows for processing of the resulting Object before it is
  * passed into a controller method as an {@code @RequestBody} or an
  * {@code HttpEntity} method argument.
+ * 允许在读取请求体并将其转换为对象之前自定义请求，
+ * 也允许在将结果对象作为{@code @RequestBody}或{@code HttpEntity}方法参数传递给控制器方法之前对其进行处理。
+ *
  *
  * <p>Implementations of this contract may be registered directly with the
  * {@code RequestMappingHandlerAdapter} or more likely annotated with
  * {@code @ControllerAdvice} in which case they are auto-detected.
+ * 这个契约的实现可以直接注册到{@code RequestMappingHandlerAdapter}，
+ * 或者更有可能用{@code @ControllerAdvice}注释，在这种情况下，它们会被自动检测到。
+ *
  *
  * @author Rossen Stoyanchev
  * @since 4.2
@@ -41,6 +47,8 @@ public interface RequestBodyAdvice {
 
 	/**
 	 * Invoked first to determine if this interceptor applies.
+	 * 首先调用，以确定该拦截器是否适用。
+	 *
 	 * @param methodParameter the method parameter
 	 * @param targetType the target type, not necessarily the same as the method
 	 * parameter type, e.g. for {@code HttpEntity<String>}.
@@ -52,6 +60,8 @@ public interface RequestBodyAdvice {
 
 	/**
 	 * Invoked second before the request body is read and converted.
+	 * 在读取和转换请求体之前的第二秒调用。
+	 *
 	 * @param inputMessage the request
 	 * @param parameter the target method parameter
 	 * @param targetType the target type, not necessarily the same as the method
@@ -64,6 +74,8 @@ public interface RequestBodyAdvice {
 
 	/**
 	 * Invoked third (and last) after the request body is converted to an Object.
+	 * 在请求体转换为对象后第三次(也是最后一次)调用。
+	 *
 	 * @param body set to the converter Object before the first advice is called
 	 * @param inputMessage the request
 	 * @param parameter the target method parameter
@@ -77,6 +89,8 @@ public interface RequestBodyAdvice {
 
 	/**
 	 * Invoked second (and last) if the body is empty.
+	 * 如果主体为空，则第二次(也是最后一次)调用。
+	 *
 	 * @param body usually set to {@code null} before the first advice is called
 	 * @param inputMessage the request
 	 * @param parameter the method parameter

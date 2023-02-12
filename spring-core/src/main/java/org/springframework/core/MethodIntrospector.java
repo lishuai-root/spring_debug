@@ -110,8 +110,14 @@ public final class MethodIntrospector {
 	}
 
 	/**
+	 * 通过指定方法过滤器，选择指定类中合适的方法集合
+	 *
 	 * Select methods on the given target type based on a filter.
+	 * 基于筛选器选择给定目标类型上的方法。
+	 *
 	 * <p>Callers define methods of interest through the {@code MethodFilter} parameter.
+	 * 调用者通过{@code MethodFilter}参数定义感兴趣的方法。
+	 *
 	 * @param targetType the target type to search methods on
 	 * @param methodFilter a {@code MethodFilter} to help
 	 * recognize handler methods of interest

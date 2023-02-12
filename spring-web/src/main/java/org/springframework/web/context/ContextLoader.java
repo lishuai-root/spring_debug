@@ -45,12 +45,18 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Performs the actual initialization work for the root application context.
  * Called by {@link ContextLoaderListener}.
+ * 为根应用程序上下文执行实际的初始化工作。由{@link ContextLoaderListener}调用。
  *
  * <p>Looks for a {@link #CONTEXT_CLASS_PARAM "contextClass"} parameter at the
  * {@code web.xml} context-param level to specify the context class type, falling
  * back to {@link org.springframework.web.context.support.XmlWebApplicationContext}
  * if not found. With the default ContextLoader implementation, any context class
  * specified needs to implement the {@link ConfigurableWebApplicationContext} interface.
+ * 在{@code web.xml} context-param级别查找{@link CONTEXT_CLASS_PARAM "contextClass"}参数，以指定上下文类类型，
+ * 回落到{@link org.springframework.web.context.support.XmlWebApplicationContext}如果没有找到。
+ * 使用默认的ContextLoader实现，任何指定的上下文类都需要实现{@link ConfigurableWebApplicationContext}接口。
+ *
+ *
  *
  * <p>Processes a {@link #CONFIG_LOCATION_PARAM "contextConfigLocation"} context-param
  * and passes its value to the context instance, parsing it into potentially multiple

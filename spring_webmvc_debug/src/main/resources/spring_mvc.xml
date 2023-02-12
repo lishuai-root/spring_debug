@@ -55,8 +55,17 @@
 			<mvc:exclude-mapping path="/static/**"/>
 			<bean id="fileInterceptor" class="com.shuai.interceptor.FileInterceptor"/>
 		</mvc:interceptor>
+		<bean id="requestParameterConverter" class="com.shuai.interceptor.RequestParameterConverter"/>
 	</mvc:interceptors>
-	<mvc:resources mapping="/static/**" location="classpath:static"/>
+
 	<bean id="/xmlController" class="com.shuai.controller.xml.XmlController"/>
 	<bean id="/xmlHandler" class="com.shuai.controller.xml.XmlHandler"/>
+
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="suffix" value=".html"/>
+		<property name="prefix" value="/resource/view/"/>
+<!--		<property name="prefix" value="/WEB-INF/classes/static/**"/>-->
+	</bean>
+	
+	<mvc:resources mapping="/static/**" location="/resource/static/"/>
 </beans>

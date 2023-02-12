@@ -215,6 +215,8 @@ public class MethodParameter {
 	/**
 	 * Copy constructor, resulting in an independent MethodParameter object
 	 * based on the same metadata and cache state that the original object was in.
+	 * 复制构造函数，导致基于原始对象所在的相同元数据和缓存状态的独立MethodParameter对象。
+	 *
 	 * @param original the original MethodParameter object to copy from
 	 */
 	public MethodParameter(MethodParameter original) {
@@ -405,6 +407,8 @@ public class MethodParameter {
 	/**
 	 * Return a variant of this {@code MethodParameter} which points to the
 	 * same parameter but one nesting level deeper.
+	 * 返回这个{@code MethodParameter}的一个变体，它指向相同的参数，但更深一层嵌套。
+	 *
 	 * @since 4.3
 	 */
 	public MethodParameter nested() {
@@ -414,6 +418,8 @@ public class MethodParameter {
 	/**
 	 * Return a variant of this {@code MethodParameter} which points to the
 	 * same parameter but one nesting level deeper.
+	 * 返回这个{@code MethodParameter}的一个变体，它指向相同的参数，但更深一层嵌套。
+	 *
 	 * @param typeIndex the type index for the new nesting level
 	 * @since 5.2
 	 */
@@ -445,10 +451,14 @@ public class MethodParameter {
 
 	/**
 	 * Return whether this method indicates a parameter which is not required:
+	 * 返回该方法是否指示一个非必需参数:
+	 *
 	 * either in the form of Java 8's {@link java.util.Optional}, any variant
 	 * of a parameter-level {@code Nullable} annotation (such as from JSR-305
 	 * or the FindBugs set of annotations), or a language-level nullable type
 	 * declaration or {@code Continuation} parameter in Kotlin.
+	 * 或者以Java 8的{@link java.util.Optional}、参数级{@code Nullable}注释(如来自JSR-305或FindBugs注释集)的任何变体，或Kotlin中的语言级可空类型声明或{@code Continuation}参数。
+	 *
 	 * @since 4.3
 	 */
 	public boolean isOptional() {
@@ -476,6 +486,8 @@ public class MethodParameter {
 	 * Return a variant of this {@code MethodParameter} which points to
 	 * the same parameter but one nesting level deeper in case of a
 	 * {@link java.util.Optional} declaration.
+	 * 返回这个{@code MethodParameter}的一个变体，它指向相同的参数，但在{@link java.util.Optional}声明。
+	 *
 	 * @since 4.3
 	 * @see #isOptional()
 	 * @see #nested()
@@ -529,6 +541,8 @@ public class MethodParameter {
 
 	/**
 	 * Return the type of the method/constructor parameter.
+	 * 返回methodconstructor形参的类型。
+	 *
 	 * @return the parameter type (never {@code null})
 	 */
 	public Class<?> getParameterType() {
@@ -788,6 +802,8 @@ public class MethodParameter {
 
 	/**
 	 * Return the parameter annotation of the given type, if available.
+	 * 返回给定类型的参数注释(如果可用)。
+	 *
 	 * @param annotationType the annotation type to look for
 	 * @return the annotation object, or {@code null} if not found
 	 */
@@ -805,6 +821,8 @@ public class MethodParameter {
 
 	/**
 	 * Return whether the parameter is declared with the given annotation type.
+	 * 返回参数是否使用给定的注释类型声明。
+	 *
 	 * @param annotationType the annotation type to look for
 	 * @see #getParameterAnnotation(Class)
 	 */
@@ -814,16 +832,23 @@ public class MethodParameter {
 
 	/**
 	 * Initialize parameter name discovery for this method parameter.
+	 * 初始化此方法参数的参数名发现。
+	 *
 	 * <p>This method does not actually try to retrieve the parameter name at
 	 * this point; it just allows discovery to happen when the application calls
 	 * {@link #getParameterName()} (if ever).
+	 * 此时，该方法实际上并不尝试检索参数名称;它只允许在应用程序调用{@link #getParameterName()}时发现(如果有的话)。
 	 */
 	public void initParameterNameDiscovery(@Nullable ParameterNameDiscoverer parameterNameDiscoverer) {
 		this.parameterNameDiscoverer = parameterNameDiscoverer;
 	}
 
 	/**
+	 * 通过asm解析class获取参数名
+	 *
 	 * Return the name of the method/constructor parameter.
+	 * 返回method/constructor参数的名称。
+	 *
 	 * @return the parameter name (may be {@code null} if no
 	 * parameter name metadata is contained in the class file or no
 	 * {@link #initParameterNameDiscovery ParameterNameDiscoverer}
@@ -834,13 +859,26 @@ public class MethodParameter {
 		if (this.parameterIndex < 0) {
 			return null;
 		}
+
 		ParameterNameDiscoverer discoverer = this.parameterNameDiscoverer;
 		if (discoverer != null) {
 			String[] parameterNames = null;
+			/**
+			 * 这里最终都会调用{@link LocalVariableTableParameterNameDiscoverer#doGetParameterNames(Executable)}获取方法参数名
+			 * 通过asm解析
+			 */
 			if (this.executable instanceof Method) {
+				/**
+				 * 这里会调用{@link LocalVariableTableParameterNameDiscoverer#getParameterNames(Method)}获取方法参数名
+				 * asm解析
+				 */
 				parameterNames = discoverer.getParameterNames((Method) this.executable);
 			}
 			else if (this.executable instanceof Constructor) {
+				/**
+				 * 这里会调用{@link LocalVariableTableParameterNameDiscoverer#getParameterNames(Constructor)}获取方法参数名
+				 * asm解析
+				 */
 				parameterNames = discoverer.getParameterNames((Constructor<?>) this.executable);
 			}
 			if (parameterNames != null) {

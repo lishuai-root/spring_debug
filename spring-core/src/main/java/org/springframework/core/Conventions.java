@@ -16,14 +16,14 @@
 
 package org.springframework.core;
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.Iterator;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 
 /**
  * Provides methods to support various naming and other conventions used
@@ -91,6 +91,8 @@ public final class Conventions {
 	/**
 	 * Determine the conventional variable name for the given parameter taking
 	 * the generic collection type, if any, into account.
+	 * 考虑泛型集合类型(如果有的话)，确定给定参数的常规变量名。
+	 *
 	 * <p>As of 5.0 this method supports reactive types:<br>
 	 * {@code Mono<com.myapp.Product>} becomes {@code "productMono"}<br>
 	 * {@code Flux<com.myapp.MyProduct>} becomes {@code "myProductFlux"}<br>

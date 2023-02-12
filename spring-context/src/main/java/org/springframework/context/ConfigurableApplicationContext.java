@@ -16,8 +16,6 @@
 
 package org.springframework.context;
 
-import java.io.Closeable;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -26,6 +24,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ProtocolResolver;
 import org.springframework.core.metrics.ApplicationStartup;
 import org.springframework.lang.Nullable;
+
+import java.io.Closeable;
 
 /**
  * SPI interface to be implemented by most if not all application contexts.
@@ -235,14 +235,24 @@ public interface ConfigurableApplicationContext extends ApplicationContext, Life
 
 	/**
 	 * Return the internal bean factory of this application context.
+	 * 返回此应用程序上下文的内部bean工厂。
+	 *
 	 * Can be used to access specific functionality of the underlying factory.
+	 * 可用于访问底层工厂的特定功能。
+	 *
 	 * <p>Note: Do not use this to post-process the bean factory; singletons
 	 * will already have been instantiated before. Use a BeanFactoryPostProcessor
 	 * to intercept the BeanFactory setup process before beans get touched.
+	 * <p>注意:不要用这个来后期处理bean工厂;单例之前已经被实例化过了。
+	 * 使用BeanFactoryPostProcessor在触及bean之前拦截BeanFactory设置过程。
+	 *
 	 * <p>Generally, this internal factory will only be accessible while the context
 	 * is active, that is, in-between {@link #refresh()} and {@link #close()}.
 	 * The {@link #isActive()} flag can be used to check whether the context
 	 * is in an appropriate state.
+	 * 一般来说，这个内部工厂只有在上下文处于活动状态时才可以访问，也就是说，在{@link #refresh()}和{@link #close()}之间。
+	 * {@link #isActive()}标志可用于检查上下文是否处于适当的状态。
+	 *
 	 * @return the underlying bean factory
 	 * @throws IllegalStateException if the context does not hold an internal
 	 * bean factory (usually if {@link #refresh()} hasn't been called yet or

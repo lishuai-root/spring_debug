@@ -29,8 +29,12 @@ import org.springframework.http.converter.HttpMessageConverter;
  * The body of the request is passed through an {@link HttpMessageConverter} to resolve the
  * method argument depending on the content type of the request. Optionally, automatic
  * validation can be applied by annotating the argument with {@code @Valid}.
+ * 指示方法参数的注释应该绑定到web请求的主体。请求体通过{@link HttpMessageConverter}传递，以根据请求的内容类型解析方法参数。
+ * 可以选择使用{@code @Valid}注释参数来应用自动验证。
+ *
  *
  * <p>Supported for annotated handler methods.
+ * 支持带注释的处理程序方法。
  *
  * @author Arjen Poutsma
  * @since 3.0

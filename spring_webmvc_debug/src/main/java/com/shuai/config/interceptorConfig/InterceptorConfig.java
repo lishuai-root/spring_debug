@@ -2,7 +2,6 @@ package com.shuai.config.interceptorConfig;
 
 import com.shuai.interceptor.AnnotationInterceptor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -15,8 +14,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc
 public class InterceptorConfig implements WebMvcConfigurer {
+
+	public InterceptorConfig(){}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

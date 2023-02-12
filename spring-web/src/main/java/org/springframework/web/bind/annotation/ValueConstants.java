@@ -27,8 +27,12 @@ public interface ValueConstants {
 	/**
 	 * Constant defining a value for no default - as a replacement for
 	 * {@code null} which we cannot use in annotation attributes.
+	 * 常量定义了一个没有默认值的值-作为{@code null}的替换，我们不能在注释属性中使用。
+	 *
 	 * <p>This is an artificial arrangement of 16 unicode characters,
 	 * with its sole purpose being to never match user-declared values.
+	 * 这是16个unicode字符的人工排列，其唯一目的是永远不匹配用户声明的值。
+	 *
 	 * @see RequestParam#defaultValue()
 	 * @see RequestHeader#defaultValue()
 	 * @see CookieValue#defaultValue()
