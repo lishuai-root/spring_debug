@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   https://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context
+	   https://www.springframework.org/schema/context/spring-context.xsd
+	   http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<context:component-scan base-package="com.shuai"/>
+	<mvc:annotation-driven>
+<!--		<mvc:message-converters register-defaults="true">-->
+<!--			&lt;!&ndash; 配置Fastjson支持 &ndash;&gt;-->
+<!--			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">-->
+<!--				<property name="supportedMediaTypes">-->
+<!--					<list>-->
+<!--						<value>application/json</value>-->
+<!--						<value>text/html;charset=UTF-8</value>-->
+<!--					</list>-->
+<!--				</property>-->
+<!--			</bean>-->
+<!--		</mvc:message-converters>-->
+		<mvc:argument-resolvers>
+			<bean class="com.shuai.config.customComponent.CustomHandlerMethodArgumentResolver"/>
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+	<mvc:default-servlet-handler />
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+	</bean>
+	<bean id="myFileUploadConfigDispatcherServletInitializer" class="com.shuai.config.initializer.MyFileUploadConfigDispatcherServletInitializer"/>
+<!--	<bean id="commonsMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+<!--		<property name="maxUploadSize" value="10240"/>-->
+<!--		<property name="defaultEncoding" value="UTF-8"/>-->
+<!--		<property name="uploadTempDir" value="classpath:uploadFiles"/>-->
+<!--	</bean>-->
+
+	<mvc:interceptors>
+<!--		网络拦截器，拦截所有请求 -->
+		<bean id="networkSecurityInterceptor" class="com.shuai.interceptor.NetworkSecurityInterceptor"/>
+
+<!--		日志拦截器 -->
+		<bean id="serverLogInterceptor" class="com.shuai.interceptor.ServerLogInterceptor"/>
+
+<!--		权限拦截器 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/static/**"/>
+			<bean id="permissionInterceptor" class="com.shuai.interceptor.PermissionInterceptor"/>
+		</mvc:interceptor>
+
+<!--		文件拦截器，处理文件上传下载 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/static/**"/>
+			<bean id="fileInterceptor" class="com.shuai.interceptor.FileInterceptor"/>
+		</mvc:interceptor>
+		<bean id="requestParameterConverter" class="com.shuai.interceptor.RequestParameterConverter"/>
+	</mvc:interceptors>
+
+	<bean id="/xmlController" class="com.shuai.controller.xml.XmlController"/>
+	<bean id="/xmlHandler" class="com.shuai.controller.xml.XmlHandler"/>
+
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="suffix" value=".html"/>
+		<property name="prefix" value="/resource/view/"/>
+<!--		<property name="prefix" value="/WEB-INF/classes/static/**"/>-->
+	</bean>
+	
+	<mvc:resources mapping="/static/**" location="/resource/static/"/>
+</beans>
