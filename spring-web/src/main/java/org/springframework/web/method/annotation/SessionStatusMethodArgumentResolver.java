@@ -28,17 +28,38 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 /**
  * Resolves a {@link SessionStatus} argument by obtaining it from
  * the {@link ModelAndViewContainer}.
+ * 通过从{@link ModelAndViewContainer}获取{@link SessionStatus}参数来解析它。
  *
  * @author Rossen Stoyanchev
  * @since 3.1
  */
 public class SessionStatusMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
+	/**
+	 * 解析参数类型为{@link SessionStatus}类型的方法参数
+	 *
+	 * @param parameter the method parameter to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		return SessionStatus.class == parameter.getParameterType();
 	}
 
+	/**
+	 * 获取{@link SessionStatus}实例
+	 *
+	 * @param parameter the method parameter to resolve. This parameter must
+	 * have previously been passed to {@link #supportsParameter} which must
+	 * have returned {@code true}.
+	 * 要解析的方法参数。此参数之前必须传递给{@link #supportsParameter}，后者必须返回{@code true}。
+	 *
+	 * @param mavContainer the ModelAndViewContainer for the current request
+	 * @param webRequest the current request
+	 * @param binderFactory a factory for creating {@link WebDataBinder} instances
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {

@@ -87,7 +87,7 @@ public class MediaType extends MimeType implements Serializable {
 	public static final String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
 
 	/**
-	 * Public constant media type for {@code application/json}.
+	 * Public constant media type for {@code application/json}. {@code application/json}的公共常量媒体类型。
 	 */
 	public static final MediaType APPLICATION_JSON;
 
@@ -121,6 +121,7 @@ public class MediaType extends MimeType implements Serializable {
 
 	/**
 	 * Public constant media type for {@code application/octet-stream}.
+	 * {@code application/octet-stream}的公共常量媒体类型。
 	 */
 	public static final MediaType APPLICATION_OCTET_STREAM;
 
@@ -296,6 +297,7 @@ public class MediaType extends MimeType implements Serializable {
 
 	/**
 	 * A String equivalent of {@link MediaType#MULTIPART_FORM_DATA}.
+	 * 相当于{@link MediaType#MULTIPART_FORM_DATA}的字符串。
 	 */
 	public static final String MULTIPART_FORM_DATA_VALUE = "multipart/form-data";
 
@@ -382,7 +384,7 @@ public class MediaType extends MimeType implements Serializable {
 
 
 	static {
-		// Not using "valueOf' to avoid static init cost
+		// Not using "valueOf' to avoid static init cost 不使用"valueOf "来避免静态初始化成本
 		ALL = new MediaType("*", "*");
 		APPLICATION_ATOM_XML = new MediaType("application", "atom+xml");
 		APPLICATION_CBOR = new MediaType("application", "cbor");
@@ -425,6 +427,8 @@ public class MediaType extends MimeType implements Serializable {
 
 	/**
 	 * Create a new {@code MediaType} for the given primary type and subtype.
+	 * 为给定的主类型和子类型创建一个新的{@code MediaType}。
+	 *
 	 * <p>The parameters are empty.
 	 * @param type the primary type
 	 * @param subtype the subtype
@@ -527,11 +531,18 @@ public class MediaType extends MimeType implements Serializable {
 
 	/**
 	 * Indicate whether this {@code MediaType} includes the given media type.
+	 * 指示这个{@code MediaType}是否包含给定的媒体类型。
+	 *
 	 * <p>For instance, {@code text/*} includes {@code text/plain} and {@code text/html},
 	 * and {@code application/*+xml} includes {@code application/soap+xml}, etc.
 	 * This method is <b>not</b> symmetric.
+	 * <p>例如，{@code text/*}包括{@code text/plain}和{@code text/html}，
+	 * {@code application/*+xml}包括{@code application/soap+xml}等。这个方法是<b>不<b>对称的。
+	 *
 	 * <p>Simply calls {@link MimeType#includes(MimeType)} but declared with a
 	 * {@code MediaType} parameter for binary backwards compatibility.
+	 * <p>简单调用{@link MimeType#includes(MimeType)}，但声明了一个{@code MediaType}参数，用于二进制向后兼容。
+	 *
 	 * @param other the reference media type with which to compare
 	 * @return {@code true} if this media type includes the given media type;
 	 * {@code false} otherwise
@@ -542,11 +553,18 @@ public class MediaType extends MimeType implements Serializable {
 
 	/**
 	 * Indicate whether this {@code MediaType} is compatible with the given media type.
+	 * 指示此{@code MediaType}是否与给定的媒体类型兼容。
+	 *
 	 * <p>For instance, {@code text/*} is compatible with {@code text/plain},
 	 * {@code text/html}, and vice versa. In effect, this method is similar to
 	 * {@link #includes}, except that it <b>is</b> symmetric.
+	 * <p>例如，{@code text}兼容{@code textplain}， {@code texttml}，反之亦然。
+	 * 实际上，这个方法类似于{@link includes}，只是它<b>是<b>对称的。
+	 *
 	 * <p>Simply calls {@link MimeType#isCompatibleWith(MimeType)} but declared with a
 	 * {@code MediaType} parameter for binary backwards compatibility.
+	 * <p>简单调用{@link MimeType#isCompatibleWith(MimeType)}，但声明了一个{@code MediaType}参数，用于二进制向后兼容。
+	 *
 	 * @param other the reference media type with which to compare
 	 * @return {@code true} if this media type is compatible with the given media type;
 	 * {@code false} otherwise
@@ -762,6 +780,8 @@ public class MediaType extends MimeType implements Serializable {
 	/**
 	 * Sorts the given list of {@code MediaType} objects by specificity as the
 	 * primary criteria and quality value the secondary.
+	 * 将给定的{@code MediaType}对象列表按特异性作为主要标准进行排序，质量值作为次要标准。
+	 *
 	 * @see MediaType#sortBySpecificity(List)
 	 * @see MediaType#sortByQualityValue(List)
 	 */

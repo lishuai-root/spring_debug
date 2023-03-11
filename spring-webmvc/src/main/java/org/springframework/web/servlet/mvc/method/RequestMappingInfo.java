@@ -210,6 +210,8 @@ public final class RequestMappingInfo implements RequestCondition<RequestMapping
 	/**
 	 * Returns either {@link #getPathPatternsCondition()} or
 	 * {@link #getPatternsCondition()} depending on which is not null.
+	 * 返回{@link #getPathPatternsCondition()}或{@link #getPatternsCondition()}，取决于哪个不为空。
+	 *
 	 * @since 5.3
 	 */
 	@SuppressWarnings("unchecked")

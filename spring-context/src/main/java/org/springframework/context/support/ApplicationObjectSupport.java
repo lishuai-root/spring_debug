@@ -31,16 +31,24 @@ import org.springframework.util.Assert;
  * the application context, e.g. for custom lookup of collaborating beans
  * or for context-specific resource access. It saves the application
  * context reference and provides an initialization callback method.
+ * 想要了解应用程序上下文的应用程序对象的方便超类，例如用于自定义查找协作bean或用于特定于上下文的资源访问。
+ * 它保存应用程序上下文引用并提供初始化回调方法。
+ *
  * Furthermore, it offers numerous convenience methods for message lookup.
+ * 此外，它为消息查找提供了许多方便的方法。
  *
  * <p>There is no requirement to subclass this class: It just makes things
  * a little easier if you need access to the context, e.g. for access to
  * file resources or to the message source. Note that many application
  * objects do not need to be aware of the application context at all,
  * as they can receive collaborating beans via bean references.
+ * 没有要求子类化这个类:如果你需要访问上下文，例如访问文件资源或消息源，它只是让事情变得更容易一些。
+ * 请注意，许多应用程序对象根本不需要知道应用程序上下文，因为它们可以通过bean引用接收协作bean。
+ *
  *
  * <p>Many framework classes are derived from this class, particularly
  * within the web support.
+ * 许多框架类都派生自这个类，特别是在web支持中。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -184,6 +192,8 @@ public abstract class ApplicationObjectSupport implements ApplicationContextAwar
 	/**
 	 * Return a MessageSourceAccessor for the application context
 	 * used by this object, for easy message access.
+	 * 返回此对象使用的应用程序上下文的MessageSourceAccessor，以方便消息访问。
+	 *
 	 * @throws IllegalStateException if not running in an ApplicationContext
 	 */
 	@Nullable

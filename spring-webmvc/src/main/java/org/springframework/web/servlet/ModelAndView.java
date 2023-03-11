@@ -46,7 +46,7 @@ import java.util.Map;
  */
 public class ModelAndView {
 
-	/** View instance or view name String. */
+	/** View instance or view name String.  视图实例或视图名称字符串。*/
 	@Nullable
 	private Object view;
 
@@ -58,7 +58,10 @@ public class ModelAndView {
 	@Nullable
 	private HttpStatus status;
 
-	/** Indicates whether or not this instance has been cleared with a call to {@link #clear()}. */
+	/** Indicates whether or not this instance has been cleared with a call to {@link #clear()}.
+	 *
+	 * 通过调用{@link clear()}指示该实例是否已被清除。
+	 * */
 	private boolean cleared = false;
 
 
@@ -139,6 +142,8 @@ public class ModelAndView {
 
 	/**
 	 * Create a new ModelAndView given a view name, model, and HTTP status.
+	 * 创建一个新的ModelAndView，给定视图名称、模型和HTTP状态。
+	 *
 	 * @param viewName name of the View to render, to be resolved
 	 * by the DispatcherServlet's ViewResolver
 	 * @param model a Map of model names (Strings) to model objects
@@ -194,6 +199,8 @@ public class ModelAndView {
 	/**
 	 * Return the view name to be resolved by the DispatcherServlet
 	 * via a ViewResolver, or {@code null} if we are using a View object.
+	 *
+	 * 返回要由DispatcherServlet通过ViewResolver解析的视图名称，如果我们使用的是view对象，则返回{@code null}。
 	 */
 	@Nullable
 	public String getViewName() {
@@ -203,6 +210,8 @@ public class ModelAndView {
 	/**
 	 * Set a View object for this ModelAndView. Will override any
 	 * pre-existing view name or View.
+	 *
+	 * 为这个ModelAndView设置一个View对象。将覆盖任何预先存在的视图名称或视图。
 	 */
 	public void setView(@Nullable View view) {
 		this.view = view;
@@ -231,6 +240,8 @@ public class ModelAndView {
 	 * Return whether we use a view reference, i.e. {@code true}
 	 * if the view has been specified via a name to be resolved by the
 	 * DispatcherServlet via a ViewResolver.
+	 *
+	 * 返回我们是否使用视图引用，例如，如果视图是通过名称指定的，将由DispatcherServlet通过ViewResolver解析。
 	 */
 	public boolean isReference() {
 		return (this.view instanceof String);
@@ -247,6 +258,7 @@ public class ModelAndView {
 
 	/**
 	 * Return the underlying {@code ModelMap} instance (never {@code null}).
+	 * 返回底层的{@code ModelMap}实例(从不返回{@code null})。
 	 */
 	public ModelMap getModelMap() {
 		if (this.model == null) {
@@ -257,7 +269,10 @@ public class ModelAndView {
 
 	/**
 	 * Return the model map. Never returns {@code null}.
+	 * 返回模型映射。从不返回{@code null}。
+	 *
 	 * To be called by application code for modifying the model.
+	 * 由应用程序代码调用以修改模型。
 	 */
 	public Map<String, Object> getModel() {
 		return getModelMap();
@@ -334,6 +349,8 @@ public class ModelAndView {
 	/**
 	 * Return whether this ModelAndView object is empty,
 	 * i.e. whether it does not hold any view and does not contain a model.
+	 *
+	 * 返回ModelAndView对象是否为空，即它是否不持有任何视图，也不包含模型。
 	 */
 	public boolean isEmpty() {
 		return (this.view == null && CollectionUtils.isEmpty(this.model));

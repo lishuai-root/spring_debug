@@ -33,6 +33,9 @@ import org.springframework.web.context.request.NativeWebRequest;
  * asynchronous request processing. While a {@code Callable} is executed concurrently
  * on behalf of the application, with a {@code DeferredResult} the application can
  * produce the result from a thread of its choice.
+ * {@code DeferredResult}提供了使用{@link Callable}进行异步请求处理的替代方案。
+ * 当{@code Callable}代表应用程序并发执行时，使用{@code DeferredResult}应用程序可以从它选择的线程中产生结果。
+ *
  *
  * <p>Subclasses can extend this class to easily associate additional data or behavior
  * with the {@link DeferredResult}. For example, one might want to associate the user
@@ -40,10 +43,19 @@ import org.springframework.web.context.request.NativeWebRequest;
  * additional property for the user. In this way, the user could easily be accessed
  * later without the need to use a data structure to do the mapping.
  *
+ * 子类可以扩展这个类，方便地将其他数据或行为与{@link DeferredResult}相关联。
+ * 例如，您可能希望通过扩展类和为用户添加附加属性来关联用于创建{@link DeferredResult}的用户。
+ * 通过这种方式，以后可以很容易地访问用户，而不需要使用数据结构来进行映射。
+ *
+ *
  * <p>An example of associating additional behavior to this class might be realized
  * by extending the class to implement an additional interface. For example, one
  * might want to implement {@link Comparable} so that when the {@link DeferredResult}
  * is added to a {@link PriorityQueue} it is handled in the correct order.
+ *
+ * 将附加行为关联到该类的一个例子可以通过扩展类来实现附加接口来实现。
+ * 例如，你可能想要实现{@link Comparable}，这样当{@link DeferredResult}被添加到{@link PriorityQueue}中时，它就会按照正确的顺序被处理。
+ *
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -194,6 +206,8 @@ public class DeferredResult<T> {
 
 	/**
 	 * Provide a handler to use to handle the result value.
+	 * 提供一个用于处理结果值的处理程序。
+	 *
 	 * @param resultHandler the handler
 	 * @see DeferredResultProcessingInterceptor
 	 */
@@ -337,6 +351,7 @@ public class DeferredResult<T> {
 
 	/**
 	 * Handles a DeferredResult value when set.
+	 * 在设置时处理DeferredResult值。
 	 */
 	@FunctionalInterface
 	public interface DeferredResultHandler {

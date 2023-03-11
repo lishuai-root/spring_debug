@@ -174,6 +174,8 @@ public abstract class WebUtils {
 	/**
 	 * Default character encoding to use when {@code request.getCharacterEncoding}
 	 * returns {@code null}, according to the Servlet spec.
+	 * {@code 请求时使用的默认字符编码。根据Servlet规范，request.getCharacterEncoding}返回{@code null}。
+	 *
 	 * @see ServletRequest#getCharacterEncoding
 	 */
 	public static final String DEFAULT_CHARACTER_ENCODING = "ISO-8859-1";
@@ -522,6 +524,9 @@ public abstract class WebUtils {
 	 * Expose the Servlet spec's error attributes as {@link jakarta.servlet.http.HttpServletRequest}
 	 * attributes under the keys defined in the Servlet 2.3 specification, for error pages that
 	 * are rendered directly rather than through the Servlet container's error page resolution:
+	 * 将Servlet规范的错误属性公开为{@link jakarta.servlet.http.HttpServletRequest}属性在Servlet 2.3规范中定义的键下，
+	 * 用于直接呈现错误页面，而不是通过Servlet容器的错误页面解析:
+	 *
 	 * {@code jakarta.servlet.error.status_code},
 	 * {@code jakarta.servlet.error.exception_type},
 	 * {@code jakarta.servlet.error.message},
@@ -584,6 +589,8 @@ public abstract class WebUtils {
 	/**
 	 * Retrieve the first cookie with the given name. Note that multiple
 	 * cookies can have the same name but different paths or domains.
+	 * 检索第一个具有给定名称的cookie。请注意，多个cookie可以具有相同的名称，但路径或域不同。
+	 *
 	 * @param request current servlet request
 	 * @param name cookie name
 	 * @return the first cookie with the given name, or {@code null} if none is found
@@ -593,6 +600,9 @@ public abstract class WebUtils {
 		Assert.notNull(request, "Request must not be null");
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
+			/**
+			 * 遍历所有cookie，返回第一个指定名称的cookie
+			 */
 			for (Cookie cookie : cookies) {
 				if (name.equals(cookie.getName())) {
 					return cookie;

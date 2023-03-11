@@ -31,10 +31,16 @@ import java.io.File;
  * Convenient superclass for application objects running in a {@link WebApplicationContext}.
  * Provides {@code getWebApplicationContext()}, {@code getServletContext()}, and
  * {@code getTempDir()} accessors.
+ * 在{@link WebApplicationContext}中运行的应用程序对象的方便超类。
+ * 提供{@code getWebApplicationContext()}、{@code getServletContext()}和{@code getTempDir()}访问器。
+ *
  *
  * <p>Note: It is generally recommended to use individual callback interfaces for the actual
  * callbacks needed. This broad base class is primarily intended for use within the framework,
  * in case of {@link ServletContext} access etc typically being needed.
+ *
+ * 注意:对于实际需要的回调，通常建议使用单独的回调接口。这个广泛的基类主要用于框架内使用，通常需要{@link ServletContext}访问等。
+ *
  *
  * @author Juergen Hoeller
  * @since 28.08.2003
@@ -73,6 +79,10 @@ public abstract class WebApplicationObjectSupport extends ApplicationObjectSuppo
 	/**
 	 * Calls {@link #initServletContext(jakarta.servlet.ServletContext)} if the
 	 * given ApplicationContext is a {@link WebApplicationContext}.
+	 *
+	 * 如果给定的ApplicationContext是一个{@link WebApplicationContext}，
+	 * 则调用{@link initServletContext(jakarta.servlet.ServletContext)}。
+	 *
 	 */
 	@Override
 	protected void initApplicationContext(ApplicationContext context) {
@@ -104,10 +114,15 @@ public abstract class WebApplicationObjectSupport extends ApplicationObjectSuppo
 
 	/**
 	 * Return the current application context as WebApplicationContext.
+	 * 将当前应用程序上下文返回为WebApplicationContext。
+	 *
 	 * <p><b>NOTE:</b> Only use this if you actually need to access
 	 * WebApplicationContext-specific functionality. Preferably use
 	 * {@code getApplicationContext()} or {@code getServletContext()}
 	 * else, to be able to run in non-WebApplicationContext environments as well.
+	 * 只有当你需要访问特定于WebApplicationContext的功能时才使用这个。
+	 * 最好使用{@code getApplicationContext()}或{@code getServletContext()} else，以便能够在非webapplicationcontext环境中运行。
+	 *
 	 * @throws IllegalStateException if not running in a WebApplicationContext
 	 * @see #getApplicationContext()
 	 */

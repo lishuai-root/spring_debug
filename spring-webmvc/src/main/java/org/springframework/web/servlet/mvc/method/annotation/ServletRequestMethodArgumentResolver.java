@@ -16,19 +16,10 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.security.Principal;
-import java.time.ZoneId;
-import java.util.Locale;
-import java.util.TimeZone;
-
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.PushBuilder;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;
@@ -41,9 +32,19 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.security.Principal;
+import java.time.ZoneId;
+import java.util.Locale;
+import java.util.TimeZone;
+
 /**
  * Resolves servlet backed request-related method arguments. Supports values of the
  * following types:
+ * 解析servlet支持的请求相关方法参数。支持以下类型的值:
+ *
  * <ul>
  * <li>{@link WebRequest}
  * <li>{@link ServletRequest}
@@ -53,6 +54,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
  * <li>{@link Principal} but only if not annotated in order to allow custom
  * resolvers to resolve it, and the falling back on
  * {@link PrincipalMethodArgumentResolver}.
+ * 但只有在没有注释的情况下，才能允许自定义解析器解析它，并返回{@link PrincipalMethodArgumentResolver}。
  * <li>{@link InputStream}
  * <li>{@link Reader}
  * <li>{@link HttpMethod} (as of Spring 4.0)
@@ -83,6 +85,12 @@ public class ServletRequestMethodArgumentResolver implements HandlerMethodArgume
 	}
 
 
+	/**
+	 * 解析参数类型为以下指定类型的方法参数
+	 *
+	 * @param parameter the method parameter to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		Class<?> paramType = parameter.getParameterType();
@@ -100,6 +108,20 @@ public class ServletRequestMethodArgumentResolver implements HandlerMethodArgume
 				ZoneId.class == paramType);
 	}
 
+	/**
+	 * 通过请求强转，获取参数，创建参数解析出方法参数类型的参数值
+	 *
+	 * @param parameter the method parameter to resolve. This parameter must
+	 * have previously been passed to {@link #supportsParameter} which must
+	 * have returned {@code true}.
+	 * 要解析的方法参数。此参数之前必须传递给{@link #supportsParameter}，后者必须返回{@code true}。
+	 *
+	 * @param mavContainer the ModelAndViewContainer for the current request
+	 * @param webRequest the current request
+	 * @param binderFactory a factory for creating {@link WebDataBinder} instances
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
@@ -107,6 +129,9 @@ public class ServletRequestMethodArgumentResolver implements HandlerMethodArgume
 		Class<?> paramType = parameter.getParameterType();
 
 		// WebRequest / NativeWebRequest / ServletWebRequest
+		/**
+		 * 将当前请求强转成 WebRequest / NativeWebRequest / ServletWebRequest
+		 */
 		if (WebRequest.class.isAssignableFrom(paramType)) {
 			if (!paramType.isInstance(webRequest)) {
 				throw new IllegalStateException(
@@ -121,6 +146,9 @@ public class ServletRequestMethodArgumentResolver implements HandlerMethodArgume
 		}
 
 		// HttpServletRequest required for all further argument types
+		/**
+		 * 所有进一步的参数类型都需要HttpServletRequest
+		 */
 		return resolveArgument(paramType, resolveNativeRequest(webRequest, HttpServletRequest.class));
 	}
 
@@ -133,6 +161,14 @@ public class ServletRequestMethodArgumentResolver implements HandlerMethodArgume
 		return nativeRequest;
 	}
 
+	/**
+	 * 通过请求获取或者创建指定类型的参数值
+	 *
+	 * @param paramType
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
 	@Nullable
 	private Object resolveArgument(Class<?> paramType, HttpServletRequest request) throws IOException {
 		if (HttpSession.class.isAssignableFrom(paramType)) {
@@ -186,12 +222,16 @@ public class ServletRequestMethodArgumentResolver implements HandlerMethodArgume
 		}
 
 		// Should never happen...
+		/**
+		 * 不应该发生……
+		 */
 		throw new UnsupportedOperationException("Unknown parameter type: " + paramType.getName());
 	}
 
 
 	/**
 	 * Inner class to avoid a hard dependency on Servlet API 4.0 at runtime.
+	 * 内部类，以避免在运行时对Servlet API 4.0的硬依赖。
 	 */
 	private static class PushBuilderDelegate {
 

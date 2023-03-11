@@ -32,6 +32,10 @@ import org.springframework.web.context.request.NativeWebRequest;
  * {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}.
  * Previously resolved method parameters are cached for faster lookups.
  *
+ * 通过将方法参数委托给一个已注册的{@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}列表来解析方法参数。
+ * 缓存以前解析的方法参数，以便更快地查找。
+ *
+ *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
  * @since 3.1
@@ -67,6 +71,8 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 
 	/**
 	 * Add the given {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}.
+	 *
+	 * 添加给定的{@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}。
 	 */
 	public HandlerMethodArgumentResolverComposite addResolvers(
 			@Nullable List<? extends HandlerMethodArgumentResolver> resolvers) {
@@ -94,8 +100,12 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 
 
 	/**
+	 * 通过在已注册的解析器中查找是否存在适用于当前方法参数的解析器确定是否可以处理给定方法参数
+	 *
 	 * Whether the given {@linkplain MethodParameter method parameter} is
 	 * supported by any registered {@link HandlerMethodArgumentResolver}.
+	 *
+	 * 任何已注册的{@link HandlerMethodArgumentResolver}是否支持给定的{@linkplain MethodParameter方法参数}。
 	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
@@ -103,9 +113,13 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	}
 
 	/**
+	 * 查找并委托给适用的解析器处理
+	 *
 	 * Iterate over registered
 	 * {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}
 	 * and invoke the one that supports it.
+	 * 遍历已注册的{@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}并调用支持它的那个。
+	 *
 	 * @throws IllegalArgumentException if no suitable argument resolver is found
 	 */
 	@Override
@@ -122,8 +136,12 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 	}
 
 	/**
+	 * 查找并缓存第一个适用于给定方法参数的解析器
+	 *
 	 * Find a registered {@link HandlerMethodArgumentResolver} that supports
 	 * the given method parameter.
+	 *
+	 * 找到一个支持给定方法参数的已注册{@link HandlerMethodArgumentResolver}。
 	 */
 	@Nullable
 	private HandlerMethodArgumentResolver getArgumentResolver(MethodParameter parameter) {

@@ -28,6 +28,7 @@ import org.springframework.util.Assert;
 
 /**
  * Base class for exceptions associated with specific HTTP response status codes.
+ * 与特定HTTP响应状态码关联的异常的基类。
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller

@@ -28,13 +28,16 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 /**
  * Resolves method arguments annotated with {@code @Value}.
+ * 解析用{@code @Value}注释的方法参数。
  *
  * <p>An {@code @Value} does not have a name but gets resolved from the default
  * value string, which may contain ${...} placeholder or Spring Expression
  * Language #{...} expressions.
+ * {@code @Value}没有名称，但从默认值字符串中解析，该字符串可能包含${...}占位符或Spring表达式语言#{...}表达式。
  *
  * <p>A {@link WebDataBinder} may be invoked to apply type conversion to
  * resolved argument value.
+ * <p>可以调用一个{@link WebDataBinder}将类型转换应用到解析参数值。
  *
  * @author Rossen Stoyanchev
  * @since 3.1
@@ -52,6 +55,12 @@ public class ExpressionValueMethodArgumentResolver extends AbstractNamedValueMet
 	}
 
 
+	/**
+	 * 解析带有{@link Value}注解的方法参数
+	 *
+	 * @param parameter the method parameter to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		return parameter.hasParameterAnnotation(Value.class);
@@ -64,10 +73,22 @@ public class ExpressionValueMethodArgumentResolver extends AbstractNamedValueMet
 		return new ExpressionValueNamedValueInfo(ann);
 	}
 
+	/**
+	 * 默认返回null
+	 * {@link ExpressionValueNamedValueInfo#defaultValue}值为{@link Value#value()}中指定的值，
+	 * 此方法返回null，最终的参数值解析是在{@link super#resolveEmbeddedValuesAndExpressions(String)}中通过解析{@link Value#value()}表达式得到
+	 *
+	 * @param name the name of the value being resolved
+	 * @param parameter the method parameter to resolve to an argument value
+	 * (pre-nested in case of a {@link java.util.Optional} declaration)
+	 * @param webRequest
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	@Nullable
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest webRequest) throws Exception {
-		// No name to resolve
+		// No name to resolve 没有名称需要解析
 		return null;
 	}
 

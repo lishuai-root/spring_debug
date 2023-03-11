@@ -16,30 +16,24 @@
 
 package org.springframework.core.io;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
+
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
+import java.nio.file.*;
 
 /**
  * {@link Resource} implementation for {@link java.nio.file.Path} handles,
  * performing all operations and transformations via the {@code Path} API.
  * Supports resolution as a {@link File} and also as a {@link URL}.
  * Implements the extended {@link WritableResource} interface.
+ * {@link java.nio.file.Path}实现。
+ * 通过{@code Path} API执行所有的操作和转换。支持解析为{@link File}，也作为一个{@link URL}。实现扩展的{@link WritableResource}接口。
+ *
  *
  * <p>Note: As of 5.1, {@link java.nio.file.Path} support is also available
  * in {@link FileSystemResource#FileSystemResource(Path) FileSystemResource},
@@ -47,6 +41,10 @@ import org.springframework.util.Assert;
  * performing all operations via the {@link java.nio.file.Files} API.
  * This {@code PathResource} is effectively a pure {@code java.nio.path.Path}
  * based alternative with different {@code createRelative} behavior.
+ * <p>注意:从5.1开始，{@link java.nio.file.Path}支持在{@link FileSystemResource#FileSystemResource(Path) FileSystemResource}中也可用，
+ * 应用Spring的标准基于string的路径转换，但通过{@link java.nio.file.Files 执行所有操作。文件}API。
+ * 这个{@code PathResource}实际上是一个纯粹的{@code java.nio.file.Path} 基于Path的选项，具有不同的{@code createRelative}行为。
+ *
  *
  * @author Philippe Marschall
  * @author Juergen Hoeller
@@ -62,9 +60,14 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * Create a new PathResource from a Path handle.
+	 * 从路径句柄创建一个新的PathResource。
+	 *
 	 * <p>Note: Unlike {@link FileSystemResource}, when building relative resources
 	 * via {@link #createRelative}, the relative path will be built <i>underneath</i>
 	 * the given root: e.g. Paths.get("C:/dir1/"), relative path "dir2" -> "C:/dir1/dir2"!
+	 * 注意:与{@link FileSystemResource}不同，当通过{@link #createRelative}构建相对资源时，
+	 * 相对路径将被构建在<i>下面<i>给定根:例如Paths.get("C:dir1")，相对路径"dir2" -> "C:dir1dir2"!
+	 *
 	 * @param path a Path handle
 	 */
 	public PathResource(Path path) {
@@ -74,6 +77,8 @@ public class PathResource extends AbstractResource implements WritableResource {
 
 	/**
 	 * Create a new PathResource from a Path handle.
+	 * 从路径句柄创建一个新的PathResource。
+	 *
 	 * <p>Note: Unlike {@link FileSystemResource}, when building relative resources
 	 * via {@link #createRelative}, the relative path will be built <i>underneath</i>
 	 * the given root: e.g. Paths.get("C:/dir1/"), relative path "dir2" -> "C:/dir1/dir2"!

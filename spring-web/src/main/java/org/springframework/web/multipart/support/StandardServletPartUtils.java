@@ -58,6 +58,8 @@ public abstract class StandardServletPartUtils {
 
 	/**
 	 * Retrieve all parts with the given name from the given servlet request.
+	 * 从给定的servlet请求中检索具有给定名称的所有部件。
+	 *
 	 * @param request the servlet request
 	 * @param name the name to look for
 	 * @return the parts in a MultiValueMap

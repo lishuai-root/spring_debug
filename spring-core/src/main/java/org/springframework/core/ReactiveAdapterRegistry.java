@@ -16,6 +16,18 @@
 
 package org.springframework.core;
 
+import kotlinx.coroutines.CompletableDeferredKt;
+import kotlinx.coroutines.Deferred;
+import org.reactivestreams.Publisher;
+import org.springframework.lang.Nullable;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ConcurrentReferenceHashMap;
+import reactor.adapter.JdkFlowAdapter;
+import reactor.blockhound.BlockHound;
+import reactor.blockhound.integration.BlockHoundIntegration;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,19 +35,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Flow;
 import java.util.function.Function;
-
-import kotlinx.coroutines.CompletableDeferredKt;
-import kotlinx.coroutines.Deferred;
-import org.reactivestreams.Publisher;
-import reactor.adapter.JdkFlowAdapter;
-import reactor.blockhound.BlockHound;
-import reactor.blockhound.integration.BlockHoundIntegration;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import org.springframework.lang.Nullable;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ConcurrentReferenceHashMap;
 
 /**
  * A registry of adapters to adapt Reactive Streams {@link Publisher} to/from
@@ -178,6 +177,8 @@ public class ReactiveAdapterRegistry {
 	/**
 	 * Return a shared default {@code ReactiveAdapterRegistry} instance,
 	 * lazily building it once needed.
+	 * 返回一个共享的默认实例{@code ReactiveAdapterRegistry}，在需要时惰性地构建它。
+	 *
 	 * <p><b>NOTE:</b> We highly recommend passing a long-lived, pre-configured
 	 * {@code ReactiveAdapterRegistry} instance for customization purposes.
 	 * This accessor is only meant as a fallback for code paths that want to

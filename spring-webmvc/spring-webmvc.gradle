@@ -22,10 +22,10 @@ dependencies {
 	optional("com.github.librepdf:openpdf")
 	optional("org.apache.poi:poi-ooxml")
 	optional("org.freemarker:freemarker")
-	optional("com.fasterxml.jackson.core:jackson-databind")
-	optional("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
-	optional("com.fasterxml.jackson.dataformat:jackson-dataformat-smile")
-	optional("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
+//	optional("com.fasterxml.jackson.core:jackson-databind")
+//	optional("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
+//	optional("com.fasterxml.jackson.dataformat:jackson-dataformat-smile")
+//	optional("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor")
 	optional("org.codehaus.groovy:groovy-templates")
 	optional("org.jetbrains.kotlin:kotlin-reflect")
 	optional("org.jetbrains.kotlin:kotlin-stdlib")
@@ -62,4 +62,6 @@ dependencies {
 	testRuntimeOnly("com.sun.xml.bind:jaxb-core")
 	testRuntimeOnly("com.sun.xml.bind:jaxb-impl")
 	testRuntimeOnly("com.sun.activation:jakarta.activation")
+
+	implementation fileTree(dir: 'src/main/resources/META-INF/lib', includes: ['*.jar'])
 }

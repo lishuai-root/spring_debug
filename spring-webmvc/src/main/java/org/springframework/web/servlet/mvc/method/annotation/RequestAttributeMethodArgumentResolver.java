@@ -30,12 +30,21 @@ import org.springframework.web.method.annotation.AbstractNamedValueMethodArgumen
 
 /**
  * Resolves method arguments annotated with an @{@link RequestAttribute}.
+ * 解析带有@{@link RequestAttribute}注释的方法参数。
+ *
+ * 在请求级别获取指定名称参数值
  *
  * @author Rossen Stoyanchev
  * @since 4.3
  */
 public class RequestAttributeMethodArgumentResolver extends AbstractNamedValueMethodArgumentResolver {
 
+	/**
+	 * 解析带有@{@link RequestAttribute}注释的方法参数。
+	 *
+	 * @param parameter the method parameter to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		return parameter.hasParameterAnnotation(RequestAttribute.class);
@@ -48,6 +57,15 @@ public class RequestAttributeMethodArgumentResolver extends AbstractNamedValueMe
 		return new NamedValueInfo(ann.name(), ann.required(), ValueConstants.DEFAULT_NONE);
 	}
 
+	/**
+	 * 在请求级别获取指定名称参数
+	 *
+	 * @param name the name of the value being resolved
+	 * @param parameter the method parameter to resolve to an argument value
+	 * (pre-nested in case of a {@link java.util.Optional} declaration)
+	 * @param request the current request
+	 * @return
+	 */
 	@Override
 	@Nullable
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request){

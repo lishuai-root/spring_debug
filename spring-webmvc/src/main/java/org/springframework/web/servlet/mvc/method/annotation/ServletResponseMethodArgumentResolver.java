@@ -16,12 +16,7 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-
 import jakarta.servlet.ServletResponse;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -29,9 +24,14 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+
 /**
  * Resolves servlet backed response-related method arguments. Supports values of the
  * following types:
+ * 解析servlet支持的响应相关方法参数。支持以下类型的值:
  * <ul>
  * <li>{@link ServletResponse}
  * <li>{@link OutputStream}
@@ -45,6 +45,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  */
 public class ServletResponseMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
+	/**
+	 * 解析{@link ServletResponse}, {@link OutputStream}, {@link Writer}类型的方法参数
+	 *
+	 * @param parameter the method parameter to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		Class<?> paramType = parameter.getParameterType();
@@ -54,10 +60,16 @@ public class ServletResponseMethodArgumentResolver implements HandlerMethodArgum
 	}
 
 	/**
+	 * 通过web上下文获取响应对象，或者响应对象的输出流
+	 *
 	 * Set {@link ModelAndViewContainer#setRequestHandled(boolean)} to
 	 * {@code false} to indicate that the method signature provides access
 	 * to the response. If subsequently the underlying method returns
 	 * {@code null}, the request is considered directly handled.
+	 *
+	 * 将{@link ModelAndViewContainer#setRequestHandled(boolean)} 设置为{@code false}，以指示方法签名提供对响应的访问。
+	 * 如果随后底层方法返回{@code null}，则认为该请求被直接处理。
+	 *
 	 */
 	@Override
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
@@ -70,11 +82,17 @@ public class ServletResponseMethodArgumentResolver implements HandlerMethodArgum
 		Class<?> paramType = parameter.getParameterType();
 
 		// ServletResponse, HttpServletResponse
+		/**
+		 * 获取当前请求的响应
+		 */
 		if (ServletResponse.class.isAssignableFrom(paramType)) {
 			return resolveNativeResponse(webRequest, paramType);
 		}
 
 		// ServletResponse required for all further argument types
+		/**
+		 * 所有其他参数类型都需要ServletResponse
+		 */
 		return resolveArgument(paramType, resolveNativeResponse(webRequest, ServletResponse.class));
 	}
 
@@ -87,6 +105,14 @@ public class ServletResponseMethodArgumentResolver implements HandlerMethodArgum
 		return nativeResponse;
 	}
 
+	/**
+	 * 返回响应体的输出流
+	 *
+	 * @param paramType
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
 	private Object resolveArgument(Class<?> paramType, ServletResponse response) throws IOException {
 		if (OutputStream.class.isAssignableFrom(paramType)) {
 			return response.getOutputStream();
@@ -95,7 +121,7 @@ public class ServletResponseMethodArgumentResolver implements HandlerMethodArgum
 			return response.getWriter();
 		}
 
-		// Should never happen...
+		// Should never happen... 不应该发生……
 		throw new UnsupportedOperationException("Unknown parameter type: " + paramType);
 	}
 

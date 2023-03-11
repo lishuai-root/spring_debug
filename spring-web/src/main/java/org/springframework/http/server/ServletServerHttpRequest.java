@@ -48,6 +48,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * {@link ServerHttpRequest} implementation that is based on a {@link HttpServletRequest}.
+ * {@link ServerHttpRequest}实现，它基于一个{@link HttpServletRequest}。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -76,6 +77,8 @@ public class ServletServerHttpRequest implements ServerHttpRequest {
 	/**
 	 * Construct a new instance of the ServletServerHttpRequest based on the
 	 * given {@link HttpServletRequest}.
+	 * 基于给定的{@link HttpServletRequest}构造一个ServletServerHttpRequest的新实例。
+	 *
 	 * @param servletRequest the servlet request
 	 */
 	public ServletServerHttpRequest(HttpServletRequest servletRequest) {
@@ -238,6 +241,10 @@ public class ServletServerHttpRequest implements ServerHttpRequest {
 	 * body of a form 'POST' providing a predictable outcome as opposed to reading
 	 * from the body, which can fail if any other code has used the ServletRequest
 	 * to access a parameter, thus causing the input stream to be "consumed".
+	 *
+	 * 使用{@link jakarta.servlet.ServletRequest#getParameterMap()}重构表单POST的主体，提供可预测的结果，而不是从主体中读取，
+	 * 如果任何其他代码使用ServletRequest访问参数，则会失败，从而导致输入流被“消耗”。
+	 *
 	 */
 	private static InputStream getBodyFromServletRequestParameters(HttpServletRequest request) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(1024);

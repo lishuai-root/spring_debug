@@ -16,12 +16,12 @@
 
 package org.springframework.core;
 
+import org.springframework.lang.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
-
-import org.springframework.lang.Nullable;
 
 /**
  * Static holder for local Spring properties, i.e. defined at the Spring library level.
@@ -95,6 +95,8 @@ public final class SpringProperties {
 	/**
 	 * Retrieve the property value for the given key, checking local Spring
 	 * properties first and falling back to JVM-level system properties.
+	 * 检索给定键的属性值，首先检查本地Spring属性，然后退回到jvm级别的系统属性。
+	 *
 	 * @param key the property key
 	 * @return the associated property value, or {@code null} if none found
 	 */

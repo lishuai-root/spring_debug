@@ -26,6 +26,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 /**
  * No-op resolver for method arguments of type {@link kotlin.coroutines.Continuation}.
  *
+ * 用于{@link kotlin.coroutines.Continuation}类型的方法参数的No-op解析器。
+ *
  * @author Sebastien Deleuze
  * @since 5.3
  */

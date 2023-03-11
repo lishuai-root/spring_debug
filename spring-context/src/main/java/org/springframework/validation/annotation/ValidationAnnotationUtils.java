@@ -16,10 +16,10 @@
 
 package org.springframework.validation.annotation;
 
-import java.lang.annotation.Annotation;
-
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.Nullable;
+
+import java.lang.annotation.Annotation;
 
 /**
  * Utility class for handling validation annotations.
@@ -34,9 +34,13 @@ public abstract class ValidationAnnotationUtils {
 
 	/**
 	 * Determine any validation hints by the given annotation.
+	 * 通过给定的注释确定任何验证提示。
+	 *
 	 * <p>This implementation checks for {@code @jakarta.validation.Valid},
 	 * Spring's {@link org.springframework.validation.annotation.Validated},
 	 * and custom annotations whose name starts with "Valid".
+	 * 这个实现检查{@code @jakarta.validation.Valid}， Spring的{@link org.springframework.validation.annotation.Validated}以及名称以“Valid”开头的自定义注释。
+	 *
 	 * @param ann the annotation (potentially a validation annotation)
 	 * @return the validation hints to apply (possibly an empty array),
 	 * or {@code null} if this annotation does not trigger any validation

@@ -23,6 +23,7 @@ public class JDBCTestXml {
 		TransactionalService service = context.getBean(TransactionalService.class);
 //		service.updateForTransactional();
 		Connection connection = null;
+		service.newConnectTest();
 		try {
 			connection = context.getBean(JdbcTemplate.class).getDataSource().getConnection();
 			connection.setAutoCommit(false);

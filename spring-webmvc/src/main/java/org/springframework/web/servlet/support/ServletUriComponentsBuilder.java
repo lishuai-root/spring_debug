@@ -31,6 +31,7 @@ import org.springframework.web.util.UrlPathHelper;
 /**
  * UriComponentsBuilder with additional static factory methods to create links
  * based on the current HttpServletRequest.
+ * UriComponentsBuilder和附加的静态工厂方法来创建基于当前HttpServletRequest的链接。
  *
  * <p><strong>Note:</strong> As of 5.1, methods in this class do not extract
  * {@code "Forwarded"} and {@code "X-Forwarded-*"} headers that specify the
@@ -38,6 +39,10 @@ import org.springframework.web.util.UrlPathHelper;
  * {@link org.springframework.web.filter.ForwardedHeaderFilter
  * ForwardedHeaderFilter}, or similar from the underlying server, to extract
  * and use such headers, or to discard them.
+ *
+ * 从5.1开始，该类中的方法不会提取指定客户端源地址的{@code "Forwarded"}和{@code "X-Forwarded-"}头信息。
+ * 请使用{@link org.springframework.web.filter.ForwardedHeaderFilter}，或类似于底层服务器，来提取和使用这些头文件，或丢弃它们。
+ *
  *
  * @author Rossen Stoyanchev
  * @since 3.1
@@ -75,6 +80,8 @@ public class ServletUriComponentsBuilder extends UriComponentsBuilder {
 	/**
 	 * Prepare a builder from the host, port, scheme, and context path of the
 	 * given HttpServletRequest.
+	 *
+	 * 从给定HttpServletRequest的主机、端口、方案和上下文路径准备一个构建器。
 	 */
 	public static ServletUriComponentsBuilder fromContextPath(HttpServletRequest request) {
 		ServletUriComponentsBuilder builder = initFromRequest(request);
@@ -85,10 +92,16 @@ public class ServletUriComponentsBuilder extends UriComponentsBuilder {
 	/**
 	 * Prepare a builder from the host, port, scheme, context path, and
 	 * servlet mapping of the given HttpServletRequest.
+	 * 从给定HttpServletRequest的主机、端口、方案、上下文路径和servlet映射准备一个构建器。
+	 *
 	 * <p>If the servlet is mapped by name, e.g. {@code "/main/*"}, the path
 	 * will end with "/main". If the servlet is mapped otherwise, e.g.
 	 * {@code "/"} or {@code "*.do"}, the result will be the same as
 	 * if calling {@link #fromContextPath(HttpServletRequest)}.
+	 *
+	 * 如果servlet是通过名称映射的，例如{@code "/main"}，路径将以"main"结束。
+	 * 如果servlet以其他方式映射，例如{@code "/"}或{@code "*.do"}结果将与调用{@link #fromContextPath(HttpServletRequest)}相同。
+	 *
 	 */
 	public static ServletUriComponentsBuilder fromServletMapping(HttpServletRequest request) {
 		ServletUriComponentsBuilder builder = fromContextPath(request);
@@ -121,6 +134,8 @@ public class ServletUriComponentsBuilder extends UriComponentsBuilder {
 
 	/**
 	 * Initialize a builder with a scheme, host,and port (but not path and query).
+	 *
+	 * 使用方案、主机和端口初始化构建器(但不包括路径和查询)。
 	 */
 	private static ServletUriComponentsBuilder initFromRequest(HttpServletRequest request) {
 		String scheme = request.getScheme();
@@ -130,6 +145,14 @@ public class ServletUriComponentsBuilder extends UriComponentsBuilder {
 		ServletUriComponentsBuilder builder = new ServletUriComponentsBuilder();
 		builder.scheme(scheme);
 		builder.host(host);
+		/**
+		 * 80端口是http协议的默认端口
+		 *  eg:
+		 *  	http://www.baidu.com:80  ==  http://www.baidu.com
+		 * 443端口是https协议的默认端口
+		 *  eg:
+		 *  	https://www.baidu.com:443  ==  https://www.baidu.com
+		 */
 		if (("http".equals(scheme) && port != 80) || ("https".equals(scheme) && port != 443)) {
 			builder.port(port);
 		}

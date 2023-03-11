@@ -1,5 +1,10 @@
 package com.shuai.common;
 
+import com.shuai.config.customComponent.CustomArgument;
+
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * @description:
  * @author: LISHUAI
@@ -9,8 +14,10 @@ package com.shuai.common;
 
 //@Data
 //@Component
-public class User {
+public class User implements CustomArgument, Serializable {
 
+	@Serial
+	private static final long serialVersionUID = 2188605509244097149L;
 	private static int count = 0;
 
 	public User(){

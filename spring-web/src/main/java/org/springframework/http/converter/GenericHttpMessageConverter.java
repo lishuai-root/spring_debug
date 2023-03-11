@@ -28,6 +28,7 @@ import org.springframework.lang.Nullable;
  * A specialization of {@link HttpMessageConverter} that can convert an HTTP request
  * into a target object of a specified generic type and a source object of a specified
  * generic type into an HTTP response.
+ * {@link HttpMessageConverter}的专门化，可以将HTTP请求转换为指定泛型类型的目标对象，将指定泛型类型的源对象转换为HTTP响应。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -40,9 +41,13 @@ public interface GenericHttpMessageConverter<T> extends HttpMessageConverter<T> 
 
 	/**
 	 * Indicates whether the given type can be read by this converter.
+	 * 指示该转换器是否可以读取给定的类型。
+	 *
 	 * This method should perform the same checks than
 	 * {@link HttpMessageConverter#canRead(Class, MediaType)} with additional ones
 	 * related to the generic type.
+	 * 此方法应该执行与{@link HttpMessageConverter#canRead(Class, MediaType)}相同的检查，并附加与泛型类型相关的检查。
+	 *
 	 * @param type the (potentially generic) type to test for readability
 	 * @param contextClass a context class for the target type, for example a class
 	 * in which the target type appears in a method signature (can be {@code null})
@@ -69,14 +74,20 @@ public interface GenericHttpMessageConverter<T> extends HttpMessageConverter<T> 
 
 	/**
 	 * Indicates whether the given class can be written by this converter.
+	 * 指示给定的类是否可以由此转换器编写。
+	 *
 	 * <p>This method should perform the same checks than
 	 * {@link HttpMessageConverter#canWrite(Class, MediaType)} with additional ones
 	 * related to the generic type.
+	 * 这个方法应该执行与{@link HttpMessageConverter#canWrite(Class，MediaType)}相同的检查，并附加与泛型类型相关的检查。
+	 *
 	 * @param type the (potentially generic) type to test for writability
 	 * (can be {@code null} if not specified)
 	 * @param clazz the source object class to test for writability
 	 * @param mediaType the media type to write (can be {@code null} if not specified);
 	 * typically the value of an {@code Accept} header.
+	 * 要写入的媒体类型(如果没有指定，可以是{@code null});通常是{@code Accept}标头的值。
+	 *
 	 * @return {@code true} if writable; {@code false} otherwise
 	 * @since 4.2
 	 */
@@ -84,6 +95,8 @@ public interface GenericHttpMessageConverter<T> extends HttpMessageConverter<T> 
 
 	/**
 	 * Write an given object to the given output message.
+	 * 将给定对象写入给定输出消息。
+	 *
 	 * @param t the object to write to the output message. The type of this object must
 	 * have previously been passed to the {@link #canWrite canWrite} method of this
 	 * interface, which must have returned {@code true}.

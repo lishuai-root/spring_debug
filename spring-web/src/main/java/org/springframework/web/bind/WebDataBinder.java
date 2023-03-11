@@ -67,11 +67,20 @@ public class WebDataBinder extends DataBinder {
 	/**
 	 * Default prefix that field marker parameters start with, followed by the field
 	 * name: e.g. "_subscribeToNewsletter" for a field "subscribeToNewsletter".
+	 * 字段标记参数开始的默认前缀，后面跟着字段名
+	 *  e.g. "_subscribeToNewsletter" for a field "subscribeToNewsletter".
+	 *
+	 *
 	 * <p>Such a marker parameter indicates that the field was visible, that is,
 	 * existed in the form that caused the submission. If no corresponding field
 	 * value parameter was found, the field will be reset. The value of the field
 	 * marker parameter does not matter in this case; an arbitrary value can be used.
+	 * <p>这样的标记参数表示该字段是可见的，也就是说，以导致提交的形式存在。如果没有对应的字段值参数，则该字段将被重置。
+	 * 在这种情况下，字段标记参数的值并不重要;可以使用任意值。
+	 *
 	 * This is particularly useful for HTML checkboxes and select options.
+	 * 这对于HTML复选框和选择选项特别有用。
+	 *
 	 * @see #setFieldMarkerPrefix
 	 */
 	public static final String DEFAULT_FIELD_MARKER_PREFIX = "_";
@@ -79,12 +88,21 @@ public class WebDataBinder extends DataBinder {
 	/**
 	 * Default prefix that field default parameters start with, followed by the field
 	 * name: e.g. "!subscribeToNewsletter" for a field "subscribeToNewsletter".
+	 * 字段默认参数开始的默认前缀，后面跟着字段名
+	 * e.g. "!subscribeToNewsletter" for a field "subscribeToNewsletter".
+	 *
 	 * <p>Default parameters differ from field markers in that they provide a default
 	 * value instead of an empty value.
+	 * <p>默认参数与字段标记的不同之处在于它们提供了默认值而不是空值。
+	 *
 	 * @see #setFieldDefaultPrefix
 	 */
 	public static final String DEFAULT_FIELD_DEFAULT_PREFIX = "!";
 
+	/**
+	 * 用于标记可能为空的字段的参数，使用“prefix + field”作为名称。
+	 * 这样的标记参数是通过是否存在来检查的:你可以为它发送任何值，例如"visible"。
+	 */
 	@Nullable
 	private String fieldMarkerPrefix = DEFAULT_FIELD_MARKER_PREFIX;
 
@@ -119,21 +137,37 @@ public class WebDataBinder extends DataBinder {
 	 * Specify a prefix that can be used for parameters that mark potentially
 	 * empty fields, having "prefix + field" as name. Such a marker parameter is
 	 * checked by existence: You can send any value for it, for example "visible".
+	 * 指定一个前缀，用于标记可能为空的字段的参数，使用“prefix + field”作为名称。
+	 * 这样的标记参数是通过是否存在来检查的:你可以为它发送任何值，例如"visible"。
+	 *
 	 * This is particularly useful for HTML checkboxes and select options.
+	 * 这对于HTML复选框和选择选项特别有用。
+	 *
 	 * <p>Default is "_", for "_FIELD" parameters (e.g. "_subscribeToNewsletter").
 	 * Set this to null if you want to turn off the empty field check completely.
+	 *
+	 * <p>默认为“_”，对于“_FIELD”参数(例如:“_subscribeToNewsletter”)。如果您想完全关闭空字段检查，则将此设置为null。
+	 *
 	 * <p>HTML checkboxes only send a value when they're checked, so it is not
 	 * possible to detect that a formerly checked box has just been unchecked,
 	 * at least not with standard HTML means.
+	 * HTML复选框只在被选中时发送一个值，因此，不可能检测到以前选中的复选框刚刚未选中，至少不是用标准的HTML方法。
+	 *
 	 * <p>One way to address this is to look for a checkbox parameter value if
 	 * you know that the checkbox has been visible in the form, resetting the
 	 * checkbox if no value found. In Spring web MVC, this typically happens
 	 * in a custom {@code onBind} implementation.
+	 * 解决这个问题的一种方法是，如果您知道复选框在表单中是可见的，则查找复选框参数值，如果没有找到值，则重置复选框。
+	 * 在Spring web MVC中，这通常发生在自定义{@code onBind}实现中。
+	 *
 	 * <p>This auto-reset mechanism addresses this deficiency, provided
 	 * that a marker parameter is sent for each checkbox field, like
 	 * "_subscribeToNewsletter" for a "subscribeToNewsletter" field.
 	 * As the marker parameter is sent in any case, the data binder can
 	 * detect an empty field and automatically reset its value.
+	 * 这个自动重置机制解决了这个缺陷，只要为每个复选框字段发送一个标记参数，就像“_subscribetonewletter”用于“subscribetonewletter”字段。
+	 * 在任何情况下都会发送标记参数，数据绑定器可以检测到空字段并自动重置其值。
+	 *
 	 * @see #DEFAULT_FIELD_MARKER_PREFIX
 	 */
 	public void setFieldMarkerPrefix(@Nullable String fieldMarkerPrefix) {
@@ -142,6 +176,7 @@ public class WebDataBinder extends DataBinder {
 
 	/**
 	 * Return the prefix for parameters that mark potentially empty fields.
+	 * 返回标记可能为空字段的参数的前缀。
 	 */
 	@Nullable
 	public String getFieldMarkerPrefix() {
@@ -168,6 +203,7 @@ public class WebDataBinder extends DataBinder {
 
 	/**
 	 * Return the prefix for parameters that mark default fields.
+	 * 返回标记默认字段的参数的前缀。
 	 */
 	@Nullable
 	public String getFieldDefaultPrefix() {
@@ -296,7 +332,10 @@ public class WebDataBinder extends DataBinder {
 
 	/**
 	 * Determine an empty value for the specified field.
+	 * 为指定的字段确定一个空值。
+	 *
 	 * <p>The default implementation returns:
+	 * 默认实现返回:
 	 * <ul>
 	 * <li>{@code Boolean.FALSE} for boolean fields
 	 * <li>an empty array for array types

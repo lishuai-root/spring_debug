@@ -77,9 +77,13 @@ public @interface RequestMapping {
 
 	/**
 	 * Assign a name to this mapping.
+	 * 为这个映射分配一个名称。
+	 *
 	 * <p><b>Supported at the type level as well as at the method level!</b>
 	 * When used on both levels, a combined name is derived by concatenation
 	 * with "#" as separator.
+	 * <p><b>在类型级和方法级都支持!<b>当在两个级别上使用时，组合名称将通过连接""作为分隔符派生。
+	 *
 	 * @see org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder
 	 * @see org.springframework.web.servlet.handler.HandlerMethodMappingNamingStrategy
 	 */
@@ -87,14 +91,21 @@ public @interface RequestMapping {
 
 	/**
 	 * The primary mapping expressed by this annotation.
+	 * 由该注释表示的主映射。
+	 *
 	 * <p>This is an alias for {@link #path}. For example,
 	 * {@code @RequestMapping("/foo")} is equivalent to
 	 * {@code @RequestMapping(path="/foo")}.
+	 * <p> {@link path}的别名。例如，{@code @RequestMapping("/foo")}等价于{@code @RequestMapping(path="/foo")}。
+	 *
 	 * <p><b>Supported at the type level as well as at the method level!</b>
 	 * When used at the type level, all method-level mappings inherit
 	 * this primary mapping, narrowing it for a specific handler method.
+	 * <p><b>在类型级和方法级都支持!<b>当在类型级使用时，所有方法级映射都继承此主映射，将其缩小为特定处理程序方法。
+	 *
 	 * <p><strong>NOTE</strong>: A handler method that is not mapped to any path
 	 * explicitly is effectively mapped to an empty path.
+	 * <p><strong>说明<strong>:没有显式映射到任何路径的处理程序方法将有效地映射到空路径。
 	 */
 	@AliasFor("path")
 	String[] value() default {};

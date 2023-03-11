@@ -113,7 +113,9 @@ import java.util.*;
  */
 public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 
-	/** Default object name used for binding: "target". */
+	/** Default object name used for binding: "target".
+	 * 用于绑定的默认对象名称:"target"。
+	 * */
 	public static final String DEFAULT_OBJECT_NAME = "target";
 
 	/** Default limit for array and collection growing: 256. */
@@ -317,6 +319,8 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	/**
 	 * Return the internal BindingResult held by this DataBinder,
 	 * as an AbstractPropertyBindingResult.
+	 *
+	 * 返回这个DataBinder持有的内部BindingResult，作为一个AbstractPropertyBindingResult。
 	 */
 	protected AbstractPropertyBindingResult getInternalBindingResult() {
 		if (this.bindingResult == null) {
@@ -376,8 +380,12 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 	 * Return the BindingResult instance created by this DataBinder.
 	 * This allows for convenient access to the binding results after
 	 * a bind operation.
+	 * 返回由该DataBinder创建的BindingResult实例。这允许在绑定操作之后方便地访问绑定结果。
+	 *
 	 * @return the BindingResult instance, to be treated as BindingResult
 	 * or as Errors instance (Errors is a super-interface of BindingResult)
+	 * BindingResult实例，作为BindingResult或Errors实例处理(Errors是BindingResult的超接口)
+	 *
 	 * @see Errors
 	 * @see #bind
 	 */
@@ -596,6 +604,7 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 
 	/**
 	 * Return the Validators to apply after data binding.
+	 * 返回数据绑定后应用的Validators。
 	 */
 	public List<Validator> getValidators() {
 		return Collections.unmodifiableList(this.validators);
@@ -894,7 +903,11 @@ public class DataBinder implements PropertyEditorRegistry, TypeConverter {
 
 	/**
 	 * Invoke the specified Validators, if any, with the given validation hints.
+	 * 使用给定的验证提示调用指定的Validators(如果有的话)。
+	 *
 	 * <p>Note: Validation hints may get ignored by the actual target Validator.
+	 * 注意:验证提示可能会被实际的目标Validator忽略。
+	 *
 	 * @param validationHints one or more hint objects to be passed to a {@link SmartValidator}
 	 * @since 3.1
 	 * @see #setValidator(Validator)

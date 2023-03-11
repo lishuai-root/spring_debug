@@ -16,10 +16,10 @@
 
 package org.springframework.ui;
 
+import org.springframework.lang.Nullable;
+
 import java.util.Collection;
 import java.util.Map;
-
-import org.springframework.lang.Nullable;
 
 /**
  * Java-5-specific interface that defines a holder for model attributes.
@@ -87,6 +87,7 @@ public interface Model {
 
 	/**
 	 * Return the current set of model attributes as a Map.
+	 * 以Map的形式返回当前的模型属性集。
 	 */
 	Map<String, Object> asMap();
 

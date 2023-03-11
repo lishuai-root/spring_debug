@@ -16,14 +16,10 @@
 
 package org.springframework.web.servlet.mvc.support;
 
-import java.io.IOException;
-import java.util.List;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.Ordered;
@@ -52,13 +48,19 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  * The default implementation of the {@link org.springframework.web.servlet.HandlerExceptionResolver}
  * interface, resolving standard Spring MVC exceptions and translating them to corresponding
  * HTTP status codes.
  *
+ * {@link org.springframework.web.servlet.HandlerExceptionResolver}接口的标准实现，解析标准Spring MVC异常并将其转换为相应的HTTP状态码。
+ *
  * <p>This exception resolver is enabled by default in the common Spring
  * {@link org.springframework.web.servlet.DispatcherServlet}.
+ * 这个异常解析器在普通Spring中默认是启用的。
  *
  * <p>
  * <table>
@@ -163,6 +165,16 @@ public class DefaultHandlerExceptionResolver extends AbstractHandlerExceptionRes
 	}
 
 
+	/**
+	 * 处理http相关的异常，根据不同的异常写入不同的响应码
+	 *
+	 * @param request current HTTP request
+	 * @param response current HTTP response
+	 * @param handler the executed handler, or {@code null} if none chosen at the time
+	 * of the exception (for example, if multipart resolution failed)
+	 * @param ex the exception that got thrown during handler execution
+	 * @return
+	 */
 	@Override
 	@Nullable
 	protected ModelAndView doResolveException(

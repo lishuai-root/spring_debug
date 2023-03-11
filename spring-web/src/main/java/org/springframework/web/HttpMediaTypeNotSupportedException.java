@@ -25,6 +25,8 @@ import org.springframework.lang.Nullable;
  * Exception thrown when a client POSTs, PUTs, or PATCHes content of a type
  * not supported by request handler.
  *
+ * 当客户端post、put或PATCHes内容的类型不受请求处理程序支持时引发的异常。
+ *
  * @author Arjen Poutsma
  * @since 3.0
  */

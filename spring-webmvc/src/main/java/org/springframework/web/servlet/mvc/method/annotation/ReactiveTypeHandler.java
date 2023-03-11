@@ -16,22 +16,11 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ReactiveAdapter;
 import org.springframework.core.ReactiveAdapterRegistry;
@@ -55,17 +44,26 @@ import org.springframework.web.context.request.async.WebAsyncUtils;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.HandlerMapping;
 
+import java.io.IOException;
+import java.time.Duration;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * Private helper class to assist with handling "reactive" return values types
  * that can be adapted to a Reactive Streams {@link Publisher} through the
  * {@link ReactiveAdapterRegistry}.
+ * 私有助手类，帮助处理“响应式”返回值类型，可以通过{@link ReactiveAdapterRegistry}适应响应式流{@link Publisher}。
  *
  * <p>Such return values may be bridged to a {@link ResponseBodyEmitter} for
  * streaming purposes at the presence of a streaming media type or based on the
  * generic type.
+ * 这样的返回值可以桥接到{@link ResponseBodyEmitter}，用于流媒体类型或基于泛型类型的流媒体目的。
  *
  * <p>For all other cases {@code Publisher} output is collected and bridged to
  * {@link DeferredResult} for standard async request processing.
+ * <p>对于所有其他情况{@code Publisher}输出被收集并桥接到{@link DeferredResult}用于标准异步请求处理。
  *
  * @author Rossen Stoyanchev
  * @since 5.0
@@ -109,6 +107,7 @@ class ReactiveTypeHandler {
 
 	/**
 	 * Whether the type can be adapted to a Reactive Streams {@link Publisher}.
+	 * 该类型是否可以适应响应流{@link Publisher}.
 	 */
 	public boolean isReactiveType(Class<?> type) {
 		return (this.adapterRegistry.getAdapter(type) != null);
@@ -118,6 +117,8 @@ class ReactiveTypeHandler {
 	/**
 	 * Process the given reactive return value and decide whether to adapt it
 	 * to a {@link ResponseBodyEmitter} or a {@link DeferredResult}.
+	 * 处理给定的响应返回值，并决定是否将其调整为{@link ResponseBodyEmitter}或{@link DeferredResult}。
+	 *
 	 * @return an emitter for streaming, or {@code null} if handled internally
 	 * with a {@link DeferredResult}
 	 */

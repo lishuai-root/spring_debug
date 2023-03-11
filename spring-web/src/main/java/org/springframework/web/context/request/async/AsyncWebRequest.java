@@ -23,6 +23,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 /**
  * Extends {@link NativeWebRequest} with methods for asynchronous request processing.
+ * 用异步请求处理的方法扩展{@link NativeWebRequest}。
  *
  * @author Rossen Stoyanchev
  * @since 3.2
@@ -31,10 +32,15 @@ public interface AsyncWebRequest extends NativeWebRequest {
 
 	/**
 	 * Set the time required for concurrent handling to complete.
+	 * 设置完成并发处理所需的时间。
+	 *
 	 * This property should not be set when concurrent handling is in progress,
 	 * i.e. when {@link #isAsyncStarted()} is {@code true}.
+	 * 当并发处理正在进行时，即{@link #isAsyncStarted()}为{@code true}时，不应设置此属性。
+	 *
 	 * @param timeout amount of time in milliseconds; {@code null} means no
 	 * 	timeout, i.e. rely on the default timeout of the container.
+	 * 	以毫秒为单位的时间量;{@code null}表示没有超时，即依赖于容器的默认超时。
 	 */
 	void setTimeout(@Nullable Long timeout);
 
@@ -59,6 +65,8 @@ public interface AsyncWebRequest extends NativeWebRequest {
 	 * Mark the start of asynchronous request processing so that when the main
 	 * processing thread exits, the response remains open for further processing
 	 * in another thread.
+	 * 标记异步请求处理的开始，这样当主处理线程退出时，响应仍然打开，以便在另一个线程中进行进一步处理。
+	 *
 	 * @throws IllegalStateException if async processing has completed or is not supported
 	 */
 	void startAsync();

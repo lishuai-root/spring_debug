@@ -16,23 +16,28 @@
 
 package org.springframework.validation;
 
-import java.beans.PropertyEditor;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+
+import java.beans.PropertyEditor;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Thrown when binding errors are considered fatal. Implements the
  * {@link BindingResult} interface (and its super-interface {@link Errors})
  * to allow for the direct analysis of binding errors.
+ * 当绑定错误被认为是致命时抛出。实现{@link BindingResult}接口(及其超接口{@link Errors})以允许直接分析绑定错误。
  *
  * <p>As of Spring 2.0, this is a special-purpose class. Normally,
  * application code will work with the {@link BindingResult} interface,
  * or with a {@link DataBinder} that in turn exposes a BindingResult via
  * {@link org.springframework.validation.DataBinder#getBindingResult()}.
+ *
+ * 从Spring 2.0开始，这是一个特殊用途的类。通常，应用程序代码将使用{@link BindingResult}接口，或者使用{@link DataBinder}，
+ * 后者通过{@link org.springframework.validation.DataBinder#getBindingResult()}公开BindingResult。
+ *
  *
  * @author Rod Johnson
  * @author Juergen Hoeller

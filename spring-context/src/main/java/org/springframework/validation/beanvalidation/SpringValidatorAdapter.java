@@ -16,15 +16,6 @@
 
 package org.springframework.validation.beanvalidation;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ElementKind;
 import jakarta.validation.Path;
@@ -32,18 +23,16 @@ import jakarta.validation.ValidationException;
 import jakarta.validation.executable.ExecutableValidator;
 import jakarta.validation.metadata.BeanDescriptor;
 import jakarta.validation.metadata.ConstraintDescriptor;
-
 import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.SmartValidator;
+import org.springframework.validation.*;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Adapter that takes a JSR-303 {@code javax.validator.Validator} and
@@ -146,6 +135,8 @@ public class SpringValidatorAdapter implements SmartValidator, jakarta.validatio
 	/**
 	 * Process the given JSR-303 ConstraintViolations, adding corresponding errors to
 	 * the provided Spring {@link Errors} object.
+	 * 处理给定的JSR-303 ConstraintViolations，向提供的Spring {@link Errors}对象添加相应的错误。
+	 *
 	 * @param violations the JSR-303 ConstraintViolation results
 	 * @param errors the Spring errors object to register to
 	 */

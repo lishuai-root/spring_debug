@@ -20,6 +20,8 @@ package org.springframework.web.bind.support;
  * Simple implementation of the {@link SessionStatus} interface,
  * keeping the {@code complete} flag as an instance variable.
  *
+ * {@link SessionStatus}接口的简单实现，保持{@code complete}标志作为实例变量。
+ *
  * @author Juergen Hoeller
  * @since 2.5
  */

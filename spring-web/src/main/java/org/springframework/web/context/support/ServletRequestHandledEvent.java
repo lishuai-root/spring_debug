@@ -22,6 +22,8 @@ import org.springframework.lang.Nullable;
  * Servlet-specific subclass of RequestHandledEvent,
  * adding servlet-specific context information.
  *
+ * RequestHandledEvent特定于servlet的子类，添加特定于servlet的上下文信息。
+ *
  * @author Juergen Hoeller
  * @since 2.0
  * @see org.springframework.web.servlet.FrameworkServlet
@@ -97,6 +99,8 @@ public class ServletRequestHandledEvent extends RequestHandledEvent {
 
 	/**
 	 * Create a new ServletRequestHandledEvent.
+	 * 创建一个新的ServletRequestHandledEvent。
+	 *
 	 * @param source the component that published the event
 	 * @param requestUrl the URL of the request
 	 * @param clientAddress the IP address that the request came from

@@ -33,6 +33,7 @@ import org.springframework.util.CollectionUtils;
 
 /**
  * {@link ServerHttpResponse} implementation that is based on a {@link HttpServletResponse}.
+ * {@link ServerHttpResponse}实现，它基于一个{@link HttpServletResponse}。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev

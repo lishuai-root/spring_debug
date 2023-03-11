@@ -27,9 +27,11 @@ import org.springframework.core.annotation.AliasFor;
 /**
  * Annotation which indicates that a method parameter should be bound to a URI template
  * variable. Supported for {@link RequestMapping} annotated handler methods.
+ * 注释，该注释指出方法参数应该绑定到URI模板变量。支持{@link RequestMapping}带注释的处理方法。
  *
  * <p>If the method parameter is {@link java.util.Map Map&lt;String, String&gt;}
  * then the map is populated with all path variable names and values.
+ * 如果方法参数是{@link java.util.Map map &lt;String, String&gt;}，那么映射将被所有路径变量名和值填充。
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
@@ -50,6 +52,7 @@ public @interface PathVariable {
 
 	/**
 	 * The name of the path variable to bind to.
+	 * 要绑定到的路径变量的名称。
 	 * @since 4.3.3
 	 */
 	@AliasFor("value")
@@ -57,10 +60,16 @@ public @interface PathVariable {
 
 	/**
 	 * Whether the path variable is required.
+	 * 是否需要路径变量。
+	 *
 	 * <p>Defaults to {@code true}, leading to an exception being thrown if the path
 	 * variable is missing in the incoming request. Switch this to {@code false} if
 	 * you prefer a {@code null} or Java 8 {@code java.util.Optional} in this case.
 	 * e.g. on a {@code ModelAttribute} method which serves for different requests.
+	 * <p>默认为{@code true}，如果传入请求中缺少路径变量，将导致抛出异常。
+	 * 如果您喜欢{@code null}或Java 8 {@code java.util.Optional}则将其切换为{@code false}。在本例中为可选。
+	 * 例如，在{@code ModelAttribute}方法上为不同的请求服务。
+	 *
 	 * @since 4.3.3
 	 */
 	boolean required() default true;

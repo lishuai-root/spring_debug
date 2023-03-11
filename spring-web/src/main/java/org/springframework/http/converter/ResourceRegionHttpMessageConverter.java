@@ -168,6 +168,13 @@ public class ResourceRegionHttpMessageConverter extends AbstractGenericHttpMessa
 		}
 	}
 
+	/**
+	 * 将请求的资源写入响应体
+	 *
+	 * @param resourceRegions
+	 * @param outputMessage
+	 * @throws IOException
+	 */
 	private void writeResourceRegionCollection(Collection<ResourceRegion> resourceRegions,
 			HttpOutputMessage outputMessage) throws IOException {
 
@@ -206,12 +213,20 @@ public class ResourceRegionHttpMessageConverter extends AbstractGenericHttpMessa
 				}
 				long resourceLength = region.getResource().contentLength();
 				end = Math.min(end, resourceLength - inputStreamPosition - 1);
+				/**
+				 * 写入Content-Range响应头
+				 * Content-Range：字节 开始字节位置-结束字节位置／文件大小。
+				 */
 				print(out, "Content-Range: bytes " +
 						region.getPosition() + '-' + (region.getPosition() + region.getCount() - 1) +
 						'/' + resourceLength);
 				println(out);
 				println(out);
 				// Printing content
+				/**
+				 * 印刷内容
+				 * 将指定大小的资源内容写入响应体
+				 */
 				StreamUtils.copyRange(in, out, start, end);
 				inputStreamPosition += (end + 1);
 			}

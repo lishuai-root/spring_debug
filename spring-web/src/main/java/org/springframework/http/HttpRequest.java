@@ -24,6 +24,8 @@ import org.springframework.lang.Nullable;
  * Represents an HTTP request message, consisting of
  * {@linkplain #getMethod() method} and {@linkplain #getURI() uri}.
  *
+ * 表示一个HTTP请求消息，由{@linkplain #getMethod() method}和{@linkplain #getURI() uri}组成。
+ *
  * @author Arjen Poutsma
  * @since 3.1
  */
@@ -31,8 +33,12 @@ public interface HttpRequest extends HttpMessage {
 
 	/**
 	 * Return the HTTP method of the request.
+	 * 返回请求的HTTP方法。
+	 *
 	 * @return the HTTP method as an HttpMethod enum value, or {@code null}
 	 * if not resolvable (e.g. in case of a non-standard HTTP method)
+	 * 将HTTP方法作为HttpMethod枚举值，如果不可解析，则将{@code null}作为HTTP方法的枚举值(例如，在非标准HTTP方法的情况下)
+	 *
 	 * @see #getMethodValue()
 	 * @see HttpMethod#resolve(String)
 	 */
@@ -43,6 +49,8 @@ public interface HttpRequest extends HttpMessage {
 
 	/**
 	 * Return the HTTP method of the request as a String value.
+	 * 将请求的HTTP方法作为String值返回。
+	 *
 	 * @return the HTTP method as a plain String
 	 * @since 5.0
 	 * @see #getMethod()
@@ -52,6 +60,8 @@ public interface HttpRequest extends HttpMessage {
 	/**
 	 * Return the URI of the request (including a query string if any,
 	 * but only if it is well-formed for a URI representation).
+	 * 返回请求的URI(如果有的话，包括一个查询字符串，但前提是它是URI表示形式良好的)。
+	 *
 	 * @return the URI of the request (never {@code null})
 	 */
 	URI getURI();

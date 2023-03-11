@@ -34,10 +34,14 @@ import java.util.Properties;
 /**
  * Helper class for URL path matching. Provides support for URL paths in
  * {@code RequestDispatcher} includes and support for consistent URL decoding.
+ * URL路径匹配的助手类。为{@code RequestDispatcher} include中的URL路径提供支持，并支持一致的URL解码。
  *
  * <p>Used by {@link org.springframework.web.servlet.handler.AbstractUrlHandlerMapping}
  * and {@link org.springframework.web.servlet.support.RequestContext} for path matching
  * and/or URI determination.
+ *
+ * <p>由{@link org.springframework.web.servlet.handler.AbstractUrlHandlerMapping}
+ * 和{@link org.springframework.web.servlet.support.RequestContext}用于路径匹配和或URI确定。
  *
  * @author Juergen Hoeller
  * @author Rob Harrop
@@ -130,6 +134,8 @@ public class UrlPathHelper {
 	/**
 	 * Set if ";" (semicolon) content should be stripped from the request URI.
 	 * <p>Default is "true".
+	 *
+	 * 设置if ";"(分号)内容应该从请求URI中剥离。<p>默认值为true。
 	 */
 	public void setRemoveSemicolonContent(boolean removeSemicolonContent) {
 		checkReadOnly();
@@ -163,6 +169,7 @@ public class UrlPathHelper {
 
 	/**
 	 * Return the default character encoding to use for URL decoding.
+	 * 返回用于URL解码的默认字符编码。
 	 */
 	protected String getDefaultEncoding() {
 		return this.defaultEncoding;
@@ -285,6 +292,8 @@ public class UrlPathHelper {
 	 * Return the path within the servlet mapping for the given request,
 	 * i.e. the part of the request's URL beyond the part that called the servlet,
 	 * or "" if the whole URL has been used to identify the servlet.
+	 * 返回给定请求的servlet映射中的路径，即请求URL在调用servlet的部分之外的部分，或者“”(如果整个URL已用于标识servlet)。
+	 *
 	 * @param request current HTTP request
 	 * @return the path within the servlet mapping, or ""
 	 * @see #getPathWithinServletMapping(HttpServletRequest, String)
@@ -533,6 +542,8 @@ public class UrlPathHelper {
 	/**
 	 * Return the request URI for the given request. If this is a forwarded request,
 	 * correctly resolves to the request URI of the original request.
+	 *
+	 * 返回给定请求的请求URI。如果这是一个转发请求，则正确地解析为原始请求的请求URI。
 	 */
 	public String getOriginatingRequestUri(HttpServletRequest request) {
 		String uri = (String) request.getAttribute(WEBSPHERE_URI_ATTRIBUTE);
@@ -642,9 +653,15 @@ public class UrlPathHelper {
 
 	/**
 	 * Determine the encoding for the given request.
+	 * 确定给定请求的编码。
+	 *
 	 * Can be overridden in subclasses.
+	 * 可以在子类中重写。
+	 *
 	 * <p>The default implementation checks the request encoding,
 	 * falling back to the default encoding specified for this resolver.
+	 * <p>默认实现检查请求编码，回落到为这个解析器指定的默认编码。
+	 *
 	 * @param request current HTTP request
 	 * @return the encoding for the request (never {@code null})
 	 * @see jakarta.servlet.ServletRequest#getCharacterEncoding()

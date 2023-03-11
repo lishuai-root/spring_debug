@@ -34,9 +34,14 @@ import org.springframework.util.ObjectUtils;
  * Extension of {@link HttpEntity} that adds an {@link HttpStatus} status code.
  * Used in {@code RestTemplate} as well as in {@code @Controller} methods.
  *
+ * {@link HttpEntity}的扩展，它添加了一个{@link HttpStatus}状态码。在{@code RestTemplate}和{@code @Controller}方法中使用。
+ *
  * <p>In {@code RestTemplate}, this class is returned by
  * {@link org.springframework.web.client.RestTemplate#getForEntity getForEntity()} and
  * {@link org.springframework.web.client.RestTemplate#exchange exchange()}:
+ * 在{@code RestTemplate}中，这个类由{@link org.springframework.web.client.RestTemplate#getForEntity getForEntity()}
+ * 和{@link org.springframework.web.client.RestTemplate#exchange exchange()}返回:
+ *
  * <pre class="code">
  * ResponseEntity&lt;String&gt; entity = template.getForEntity("https://example.com", String.class);
  * String body = entity.getBody();
@@ -46,6 +51,8 @@ import org.springframework.util.ObjectUtils;
  *
  * <p>This can also be used in Spring MVC as the return value from an
  * {@code @Controller} method:
+ * 这也可以在Spring MVC中用作{@code @Controller}方法的返回值:
+ *
  * <pre class="code">
  * &#64;RequestMapping("/handle")
  * public ResponseEntity&lt;String&gt; handle() {
@@ -58,6 +65,8 @@ import org.springframework.util.ObjectUtils;
  * </pre>
  *
  * Or, by using a builder accessible via static methods:
+ * 或者，通过使用可通过静态方法访问的构建器:
+ *
  * <pre class="code">
  * &#64;RequestMapping("/handle")
  * public ResponseEntity&lt;String&gt; handle() {
@@ -91,6 +100,8 @@ public class ResponseEntity<T> extends HttpEntity<T> {
 
 	/**
 	 * Create a {@code ResponseEntity} with a body and status code.
+	 * 创建一个带有主体和状态代码的{@code ResponseEntity}。
+	 *
 	 * @param body the entity body
 	 * @param status the status code
 	 */
@@ -153,6 +164,8 @@ public class ResponseEntity<T> extends HttpEntity<T> {
 
 	/**
 	 * Return the HTTP status code of the response.
+	 * 返回响应的HTTP状态代码。
+	 *
 	 * @return the HTTP status as an int value
 	 * @since 4.3
 	 */

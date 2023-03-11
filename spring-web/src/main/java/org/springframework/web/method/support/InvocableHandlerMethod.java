@@ -35,6 +35,8 @@ import java.util.Arrays;
  * argument values resolved from the current HTTP request through a list of
  * {@link HandlerMethodArgumentResolver}.
  *
+ * {@link HandlerMethod}的扩展，它调用从当前HTTP请求通过{@link HandlerMethodArgumentResolver}列表解析的参数值的底层方法。
+ *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
  * @author Sebastien Deleuze
@@ -93,6 +95,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	/**
 	 * Set {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}
 	 * to use for resolving method argument values.
+	 * 设置{@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}用于解析方法参数值。
 	 */
 	public void setHandlerMethodArgumentResolvers(HandlerMethodArgumentResolverComposite argumentResolvers) {
 		this.resolvers = argumentResolvers;
@@ -118,14 +121,25 @@ public class InvocableHandlerMethod extends HandlerMethod {
 
 	/**
 	 * Invoke the method after resolving its argument values in the context of the given request.
+	 * 在给定请求的上下文中解析该方法的参数值后调用该方法。
+	 *
 	 * <p>Argument values are commonly resolved through
 	 * {@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}.
+	 * 参数值通常通过{@link HandlerMethodArgumentResolver HandlerMethodArgumentResolvers}解析。
+	 *
 	 * The {@code providedArgs} parameter however may supply argument values to be used directly,
 	 * i.e. without argument resolution. Examples of provided argument values include a
 	 * {@link WebDataBinder}, a {@link SessionStatus}, or a thrown exception instance.
+	 * {@code providedArgs}形参可以直接提供参数值，即不需要参数解析。
+	 * 提供的参数值示例包括{@link WebDataBinder}、{@link SessionStatus}或抛出的异常实例。
+	 *
 	 * Provided argument values are checked before argument resolvers.
+	 * 在参数解析器之前检查提供的参数值。
+	 *
 	 * <p>Delegates to {@link #getMethodArgumentValues} and calls {@link #doInvoke} with the
 	 * resolved arguments.
+	 * <p>委托给{@link #getMethodArgumentValues}并使用已解析的参数调用{@link #doInvoke}。
+	 *
 	 * @param request the current request
 	 * @param mavContainer the ModelAndViewContainer for this request
 	 * @param providedArgs "given" arguments matched by type, not resolved
@@ -139,6 +153,9 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	public Object invokeForRequest(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
 
+		/**
+		 * 解析方法参数
+		 */
 		Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs);
 		if (logger.isTraceEnabled()) {
 			logger.trace("Arguments: " + Arrays.toString(args));
@@ -159,6 +176,9 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	protected Object[] getMethodArgumentValues(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
 
+		/**
+		 * 如果方法参数列表为空，直接返回空数组
+		 */
 		MethodParameter[] parameters = getMethodParameters();
 		if (ObjectUtils.isEmpty(parameters)) {
 			return EMPTY_ARGS;
@@ -167,19 +187,37 @@ public class InvocableHandlerMethod extends HandlerMethod {
 		Object[] args = new Object[parameters.length];
 		for (int i = 0; i < parameters.length; i++) {
 			MethodParameter parameter = parameters[i];
+			/**
+			 * 设置参数名称解析器，必要时通过asm解析源码中定义的参数名称
+			 */
 			parameter.initParameterNameDiscovery(this.parameterNameDiscoverer);
+			/**
+			 * 检查提供的参数中是否存在与当前参数类型匹配的参数值
+			 */
 			args[i] = findProvidedArgument(parameter, providedArgs);
 			if (args[i] != null) {
 				continue;
 			}
+			/**
+			 * 检查已经注册的方法参数解析器中是否存在可以解析当前方法参数的解析器
+			 * {@link HandlerMethodArgumentResolverComposite#supportsParameter(MethodParameter)}
+			 */
 			if (!this.resolvers.supportsParameter(parameter)) {
 				throw new IllegalStateException(formatArgumentError(parameter, "No suitable resolver"));
 			}
 			try {
+				/**
+				 * 通过合适的参数解析器解析参数值，必要时会通过{@link org.springframework.web.bind.annotation.InitBinder}注解标注的方法
+				 * 对参数值进行类型转换
+				 * {@link HandlerMethodArgumentResolverComposite#resolveArgument(MethodParameter, ModelAndViewContainer, NativeWebRequest, WebDataBinderFactory)}
+				 */
 				args[i] = this.resolvers.resolveArgument(parameter, mavContainer, request, this.dataBinderFactory);
 			}
 			catch (Exception ex) {
 				// Leave stack trace for later, exception may actually be resolved and handled...
+				/**
+				 * 将堆栈跟踪留到以后，异常可能实际被解决和处理…
+				 */
 				if (logger.isDebugEnabled()) {
 					String exMsg = ex.getMessage();
 					if (exMsg != null && !exMsg.contains(parameter.getExecutable().toGenericString())) {

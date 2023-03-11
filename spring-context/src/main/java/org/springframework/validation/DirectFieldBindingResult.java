@@ -24,8 +24,10 @@ import org.springframework.lang.Nullable;
  * Special implementation of the Errors and BindingResult interfaces,
  * supporting registration and evaluation of binding errors on value objects.
  * Performs direct field access instead of going through JavaBean getters.
+ * Errors和BindingResult接口的特殊实现，支持在值对象上注册和计算绑定错误。执行直接字段访问，而不是通过JavaBean getter。
  *
  * <p>Since Spring 4.1 this implementation is able to traverse nested fields.
+ * 自Spring 4.1以来，该实现能够遍历嵌套字段。
  *
  * @author Juergen Hoeller
  * @since 2.0

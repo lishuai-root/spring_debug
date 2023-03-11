@@ -22,12 +22,20 @@ package org.springframework.core;
  * to the ASM-based {@link LocalVariableTableParameterNameDiscoverer} for checking
  * debug information in the class file.
  *
+ * {@link ParameterNameDiscoverer}策略接口的默认实现，使用Java 8标准反射机制(如果可用)，
+ * 并返回到基于asm的{@link LocalVariableTableParameterNameDiscoverer}来检查类文件中的调试信息。
+ *
+ *
  * <p>If a Kotlin reflection implementation is present,
  * {@link KotlinReflectionParameterNameDiscoverer} is added first in the list and
  * used for Kotlin classes and interfaces. When compiling or running as a GraalVM
  * native image, the {@code KotlinReflectionParameterNameDiscoverer} is not used.
+ * 如果存在Kotlin反射实现，{@link KotlinReflectionParameterNameDiscoverer}将首先添加到列表中，用于Kotlin类和接口。
+ * 当编译或作为GraalVM本机映像运行时，不使用{@code KotlinReflectionParameterNameDiscoverer}。
+ *
  *
  * <p>Further discoverers may be added through {@link #addDiscoverer(ParameterNameDiscoverer)}.
+ * <p>可以通过{@link #addDiscoverer(ParameterNameDiscoverer)}添加其他发现器。
  *
  * @author Juergen Hoeller
  * @author Sebastien Deleuze

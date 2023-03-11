@@ -26,6 +26,8 @@ import org.springframework.web.server.ServerWebExchange;
  * Strategy to resolve the argument value for a method parameter in the context
  * of the current HTTP request.
  *
+ * 在当前HTTP请求的上下文中解析方法参数的实参值的策略。
+ *
  * @author Rossen Stoyanchev
  * @since 5.0
  */

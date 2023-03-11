@@ -60,6 +60,8 @@ public @interface Value {
 	/**
 	 * The actual value expression such as <code>#{systemProperties.myProp}</code>
 	 * or property placeholder such as <code>${my.app.myProp}</code>.
+	 *
+	 * 实际的值表达式，如<code>#{systemProperties.myProp}<code>或属性占位符，例如<code>${my.app.myProp}<code>。
 	 */
 	String value();
 

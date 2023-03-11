@@ -26,20 +26,32 @@ import java.lang.annotation.Target;
  * Variant of JSR-303's {@link jakarta.validation.Valid}, supporting the
  * specification of validation groups. Designed for convenient use with
  * Spring's JSR-303 support but not JSR-303 specific.
+ * JSR-303的{@link jakarta.validation.Valid 的变体。}，支持验证组的规范。
+ * 为方便使用Spring的JSR-303支持而设计，但不是JSR-303特有的。
  *
  * <p>Can be used e.g. with Spring MVC handler methods arguments.
  * Supported through {@link org.springframework.validation.SmartValidator}'s
  * validation hint concept, with validation group classes acting as hint objects.
+ * <p>可以与Spring MVC处理方法参数一起使用。通过{@link org.springframework.validation.SmartValidator 支持}的验证提示概念，
+ * 其中验证组类充当提示对象。
+ *
  *
  * <p>Can also be used with method level validation, indicating that a specific
  * class is supposed to be validated at the method level (acting as a pointcut
  * for the corresponding validation interceptor), but also optionally specifying
  * the validation groups for method-level validation in the annotated class.
+ * <p>也可以与方法级验证一起使用，表明特定的类应该在方法级进行验证(作为相应验证拦截器的切入点)，但也可以在带注释的类中为方法级验证指定验证组。
+ *
+ *
  * Applying this annotation at the method level allows for overriding the
  * validation groups for a specific method but does not serve as a pointcut;
  * a class-level annotation is nevertheless necessary to trigger method validation
  * for a specific bean to begin with. Can also be used as a meta-annotation on a
  * custom stereotype annotation or a custom group-specific validated annotation.
+ *
+ * 在方法级应用此注释允许覆盖特定方法的验证组，但不作为切入点;然而，类级注释对于触发特定bean的方法验证仍然是必要的。
+ * 也可以用作自定义原型注释或自定义特定于组的验证注释的元注释。
+ *
  *
  * @author Juergen Hoeller
  * @since 3.1
@@ -56,11 +68,17 @@ public @interface Validated {
 	/**
 	 * Specify one or more validation groups to apply to the validation step
 	 * kicked off by this annotation.
+	 * 指定一个或多个验证组，应用于由该注释启动的验证步骤。
+	 *
 	 * <p>JSR-303 defines validation groups as custom annotations which an application declares
 	 * for the sole purpose of using them as type-safe group arguments, as implemented in
 	 * {@link org.springframework.validation.beanvalidation.SpringValidatorAdapter}.
+	 * JSR-303将验证组定义为应用程序声明的自定义注释，其唯一目的是将它们用作类型安全的组参数，
+	 * 正如在{@link org.springframework.validation.beanvalidation.SpringValidatorAdapter}中实现的那样。
+	 *
 	 * <p>Other {@link org.springframework.validation.SmartValidator} implementations may
 	 * support class arguments in other ways as well.
+	 * <p>其他{@link org.springframework.validation。SmartValidator}实现也可以以其他方式支持类参数。
 	 */
 	Class<?>[] value() default {};
 

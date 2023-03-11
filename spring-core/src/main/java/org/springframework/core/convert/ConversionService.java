@@ -47,15 +47,27 @@ public interface ConversionService {
 
 	/**
 	 * Return {@code true} if objects of {@code sourceType} can be converted to the {@code targetType}.
+	 * 如果{@code sourceType}的对象可以转换为{@code targetType}，则返回{@code true}。
+	 *
 	 * The TypeDescriptors provide additional context about the source and target locations
 	 * where conversion would occur, often object fields or property locations.
+	 * TypeDescriptors提供了关于发生转换的源和目标位置的附加上下文，通常是对象字段或属性位置。
+	 *
 	 * <p>If this method returns {@code true}, it means {@link #convert(Object, TypeDescriptor, TypeDescriptor)}
 	 * is capable of converting an instance of {@code sourceType} to {@code targetType}.
+	 * 如果这个方法返回{@code true}，这意味着{@link #convert(Object, TypeDescriptor, TypeDescriptor)}能够将{@code sourceType}的实例转换为{@code targetType}。
+	 *
 	 * <p>Special note on collections, arrays, and maps types:
+	 * <p>关于集合、数组和映射类型的特殊说明:
+	 *
 	 * For conversion between collection, array, and map types, this method will return {@code true}
 	 * even though a convert invocation may still generate a {@link ConversionException} if the
 	 * underlying elements are not convertible. Callers are expected to handle this exceptional case
 	 * when working with collections and maps.
+	 * 对于集合、数组和映射类型之间的转换，此方法将返回{@code true}，即使转换调用仍然可能生成{@link ConversionException}(如果底层元素不能转换)。
+	 * 在使用集合和映射时，调用者应该处理这种异常情况。
+	 *
+	 *
 	 * @param sourceType context about the source type to convert from
 	 * (may be {@code null} if source is {@code null})
 	 * @param targetType context about the target type to convert to (required)

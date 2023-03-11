@@ -59,6 +59,7 @@ import org.springframework.util.StreamUtils;
 /**
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter}
  * that can read and write {@link Source} objects.
+ * 实现{@link org.springframework.http.converter.HttpMessageConverter}可以读写{@link Source}对象。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -94,6 +95,10 @@ public class SourceHttpMessageConverter<T extends Source> extends AbstractHttpMe
 	/**
 	 * Sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}
 	 * to {@code text/xml} and {@code application/xml}, and {@code application/*-xml}.
+	 *
+	 * 将{@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}设置为{@code text/xml}和{@code application/xml}
+	 * 和{@code application/*-xml}。
+	 *
 	 */
 	public SourceHttpMessageConverter() {
 		super(MediaType.APPLICATION_XML, MediaType.TEXT_XML, new MediaType("application", "*+xml"));

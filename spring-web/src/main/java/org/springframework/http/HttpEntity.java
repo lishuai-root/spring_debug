@@ -22,9 +22,11 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * Represents an HTTP request or response entity, consisting of headers and body.
+ * 表示HTTP请求或响应实体，由报头和正文组成。
  *
  * <p>Typically used in combination with the {@link org.springframework.web.client.RestTemplate},
  * like so:
+ * <p>通常与{@link org.springframework.web.client.RestTemplate 结合使用}，如下所示:
  * <pre class="code">
  * HttpHeaders headers = new HttpHeaders();
  * headers.setContentType(MediaType.TEXT_PLAIN);
@@ -38,6 +40,7 @@ import org.springframework.util.ObjectUtils;
  * MediaType contentType = entity.getHeaders().getContentType();
  * </pre>
  * Can also be used in Spring MVC, as a return value from a @Controller method:
+ * 也可以在Spring MVC中使用，作为@Controller方法的返回值:
  * <pre class="code">
  * &#64;RequestMapping("/handle")
  * public HttpEntity&lt;String&gt; handle() {
@@ -111,7 +114,7 @@ public class HttpEntity<T> {
 	}
 
 	/**
-	 * Returns the body of this entity.
+	 * Returns the body of this entity. 返回该实体的主体。
 	 */
 	@Nullable
 	public T getBody() {

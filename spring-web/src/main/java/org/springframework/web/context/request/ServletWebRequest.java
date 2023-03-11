@@ -213,7 +213,7 @@ public class ServletWebRequest extends ServletRequestAttributes implements Nativ
 			return this.notModified;
 		}
 
-		// Evaluate conditions in order of precedence.
+		// Evaluate conditions in order of precedence. 按优先级顺序计算条件。
 		// See https://tools.ietf.org/html/rfc7232#section-6
 
 		if (validateIfUnmodifiedSince(lastModifiedTimestamp)) {

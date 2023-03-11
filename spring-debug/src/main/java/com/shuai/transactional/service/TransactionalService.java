@@ -4,10 +4,13 @@ import com.shuai.transactional.dao.TransactionalDao;
 import com.shuai.transactional.exception.AException;
 import com.shuai.transactional.util.JDBCUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +27,20 @@ public class TransactionalService {
 	@Autowired
 	TransactionalDao transactionalDao;
 
+
+	@Autowired
+	DataSource dataSource;
+
 	public TransactionalDao getTransactionalDao() {
 		return transactionalDao;
 	}
 
 	public void setTransactionalDao(TransactionalDao transactionalDao) {
 		this.transactionalDao = transactionalDao;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
@@ -59,6 +70,18 @@ public class TransactionalService {
 	public void updateForTransactional_REQUIRED() throws Exception {
 		transactionalDao.updateForTransactional_REQUIRED(JDBCUtil.UPDATE_OK_SQL);
 		transactionalDao.updateForTransactional_REQUIRED(JDBCUtil.UPDATE_OK_SQL);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+	public void newConnectTest() {
+		Connection connection = DataSourceUtils.getConnection(dataSource);
+		System.out.println(connection);
+		connection = DataSourceUtils.getConnection(dataSource);
+		System.out.println(connection);
+		connection = DataSourceUtils.getConnection(dataSource);
+		System.out.println(connection);
+		connection = DataSourceUtils.getConnection(dataSource);
+		System.out.println(connection);
 	}
 
 }

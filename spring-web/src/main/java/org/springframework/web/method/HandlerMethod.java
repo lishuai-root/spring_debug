@@ -269,8 +269,11 @@ public class HandlerMethod {
 
 	/**
 	 * This method returns the type of the handler for this handler method.
+	 * 此方法返回此处理程序方法的处理程序类型。
+	 *
 	 * <p>Note that if the bean type is a CGLIB-generated class, the original
 	 * user-defined class is returned.
+	 * 注意，如果bean类型是cglib生成的类，则返回原始的用户定义类。
 	 */
 	public Class<?> getBeanType() {
 		return this.beanType;
@@ -339,8 +342,12 @@ public class HandlerMethod {
 	/**
 	 * Return a single annotation on the underlying method traversing its super methods
 	 * if no annotation can be found on the given method itself.
+	 * 如果在给定方法本身上找不到注释，则返回遍历其超方法的底层方法上的单个注释。
+	 *
 	 * <p>Also supports <em>merged</em> composed annotations with attribute
 	 * overrides as of Spring Framework 4.2.2.
+	 * 与Spring Framework 4.2.2一样，<p>还支持<em>合并<em>组合注解与属性覆盖。
+	 *
 	 * @param annotationType the type of annotation to introspect the method for
 	 * @return the annotation, or {@code null} if none found
 	 * @see AnnotatedElementUtils#findMergedAnnotation

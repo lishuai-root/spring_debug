@@ -31,27 +31,52 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Resolvers argument values of type {@link UriComponentsBuilder}.
+ * 解析类型为{@link UriComponentsBuilder}的参数值。
  *
  * <p>The returned instance is initialized via
  * {@link ServletUriComponentsBuilder#fromServletMapping(HttpServletRequest)}.
+ *返回的实例通过{@link ServletUriComponentsBuilder#fromServletMapping(HttpServletRequest)}初始化。
  *
  * @author Rossen Stoyanchev
  * @since 3.1
  */
 public class UriComponentsBuilderMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
+	/**
+	 * 处理参数类型为{@link UriComponentsBuilder}或者{@link ServletUriComponentsBuilder}类型的方法参数
+	 *
+	 * @param parameter the method parameter to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		Class<?> type = parameter.getParameterType();
 		return (UriComponentsBuilder.class == type || ServletUriComponentsBuilder.class == type);
 	}
 
+	/**
+	 * 创建请求组件构建器，包含客户端地址，端口等信息
+	 *
+	 * @param parameter the method parameter to resolve. This parameter must
+	 * have previously been passed to {@link #supportsParameter} which must
+	 * have returned {@code true}.
+	 * 要解析的方法参数。此参数之前必须传递给{@link #supportsParameter}，后者必须返回{@code true}。
+	 *
+	 * @param mavContainer the ModelAndViewContainer for the current request
+	 * @param webRequest the current request
+	 * @param binderFactory a factory for creating {@link org.springframework.web.bind.WebDataBinder} instances
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
 
 		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 		Assert.state(request != null, "No HttpServletRequest");
+		/**
+		 * 创建请求组件构建器，包含客户端地址，端口等信息
+		 */
 		return ServletUriComponentsBuilder.fromServletMapping(request);
 	}
 

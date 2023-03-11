@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 
 /**
  * Represents a server-side HTTP response.
+ * 表示服务器端HTTP响应。
  *
  * @author Arjen Poutsma
  * @since 3.0

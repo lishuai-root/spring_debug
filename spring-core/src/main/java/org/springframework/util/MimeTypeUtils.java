@@ -16,21 +16,13 @@
 
 package org.springframework.util;
 
+import org.springframework.lang.Nullable;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import org.springframework.lang.Nullable;
 
 /**
  * Miscellaneous {@link MimeType} utility methods.
@@ -396,6 +388,7 @@ public abstract class MimeTypeUtils {
 
 	/**
 	 * Generate a random MIME boundary as String, often used in multipart mime types.
+	 * 生成一个随机的MIME边界作为字符串，通常用于多部分MIME类型。
 	 */
 	public static String generateMultipartBoundaryString() {
 		return new String(generateMultipartBoundary(), StandardCharsets.US_ASCII);

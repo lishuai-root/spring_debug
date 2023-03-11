@@ -63,23 +63,37 @@ import java.util.concurrent.ConcurrentHashMap;
  * file paths which can be separated by any number of commas and spaces, e.g.
  * "WEB-INF/applicationContext1.xml, WEB-INF/applicationContext2.xml".
  * Ant-style path patterns are supported as well, e.g.
+ * <p>处理一个context-param并将其值传递给context实例，将其解析为可能的多个文件路径，这些路径可以用任意数量的逗号和空格分隔，
+ * 例如:“WEB-INFapplicationContext1.xml WEB-INF/applicationContext2.xml”。还支持蚂蚁风格的路径模式，例如:
+ *
  * "WEB-INF/*Context.xml,WEB-INF/spring*.xml" or "WEB-INF/&#42;&#42;/*Context.xml".
  * If not explicitly specified, the context implementation is supposed to use a
  * default location (with XmlWebApplicationContext: "/WEB-INF/applicationContext.xml").
+ * “WEB-INF/Context.xml,WEB-INF/spring.xml”或“WEB-INF&42;&42;/Context.xml”。
+ * 如果没有显式指定，上下文实现应该使用默认位置(使用Xml/WebApplicationContext: "WEB-INF/applicationContext.xml")。
+ *
  *
  * <p>Note: In case of multiple config locations, later bean definitions will
  * override ones defined in previously loaded files, at least when using one of
  * Spring's default ApplicationContext implementations. This can be leveraged
  * to deliberately override certain bean definitions via an extra XML file.
+ * 注意:在多个配置位置的情况下，以后的bean定义将覆盖先前加载的文件中定义的bean定义，
+ * 至少在使用Spring默认的ApplicationContext实现之一时是这样。可以利用这一点，通过额外的XML文件故意覆盖某些bean定义。
+ *
  *
  * <p>Above and beyond loading the root application context, this class can optionally
  * load or obtain and hook up a shared parent context to the root application context.
  * See the {@link #loadParentContext(ServletContext)} method for more information.
+ * 除了加载根应用程序上下文之外，该类还可以有选择地加载或获取共享的父上下文，并将其连接到根应用程序上下文。
+ * 更多信息请参见{@link #loadParentContext(ServletContext)}方法。
+ *
  *
  * <p>As of Spring 3.1, {@code ContextLoader} supports injecting the root web
  * application context via the {@link #ContextLoader(WebApplicationContext)}
  * constructor, allowing for programmatic configuration in Servlet 3.0+ environments.
  * See {@link org.springframework.web.WebApplicationInitializer} for usage examples.
+ *从Spring 3.1开始，{@code ContextLoader}支持通过{@link ContextLoader(WebApplicationContext)}构造函数注入根web应用程序上下文，
+ * 允许在Servlet 3.0+环境中进行编程配置。参见{@link org.springframework.web。WebApplicationInitializer}用于使用示例。
  *
  * @author Juergen Hoeller
  * @author Colin Sampaleanu
@@ -689,8 +703,12 @@ public class ContextLoader {
 
 	/**
 	 * Close Spring's web application context for the given servlet context.
+	 * 为给定的servlet上下文关闭Spring的web应用程序上下文。
+	 *
 	 * <p>If overriding {@link #loadParentContext(ServletContext)}, you may have
 	 * to override this method as well.
+	 * <p>如果覆盖{@link #loadParentContext(ServletContext)}，你可能也必须覆盖这个方法。
+	 *
 	 * @param servletContext the ServletContext that the WebApplicationContext runs in
 	 */
 	public void closeWebApplicationContext(ServletContext servletContext) {

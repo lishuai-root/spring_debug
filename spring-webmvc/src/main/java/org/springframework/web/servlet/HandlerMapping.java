@@ -155,9 +155,13 @@ public interface HandlerMapping {
 	 * Name of the {@link HttpServletRequest} attribute that contains a map with
 	 * URI variable names and a corresponding MultiValueMap of URI matrix
 	 * variables for each.
+	 * {@link HttpServletRequest}属性的名称，该属性包含一个包含URI变量名的映射，以及每个URI矩阵变量的对应MultiValueMap。
+	 *
 	 * <p>Note: This attribute is not required to be supported by all
 	 * HandlerMapping implementations and may also not be present depending on
 	 * whether the HandlerMapping is configured to keep matrix variable content
+	 *
+	 * 注意:此属性不要求所有HandlerMapping实现都支持，也可能不存在，这取决于HandlerMapping是否配置为保留矩阵变量内容
 	 */
 	String MATRIX_VARIABLES_ATTRIBUTE = HandlerMapping.class.getName() + ".matrixVariables";
 

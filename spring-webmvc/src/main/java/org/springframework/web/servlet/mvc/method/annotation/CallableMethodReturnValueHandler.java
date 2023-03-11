@@ -16,8 +16,6 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.util.concurrent.Callable;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -25,14 +23,23 @@ import org.springframework.web.context.request.async.WebAsyncUtils;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.concurrent.Callable;
+
 /**
  * Handles return values of type {@link Callable}.
+ * 处理类型为{@link Callable}的返回值。
  *
  * @author Rossen Stoyanchev
  * @since 3.2
  */
 public class CallableMethodReturnValueHandler implements HandlerMethodReturnValueHandler {
 
+	/**
+	 * 处理{@link Callable}类型的返回值
+	 *
+	 * @param returnType the method return type to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
 		return Callable.class.isAssignableFrom(returnType.getParameterType());
@@ -48,6 +55,9 @@ public class CallableMethodReturnValueHandler implements HandlerMethodReturnValu
 		}
 
 		Callable<?> callable = (Callable<?>) returnValue;
+		/**
+		 * 使用异步管理器异步指定任务
+		 */
 		WebAsyncUtils.getAsyncManager(webRequest).startCallableProcessing(callable, mavContainer);
 	}
 

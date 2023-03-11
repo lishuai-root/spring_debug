@@ -16,12 +16,6 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.MediaType;
@@ -32,16 +26,37 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.ControllerAdviceBean;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Invokes {@link RequestBodyAdvice} and {@link ResponseBodyAdvice} where each
  * instance may be (and is most likely) wrapped with
  * {@link org.springframework.web.method.ControllerAdviceBean ControllerAdviceBean}.
+ *
+ * 调用{@link RequestBodyAdvice}和{@link ResponseBodyAdvice}，
+ * 其中每个实例都可能(而且很可能)被{@link org.springframework.web.method.ControllerAdviceBean ControllerAdviceBean}包装。
+ *
  *
  * @author Rossen Stoyanchev
  * @since 4.2
  */
 class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyAdvice<Object> {
 
+	/**
+	 * {@link #requestBodyAdvice}和{@link #responseBodyAdvice}参数在实例化当前类时传入
+	 * 
+	 * {@link RequestMappingHandlerAdapter#afterPropertiesSet()}中调用{@link RequestMappingHandlerAdapter#getDefaultArgumentResolvers()}方法时，
+	 * 会创建{@link RequestResponseBodyMethodProcessor}实例，调用{@link RequestResponseBodyMethodProcessor#RequestResponseBodyMethodProcessor(List, List)}
+	 * 构造函数时会传入{@link RequestMappingHandlerAdapter#requestResponseBodyAdvice}参数，该参数缓存了全局实现了{@link RequestBodyAdvice}或{@link ResponseBodyAdvice}接口的实例
+	 * 最终在{@link AbstractMessageConverterMethodArgumentResolver#AbstractMessageConverterMethodArgumentResolver(List, List)}构造函数中创建当前实例，并初始化这两个属性
+	 *
+	 * {@link RequestMappingHandlerAdapter#requestResponseBodyAdvice}参数在{@link RequestMappingHandlerAdapter#afterPropertiesSet()}方法中调用
+	 * {@link RequestMappingHandlerAdapter#initControllerAdviceCache()}方法初始化
+	 */
 	private final List<Object> requestBodyAdvice = new ArrayList<>(4);
 
 	private final List<Object> responseBodyAdvice = new ArrayList<>(4);
@@ -50,6 +65,7 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 	/**
 	 * Create an instance from a list of objects that are either of type
 	 * {@code ControllerAdviceBean} or {@code RequestBodyAdvice}.
+	 * 从类型为{@code ControllerAdviceBean}或{@code RequestBodyAdvice}的对象列表中创建一个实例。
 	 */
 	public RequestResponseBodyAdviceChain(@Nullable List<Object> requestResponseBodyAdvice) {
 		this.requestBodyAdvice.addAll(getAdviceByType(requestResponseBodyAdvice, RequestBodyAdvice.class));
@@ -145,8 +161,19 @@ class RequestResponseBodyAdviceChain implements RequestBodyAdvice, ResponseBodyA
 		return body;
 	}
 
+	/**
+	 * 获取全局使用于方法参数类型的adviceType子类实例
+	 *
+	 * @param parameter
+	 * @param adviceType
+	 * @param <A>
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	private <A> List<A> getMatchingAdvice(MethodParameter parameter, Class<? extends A> adviceType) {
+		/**
+		 * 获取全局实现了adviceType类型的实例，adviceType类型只能是{@link RequestBodyAdvice}或者{@link ResponseBodyAdvice}
+		 */
 		List<Object> availableAdvice = getAdvice(adviceType);
 		if (CollectionUtils.isEmpty(availableAdvice)) {
 			return Collections.emptyList();

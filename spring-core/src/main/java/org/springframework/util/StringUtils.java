@@ -577,6 +577,8 @@ public abstract class StringUtils {
 	/**
 	 * Extract the filename extension from the given Java resource path,
 	 * e.g. "mypath/myfile.txt" -> "txt".
+	 * 从给定的Java资源路径提取文件名扩展名，例如:"mypath/myfile.txt" -> "txt"。
+	 *
 	 * @param path the file path (may be {@code null})
 	 * @return the extracted filename extension, or {@code null} if none
 	 */
@@ -741,11 +743,18 @@ public abstract class StringUtils {
 
 	/**
 	 * Decode the given encoded URI component value. Based on the following rules:
+	 * 解码给定的已编码URI组件值。基于以下规则:
 	 * <ul>
 	 * <li>Alphanumeric characters {@code "a"} through {@code "z"}, {@code "A"} through {@code "Z"},
 	 * and {@code "0"} through {@code "9"} stay the same.</li>
+	 * 字母数字字符{@code "a"}到{@code "z"}， {@code "A"}到{@code "Z"}，以及{@code "0"}到{@code "9"}保持不变
+	 *
 	 * <li>Special characters {@code "-"}, {@code "_"}, {@code "."}, and {@code "*"} stay the same.</li>
+	 * {@code 特殊字符“-”},{@code “_”},{@code "*"} {@code "."}保持不变。
+	 *
 	 * <li>A sequence "{@code %<i>xy</i>}" is interpreted as a hexadecimal representation of the character.</li>
+	 * 序列“{@code %<i>xy<i>}”被解释为字符的十六进制表示。
+	 *
 	 * </ul>
 	 * @param source the encoded String
 	 * @param charset the character set
@@ -1129,11 +1138,18 @@ public abstract class StringUtils {
 	/**
 	 * Tokenize the given {@code String} into a {@code String} array via a
 	 * {@link StringTokenizer}.
+	 * 通过{@link StringTokenizer}将给定的{@code String}标记成一个{@code String}数组。
+	 *
 	 * <p>Trims tokens and omits empty tokens.
+	 * <p>修剪令牌并省略空令牌。
+	 *
 	 * <p>The given {@code delimiters} string can consist of any number of
 	 * delimiter characters. Each of those characters can be used to separate
 	 * tokens. A delimiter is always a single character; for multi-character
 	 * delimiters, consider using {@link #delimitedListToStringArray}.
+	 * <p>给定的{@code 分隔符}字符串可以由任意数量的分隔符字符组成。
+	 * 每一个字符都可以用来分隔令牌。分隔符总是一个字符;对于多字符分隔符，考虑使用{@link #delimitedListToStringArray}。
+	 *
 	 * @param str the {@code String} to tokenize (potentially {@code null} or empty)
 	 * @param delimiters the delimiter characters, assembled as a {@code String}
 	 * (each of the characters is individually considered as a delimiter)
@@ -1149,6 +1165,8 @@ public abstract class StringUtils {
 	/**
 	 * Tokenize the given {@code String} into a {@code String} array via a
 	 * {@link StringTokenizer}.
+	 * 通过{@link StringTokenizer}将给定的{@code String}标记成一个{@code String}数组。
+	 *
 	 * <p>The given {@code delimiters} string can consist of any number of
 	 * delimiter characters. Each of those characters can be used to separate
 	 * tokens. A delimiter is always a single character; for multi-character

@@ -31,6 +31,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.i18n.LocaleContext;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.annotation.Order;
@@ -55,6 +56,7 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.util.NestedServletException;
 import org.springframework.web.util.ServletRequestPathUtils;
 import org.springframework.web.util.WebUtils;
+import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.util.*;
@@ -351,7 +353,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	@Nullable
 	private List<HandlerAdapter> handlerAdapters;
 
-	/** List of HandlerExceptionResolvers used by this servlet. */
+	/** List of HandlerExceptionResolvers used by this servlet.
+	 * 这个servlet使用的HandlerExceptionResolvers的列表。
+	 * */
 	@Nullable
 	private List<HandlerExceptionResolver> handlerExceptionResolvers;
 
@@ -359,7 +363,12 @@ public class DispatcherServlet extends FrameworkServlet {
 	@Nullable
 	private RequestToViewNameTranslator viewNameTranslator;
 
-	/** FlashMapManager used by this servlet. 这个servlet使用的FlashMapManager。 */
+	/** FlashMapManager used by this servlet. 这个servlet使用的FlashMapManager。
+	 *
+	 * {@link #flashMapManager}在刷新容器时，通过事件回调调用{@link #onApplicationEvent(ContextRefreshedEvent)}初始化，
+	 * 最终调用{@link #initFlashMapManager(ApplicationContext)}方法初始化
+	 * 最终指向{@link org.springframework.web.servlet.support.SessionFlashMapManager}实例
+	 * */
 	@Nullable
 	private FlashMapManager flashMapManager;
 
@@ -754,6 +763,10 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
+	 * 在解析<mvc:annotation-driven></mvc:annotation-driven>标签时，在{@link org.springframework.web.servlet.config.AnnotationDrivenBeanDefinitionParser#parse(Element, ParserContext)}
+	 * 方法中通过{@link org.springframework.beans.factory.support.BeanDefinitionRegistry#registerBeanDefinition(String, BeanDefinition)}方法注入
+	 * 注入时指定了部分属性值
+	 *
 	 * Initialize the HandlerAdapters used by this class.
 	 * 初始化该类使用的HandlerAdapters。
 	 *
@@ -1217,6 +1230,10 @@ public class DispatcherServlet extends FrameworkServlet {
 		 */
 		request.setAttribute(THEME_SOURCE_ATTRIBUTE, getThemeSource());
 
+		/**
+		 * {@link #flashMapManager}在刷新容器时，通过事件回调调用{@link #onApplicationEvent(ContextRefreshedEvent)}初始化，
+		 * 最终指向{@link org.springframework.web.servlet.support.SessionFlashMapManager}实例
+		 */
 		if (this.flashMapManager != null) {
 			/**
 			 * 获取当前请求已经存在的{@link FlashMap}，如果由多个，则通过{@link FlashMap#compareTo(FlashMap)}排序，取第一个
@@ -1448,16 +1465,31 @@ public class DispatcherServlet extends FrameworkServlet {
 				 */
 				dispatchException = new NestedServletException("Handler dispatch failed", err);
 			}
+
+			/**
+			 * 1. 处理请求处理过程中产生的异常
+			 * 2. 渲染视图
+			 * 3. 调用{@link HandlerInterceptor#afterCompletion(HttpServletRequest, HttpServletResponse, Object, Exception)}方法
+			 */
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
+			/**
+			 * 异常时调用{@link HandlerInterceptor#afterCompletion(HttpServletRequest, HttpServletResponse, Object, Exception)}
+			 */
 			triggerAfterCompletion(processedRequest, response, mappedHandler, ex);
 		}
 		catch (Throwable err) {
+			/**
+			 * 异常时调用{@link HandlerInterceptor#afterCompletion(HttpServletRequest, HttpServletResponse, Object, Exception)}
+			 */
 			triggerAfterCompletion(processedRequest, response, mappedHandler,
 					new NestedServletException("Handler processing failed", err));
 		}
 		finally {
+			/**
+			 * 如果是异步请求，且已启动
+			 */
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				// Instead of postHandle and afterCompletion
 				/**
@@ -1497,6 +1529,10 @@ public class DispatcherServlet extends FrameworkServlet {
 	}
 
 	/**
+	 * 1. 处理请求处理过程中产生的异常
+	 * 2. 渲染视图
+	 * 3. 调用{@link HandlerInterceptor#afterCompletion(HttpServletRequest, HttpServletResponse, Object, Exception)}方法
+	 *
 	 * Handle the result of handler selection and handler invocation, which is
 	 * either a ModelAndView or an Exception to be resolved to a ModelAndView.
 	 *
@@ -1508,11 +1544,17 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		boolean errorView = false;
 
+		/**
+		 * 如果请求处理过程中有异常抛出则处理异常
+		 */
 		if (exception != null) {
 			if (exception instanceof ModelAndViewDefiningException) {
 				logger.debug("ModelAndViewDefiningException encountered", exception);
 				mv = ((ModelAndViewDefiningException) exception).getModelAndView();
 			}
+			/**
+			 * 通过异常处理器处理异常，并产生{@link ModelAndView}对象
+			 */
 			else {
 				Object handler = (mappedHandler != null ? mappedHandler.getHandler() : null);
 				mv = processHandlerException(request, response, handler, exception);
@@ -1521,7 +1563,13 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 
 		// Did the handler return a view to render?
+		/**
+		 * 处理程序是否返回要渲染的视图?
+		 */
 		if (mv != null && !mv.wasCleared()) {
+			/**
+			 * 视图渲染
+			 */
 			render(mv, request, response);
 			if (errorView) {
 				WebUtils.clearErrorRequestAttributes(request);
@@ -1535,11 +1583,16 @@ public class DispatcherServlet extends FrameworkServlet {
 
 		if (WebAsyncUtils.getAsyncManager(request).isConcurrentHandlingStarted()) {
 			// Concurrent handling started during a forward
+			// 并发处理在转发期间启动
 			return;
 		}
 
 		if (mappedHandler != null) {
 			// Exception (if any) is already handled..
+			/**
+			 * 异常(如果有)已经处理...
+			 * 调用{@link HandlerInterceptor#afterCompletion(HttpServletRequest, HttpServletResponse, Object, Exception)}方法
+			 */
 			mappedHandler.triggerAfterCompletion(request, response, null);
 		}
 	}
@@ -1738,6 +1791,8 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Determine an error ModelAndView via the registered HandlerExceptionResolvers.
+	 * 通过注册的HandlerExceptionResolvers确定错误ModelAndView。
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @param handler the executed handler, or {@code null} if none chosen at the time of the exception
@@ -1751,10 +1806,20 @@ public class DispatcherServlet extends FrameworkServlet {
 			@Nullable Object handler, Exception ex) throws Exception {
 
 		// Success and error responses may use different content types
+		/**
+		 * 成功响应和错误响应可能使用不同的内容类型
+		 * 移除支持的媒体类型
+		 */
 		request.removeAttribute(HandlerMapping.PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE);
 
 		// Check registered HandlerExceptionResolvers...
+		/**
+		 * 检查已注册的HandlerExceptionResolvers...
+		 */
 		ModelAndView exMv = null;
+		/**
+		 * 尝试使用已注册的异常处理器处理请求处理过程中产生的错误
+		 */
 		if (this.handlerExceptionResolvers != null) {
 			for (HandlerExceptionResolver resolver : this.handlerExceptionResolvers) {
 				exMv = resolver.resolveException(request, response, handler, ex);
@@ -1769,6 +1834,9 @@ public class DispatcherServlet extends FrameworkServlet {
 				return null;
 			}
 			// We might still need view name translation for a plain error model...
+			/**
+			 * 对于一个简单的错误模型，我们可能仍然需要视图名转换……
+			 */
 			if (!exMv.hasView()) {
 				String defaultViewName = getDefaultViewName(request);
 				if (defaultViewName != null) {
@@ -1781,16 +1849,26 @@ public class DispatcherServlet extends FrameworkServlet {
 			else if (logger.isDebugEnabled()) {
 				logger.debug("Using resolved error view: " + exMv);
 			}
+			/**
+			 * 设置错误属性
+			 */
 			WebUtils.exposeErrorRequestAttributes(request, ex, getServletName());
 			return exMv;
 		}
 
+		/**
+		 * 如果错误无法被处理，抛出异常
+		 */
 		throw ex;
 	}
 
 	/**
 	 * Render the given ModelAndView.
+	 * 呈现给定的ModelAndView。
+	 *
 	 * <p>This is the last stage in handling a request. It may involve resolving the view by name.
+	 * <p>这是处理请求的最后阶段。它可能涉及通过名称解析视图。
+	 *
 	 * @param mv the ModelAndView to render
 	 * @param request current HTTP servlet request
 	 * @param response current HTTP servlet response
@@ -1799,6 +1877,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	protected void render(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// Determine locale for request and apply it to the response.
+		/**
+		 * 确定请求的区域设置并将其应用于响应。
+		 */
 		Locale locale =
 				(this.localeResolver != null ? this.localeResolver.resolveLocale(request) : request.getLocale());
 		response.setLocale(locale);
@@ -1807,6 +1888,9 @@ public class DispatcherServlet extends FrameworkServlet {
 		String viewName = mv.getViewName();
 		if (viewName != null) {
 			// We need to resolve the view name.
+			/**
+			 * 我们需要解析视图名称。
+			 */
 			view = resolveViewName(viewName, mv.getModelInternal(), locale, request);
 			if (view == null) {
 				throw new ServletException("Could not resolve view with name '" + mv.getViewName() +
@@ -1815,6 +1899,9 @@ public class DispatcherServlet extends FrameworkServlet {
 		}
 		else {
 			// No need to lookup: the ModelAndView object contains the actual View object.
+			/**
+			 * 不需要查找:ModelAndView对象包含实际的View对象。
+			 */
 			view = mv.getView();
 			if (view == null) {
 				throw new ServletException("ModelAndView [" + mv + "] neither contains a view name nor a " +
@@ -1853,9 +1940,13 @@ public class DispatcherServlet extends FrameworkServlet {
 
 	/**
 	 * Resolve the given view name into a View object (to be rendered).
+	 * 将给定的视图名称解析为一个view对象(要呈现)。
+	 *
 	 * <p>The default implementations asks all ViewResolvers of this dispatcher.
 	 * Can be overridden for custom resolution strategies, potentially based on
 	 * specific model attributes or request parameters.
+	 * 默认实现询问该dispatcher的所有ViewResolvers。可以根据特定的模型属性或请求参数覆盖自定义解析策略。
+	 *
 	 * @param viewName the name of the view to resolve
 	 * @param model the model to be passed to the view
 	 * @param locale the current locale

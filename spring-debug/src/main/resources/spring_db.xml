@@ -28,6 +28,7 @@
 	</bean>
 	<bean id="transactionalService" class="com.shuai.transactional.service.TransactionalService">
 		<property name="transactionalDao" ref="transactionalDao"/>
+		<property name="dataSource" ref="datasource"/>
 	</bean>
 	<bean id="transactionalDao" class="com.shuai.transactional.dao.TransactionalDao">
 		<property name="template" ref="jdbcTemplate"/>

@@ -16,11 +16,8 @@
 
 package org.springframework.web.servlet.mvc.annotation;
 
-import java.io.IOException;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -32,20 +29,31 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
+import java.io.IOException;
+
 /**
  * A {@link org.springframework.web.servlet.HandlerExceptionResolver
  * HandlerExceptionResolver} that uses the {@link ResponseStatus @ResponseStatus}
  * annotation to map exceptions to HTTP status codes.
+ * 一个{@link org.springframework.web.servlet.HandlerExceptionResolver HandlerExceptionResolver}，
+ * 它使用{@link ResponseStatus @ResponseStatus}注释将异常映射到HTTP状态代码。
+ *
  *
  * <p>This exception resolver is enabled by default in the
  * {@link org.springframework.web.servlet.DispatcherServlet DispatcherServlet}
  * and the MVC Java config and the MVC namespace.
+ * 这个异常解析器默认在{@link org.springframework.web.servlet.DispatcherServlet}和MVC Java配置和MVC命名空间中启用。
+ *
  *
  * <p>As of 4.2 this resolver also looks recursively for {@code @ResponseStatus}
  * present on cause exceptions, and as of 4.2.2 this resolver supports
  * attribute overrides for {@code @ResponseStatus} in custom composed annotations.
+ * 从4.2开始，这个解析器还递归地查找在原因异常时出现的{@code @ResponseStatus}，
+ * 从4.2.2开始，这个解析器支持自定义组合注释中{@code @ResponseStatus}的属性重写。
+ *
  *
  * <p>As of 5.0 this resolver also supports {@link ResponseStatusException}.
+ * 从5.0开始，这个解析器还支持{@link ResponseStatusException}。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -66,6 +74,16 @@ public class ResponseStatusExceptionResolver extends AbstractHandlerExceptionRes
 	}
 
 
+	/**
+	 * 根据{@link ResponseStatus}注解标注的状态将状态码和错误提示写入响应体
+	 *
+	 * @param request current HTTP request
+	 * @param response current HTTP response
+	 * @param handler the executed handler, or {@code null} if none chosen at the time
+	 * of the exception (for example, if multipart resolution failed)
+	 * @param ex the exception that got thrown during handler execution
+	 * @return
+	 */
 	@Override
 	@Nullable
 	protected ModelAndView doResolveException(
@@ -95,8 +113,12 @@ public class ResponseStatusExceptionResolver extends AbstractHandlerExceptionRes
 
 	/**
 	 * Template method that handles the {@link ResponseStatus @ResponseStatus} annotation.
+	 * 处理{@link ResponseStatus @ResponseStatus}注释的模板方法。
+	 *
 	 * <p>The default implementation delegates to {@link #applyStatusAndReason}
 	 * with the status code and reason from the annotation.
+	 * 默认实现委托{@link #applyStatusAndReason}使用注释中的状态代码和原因。
+	 *
 	 * @param responseStatus the {@code @ResponseStatus} annotation
 	 * @param request current HTTP request
 	 * @param response current HTTP response
@@ -115,10 +137,15 @@ public class ResponseStatusExceptionResolver extends AbstractHandlerExceptionRes
 
 	/**
 	 * Template method that handles an {@link ResponseStatusException}.
+	 * 处理{@link ResponseStatusException}的模板方法。
+	 *
 	 * <p>The default implementation applies the headers from
 	 * {@link ResponseStatusException#getResponseHeaders()} and delegates to
 	 * {@link #applyStatusAndReason} with the status code and reason from the
 	 * exception.
+	 * 默认实现应用{@link ResponseStatusException#getResponseHeaders()}中的标头，
+	 * 并将异常的状态代码和原因委托给{@link #applyStatusAndReason}。
+	 *
 	 * @param ex the exception
 	 * @param request current HTTP request
 	 * @param response current HTTP response
@@ -138,10 +165,14 @@ public class ResponseStatusExceptionResolver extends AbstractHandlerExceptionRes
 
 	/**
 	 * Apply the resolved status code and reason to the response.
+	 * 将已解析的状态代码和原因应用到响应。
+	 *
 	 * <p>The default implementation sends a response error using
 	 * {@link HttpServletResponse#sendError(int)} or
 	 * {@link HttpServletResponse#sendError(int, String)} if there is a reason
 	 * and then returns an empty ModelAndView.
+	 * 如果有原因，默认实现会使用{@link HttpServletResponse#sendError(int)}或{@link HttpServletResponse#sendError(int, String)}发送一个响应错误，然后返回一个空ModelAndView。
+	 *
 	 * @param statusCode the HTTP status code
 	 * @param reason the associated reason (may be {@code null} or empty)
 	 * @param response current HTTP response

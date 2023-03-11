@@ -1075,6 +1075,8 @@ public abstract class ClassUtils {
 	/**
 	 * Return the short string name of a Java class in uncapitalized JavaBeans
 	 * property format. Strips the outer class name in case of a nested class.
+	 * 以不大写的JavaBeans属性格式返回Java类的短字符串名称。如果是嵌套类，则去掉外层类名。
+	 *
 	 * @param clazz the class
 	 * @return the short name rendered in a standard JavaBeans property format
 	 * @see java.beans.Introspector#decapitalize(String)

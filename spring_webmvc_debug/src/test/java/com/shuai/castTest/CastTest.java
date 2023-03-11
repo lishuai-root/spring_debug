@@ -17,7 +17,7 @@ import java.lang.reflect.Parameter;
 public class CastTest {
 
 	public static void main(String[] args) throws NoSuchMethodException {
-		Method method = People.class.getDeclaredMethod("testName", new Class<?>[]{String.class, int.class});
+		Method method = People.class.getDeclaredMethod("testName", String.class, int.class);
 		Parameter[] parameters = method.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			MethodParameter methodParameter = new MethodParameter(method, i);

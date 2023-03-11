@@ -84,6 +84,8 @@ class DeferredResultInterceptorChain {
 
 	/**
 	 * Determine if further error handling should be bypassed.
+	 * 确定是否应该绕过进一步的错误处理。
+	 *
 	 * @return {@code true} to continue error handling, or false to bypass any further
 	 * error handling
 	 */

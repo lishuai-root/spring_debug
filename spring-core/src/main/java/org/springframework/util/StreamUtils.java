@@ -16,20 +16,10 @@
 
 package org.springframework.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FilterInputStream;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.nio.charset.Charset;
-
 import org.springframework.lang.Nullable;
+
+import java.io.*;
+import java.nio.charset.Charset;
 
 /**
  * Simple utility methods for dealing with streams. The copy methods of this class are
@@ -48,6 +38,7 @@ public abstract class StreamUtils {
 
 	/**
 	 * The default buffer size used when copying bytes.
+	 * 复制字节时使用的默认缓冲区大小。
 	 */
 	public static final int BUFFER_SIZE = 4096;
 
@@ -73,7 +64,11 @@ public abstract class StreamUtils {
 
 	/**
 	 * Copy the contents of the given InputStream into a String.
+	 * 将给定的InputStream的内容复制到String中。
+	 *
 	 * <p>Leaves the stream open when done.
+	 * <p>当完成时，使流打开。
+	 *
 	 * @param in the InputStream to copy from (may be {@code null} or empty)
 	 * @param charset the {@link Charset} to use to decode the bytes
 	 * @return the String that has been copied to (possibly empty)
@@ -173,9 +168,15 @@ public abstract class StreamUtils {
 
 	/**
 	 * Copy a range of content of the given InputStream to the given OutputStream.
+	 * 将给定InputStream的内容范围复制到给定OutputStream。
+	 *
 	 * <p>If the specified range exceeds the length of the InputStream, this copies
 	 * up to the end of the stream and returns the actual number of copied bytes.
+	 * <p>如果指定的范围超过了InputStream的长度，将复制到流的末尾，并返回实际复制的字节数。
+	 *
 	 * <p>Leaves both streams open when done.
+	 * <p>当完成时，打开两个流。
+	 *
 	 * @param in the InputStream to copy from
 	 * @param out the OutputStream to copy to
 	 * @param start the position to start copying from

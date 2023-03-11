@@ -38,6 +38,9 @@ import org.springframework.web.servlet.ModelAndView;
  * HTTP requests throughout the lifecycle of an application. To be able to
  * configure a Controller easily, Controller implementations are encouraged
  * to be (and usually are) JavaBeans.
+ * Controller接口的任何实现都应该是一个<i>可重用的、线程安全的<i>类，能够在应用程序的整个生命周期中处理多个HTTP请求。
+ * 为了能够轻松地配置控制器，鼓励控制器实现是(并且通常是)javabean。
+ *
  *
  * <h3><a name="workflow">Workflow</a></h3>
  *
@@ -45,15 +48,22 @@ import org.springframework.web.servlet.ModelAndView;
  * done its work to resolve locales, themes, and suchlike, it then tries
  * to resolve a Controller, using a
  * {@link org.springframework.web.servlet.HandlerMapping HandlerMapping}.
+ * 在一个{@code DispatcherServlet}接收到一个请求并完成了它的工作来解析区域设置、主题等，然后它尝试解析一个控制器，
+ * 使用{@link org.springframework.web.servlet.HandlerMapping HandlerMapping}。
+ *
  * When a Controller has been found to handle the request, the
  * {@link #handleRequest(HttpServletRequest, HttpServletResponse) handleRequest}
  * method of the located Controller will be invoked; the located Controller
  * is then responsible for handling the actual request and &mdash; if applicable
  * &mdash; returning an appropriate
  * {@link org.springframework.web.servlet.ModelAndView ModelAndView}.
+ * 当找到一个控制器来处理请求时，所定位控制器的{@link #handleRequest(HttpServletRequest, HttpServletResponse) handleRequest}方法将被调用;
+ * 被定位的控制器然后负责处理实际的请求和&mdash;如果适用&mdash;返回适当的{@link org.springframework.web.servlet.ModelAndView ModelAndView}。
+ *
  * So actually, this method is the main entry point for the
  * {@link org.springframework.web.servlet.DispatcherServlet DispatcherServlet}
  * which delegates requests to controllers.
+ * 实际上，这个方法是将请求委托给控制器的{@link org.springframework.web.servlet.DispatcherServlet}的主要入口点。
  *
  * <p>So basically any <i>direct</i> implementation of the {@code Controller} interface
  * just handles HttpServletRequests and should return a ModelAndView, to be further
@@ -61,15 +71,24 @@ import org.springframework.web.servlet.ModelAndView;
  * optional validation, form handling, etc. should be obtained through extending
  * {@link org.springframework.web.servlet.mvc.AbstractController AbstractController}
  * or one of its subclasses.
+ * 所以基本上任何<i>直接<i>实现的{@code Controller}接口只处理HttpServletRequests，并且应该返回一个ModelAndView，
+ * 由DispatcherServlet进一步解释。任何额外的功能，如可选验证、表单处理等，都应该通过扩展{@link org.springframework.web.servlet.mvc.AbstractController AbstractController}或它的一个子类来获得。
+ *
  *
  * <h3>Notes on design and testing</h3>
+ * <h3>设计和测试说明<h3>
  *
  * <p>The Controller interface is explicitly designed to operate on HttpServletRequest
  * and HttpServletResponse objects, just like an HttpServlet. It does not aim to
  * decouple itself from the Servlet API, in contrast to, for example, WebWork, JSF or Tapestry.
+ * Controller接口被显式设计为操作HttpServletRequest和HttpServletResponse对象，就像HttpServlet一样。
+ * 与WebWork、JSF或Tapestry相反，它的目标不是将自身与Servlet API分离。
+ *
  * Instead, the full power of the Servlet API is available, allowing Controllers to be
  * general-purpose: a Controller is able to not only handle web user interface
  * requests but also to process remoting protocols or to generate reports on demand.
+ * 相反，Servlet API的全部功能是可用的，允许控制器是通用的:控制器不仅能够处理web用户界面请求，还能够处理远程协议或按需生成报告。
+ *
  *
  * <p>Controllers can easily be tested by passing in mock objects for the
  * HttpServletRequest and HttpServletResponse objects as parameters to the
@@ -79,10 +98,16 @@ import org.springframework.web.servlet.ModelAndView;
  * suitable for testing Spring web controllers. In contrast to a Struts Action,
  * there is no need to mock the ActionServlet or any other infrastructure;
  * mocking HttpServletRequest and HttpServletResponse is sufficient.
+ * 通过将HttpServletRequest和HttpServletResponse对象的模拟对象作为参数传递给{@link #handleRequest(HttpServletRequest, HttpServletResponse) handleRequest}方法，
+ * 可以很容易地测试控制器。为了方便起见，Spring附带了一组Servlet API模拟，适合测试任何类型的web组件，但特别适合测试Spring web控制器。
+ * 与Struts Action相反，不需要模拟ActionServlet或任何其他基础结构;模仿HttpServletRequest和HttpServletResponse就足够了。
+ *
  *
  * <p>If Controllers need to be aware of specific environment references, they can
  * choose to implement specific awareness interfaces, just like any other bean in a
  * Spring (web) application context can do, for example:
+ * 如果控制器需要感知特定的环境引用，他们可以选择实现特定的感知接口，就像Spring (web)应用程序上下文中的任何其他bean一样，例如:
+ *
  * <ul>
  * <li>{@code org.springframework.context.ApplicationContextAware}</li>
  * <li>{@code org.springframework.context.ResourceLoaderAware}</li>
@@ -91,15 +116,23 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * <p>Such environment references can easily be passed in testing environments,
  * through the corresponding setters defined in the respective awareness interfaces.
+ * 这样的环境引用可以很容易地通过在各自的感知接口中定义的相应setter在测试环境中传递。
+ *
  * In general, it is recommended to keep the dependencies as minimal as possible:
  * for example, if all you need is resource loading, implement ResourceLoaderAware only.
+ * 一般来说，建议尽可能减少依赖关系:例如，如果您所需要的只是资源加载，那么只实现ResourceLoaderAware。
+ *
  * Alternatively, derive from the WebApplicationObjectSupport base class, which gives
  * you all those references through convenient accessors but requires an
  * ApplicationContext reference on initialization.
+ * 或者，派生自WebApplicationObjectSupport基类，它通过方便的访问器提供所有这些引用，但在初始化时需要一个ApplicationContext引用。
+ *
  *
  * <p>Controllers can use the {@code checkNotModified} methods on
  * {@link org.springframework.web.context.request.WebRequest} for HTTP caching
  * support.
+ * 控制器可以在{@link org.springframework.web.context.request.WebRequest}上使用{@code checkNotModified}用于HTTP缓存支持。
+ *
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -120,6 +153,9 @@ public interface Controller {
 	 * will render. A {@code null} return value is not an error: it indicates that
 	 * this object completed request processing itself and that there is therefore no
 	 * ModelAndView to render.
+	 * 处理请求并返回DispatcherServlet将呈现的ModelAndView对象。
+	 * {@code null}返回值不是错误:它表明该对象本身完成了请求处理，因此没有ModelAndView要呈现。
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 * @return a ModelAndView to render, or {@code null} if handled directly

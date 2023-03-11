@@ -30,6 +30,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -51,11 +52,19 @@ import java.util.concurrent.Callable;
  * also supports setting the response status based on a method-level
  * {@code @ResponseStatus} annotation.
  *
+ * 扩展{@link InvocableHandlerMethod}，使其能够通过注册的{@link HandlerMethodReturnValueHandler}处理返回值，
+ * 还支持基于方法级{@code @ResponseStatus}注释设置响应状态。
+ *
+ *
  * <p>A {@code null} return value (including void) may be interpreted as the
  * end of request processing in combination with a {@code @ResponseStatus}
  * annotation, a not-modified check condition
  * (see {@link ServletWebRequest#checkNotModified(long)}), or
  * a method argument that provides access to the response stream.
+ *
+ * {@code null}返回值(包括void)可以被解释为请求处理的结束，并结合{@code @ResponseStatus}注释，
+ * 未修改的检查条件(参见{@link ServletWebRequest#checkNotModified(long)})，或提供访问响应流的方法参数。
+ *
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -125,6 +134,9 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 		 */
 		setResponseStatus(webRequest);
 
+		/**
+		 * 如果处理程序的返回值为null，标记请求已经被处理程序完全处理
+		 */
 		if (returnValue == null) {
 			if (isRequestNotModified(webRequest) || getResponseStatus() != null || mavContainer.isRequestHandled()) {
 				disableContentCachingIfNecessary(webRequest);
@@ -132,6 +144,9 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 				return;
 			}
 		}
+		/**
+		 * 返回值不为null，且设置了{@link ResponseStatus#reason()} ，这时请求处理完成并返回
+		 */
 		else if (StringUtils.hasText(getResponseStatusReason())) {
 			mavContainer.setRequestHandled(true);
 			return;
@@ -139,6 +154,10 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 
 		mavContainer.setRequestHandled(false);
 		Assert.state(this.returnValueHandlers != null, "No return value handlers");
+		/**
+		 * 解析处理程序返回值
+		 * {@link HandlerMethodReturnValueHandlerComposite#handleReturnValue(Object, MethodParameter, ModelAndViewContainer, NativeWebRequest)}
+		 */
 		try {
 			this.returnValueHandlers.handleReturnValue(
 					returnValue, getReturnValueType(returnValue), mavContainer, webRequest);
@@ -192,6 +211,11 @@ public class ServletInvocableHandlerMethod extends InvocableHandlerMethod {
 		return webRequest.isNotModified();
 	}
 
+	/**
+	 * 必要时禁用内容缓存
+	 * 
+	 * @param webRequest
+	 */
 	private void disableContentCachingIfNecessary(ServletWebRequest webRequest) {
 		if (isRequestNotModified(webRequest)) {
 			HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);

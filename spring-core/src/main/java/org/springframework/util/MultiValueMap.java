@@ -42,6 +42,8 @@ public interface MultiValueMap<K, V> extends Map<K, List<V>> {
 
 	/**
 	 * Add the given single value to the current list of values for the given key.
+	 * 将给定的单个值添加到给定键的当前值列表中。
+	 *
 	 * @param key the key
 	 * @param value the value to be added
 	 */
@@ -90,6 +92,8 @@ public interface MultiValueMap<K, V> extends Map<K, List<V>> {
 
 	/**
 	 * Return a {@code Map} with the first values contained in this {@code MultiValueMap}.
+	 * 返回一个{@code Map}，其中包含{@code MultiValueMap}中的第一个值。
+	 *
 	 * @return a single value representation of this map
 	 */
 	Map<K, V> toSingleValueMap();

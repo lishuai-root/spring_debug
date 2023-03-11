@@ -16,14 +16,15 @@
 
 package org.springframework.core;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 /**
  * A common delegate for detecting Kotlin's presence and for identifying Kotlin types.
+ * 一个用于检测Kotlin存在和识别Kotlin类型的通用委托。
  *
  * @author Juergen Hoeller
  * @author Sebastien Deleuze
@@ -44,7 +45,7 @@ public abstract class KotlinDetector {
 			metadata = ClassUtils.forName("kotlin.Metadata", classLoader);
 		}
 		catch (ClassNotFoundException ex) {
-			// Kotlin API not available - no Kotlin support
+			// Kotlin API not available - no Kotlin support Kotlin API不可用-没有Kotlin支持
 			metadata = null;
 		}
 		kotlinMetadata = (Class<? extends Annotation>) metadata;
@@ -54,6 +55,7 @@ public abstract class KotlinDetector {
 
 	/**
 	 * Determine whether Kotlin is present in general.
+	 * 确定Kotlin是否在场。
 	 */
 	public static boolean isKotlinPresent() {
 		return (kotlinMetadata != null);

@@ -46,6 +46,9 @@ public interface DeferredResultProcessingInterceptor {
 	 * Invoked immediately before the start of concurrent handling, in the same
 	 * thread that started it. This method may be used to capture state just prior
 	 * to the start of concurrent processing with the given {@code DeferredResult}.
+	 *
+	 * 在并发处理开始之前，在启动并发处理的同一个线程中立即调用。这个方法可以用给定的{@code DeferredResult}捕获并发处理开始之前的状态。
+	 *
 	 * @param request the current request
 	 * @param deferredResult the DeferredResult for the current request
 	 * @throws Exception in case of errors
@@ -128,6 +131,9 @@ public interface DeferredResultProcessingInterceptor {
 	 * Invoked from a container thread when an async request completed for any
 	 * reason including timeout and network error. This method is useful for
 	 * detecting that a {@code DeferredResult} instance is no longer usable.
+	 *
+	 * 当异步请求因任何原因(包括超时和网络错误)完成时，从容器线程调用。此方法用于检测{@code DeferredResult}实例不再可用。
+	 *
 	 * @param request the current request
 	 * @param deferredResult the DeferredResult for the current request
 	 * @throws Exception in case of errors

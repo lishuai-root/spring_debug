@@ -259,6 +259,7 @@ public class MethodParameter {
 
 	/**
 	 * Return the class that declares the underlying Method or Constructor.
+	 * 返回声明底层方法或构造函数的类。
 	 */
 	public Class<?> getDeclaringClass() {
 		return this.executable.getDeclaringClass();
@@ -522,6 +523,8 @@ public class MethodParameter {
 
 	/**
 	 * Return the containing class for this method parameter.
+	 * 返回此方法参数的包含类。
+	 *
 	 * @return a specific containing class (potentially a subclass of the
 	 * declaring class), or otherwise simply the declaring class itself
 	 * @see #getDeclaringClass()
@@ -771,6 +774,7 @@ public class MethodParameter {
 
 	/**
 	 * Return the annotations associated with the specific method/constructor parameter.
+	 * 返回与特定method/constructor参数关联的注释。
 	 */
 	public Annotation[] getParameterAnnotations() {
 		Annotation[] paramAnns = this.parameterAnnotations;
@@ -782,6 +786,9 @@ public class MethodParameter {
 					annotationArray.length == this.executable.getParameterCount() - 1) {
 				// Bug in javac in JDK <9: annotation array excludes enclosing instance parameter
 				// for inner classes, so access it with the actual parameter index lowered by 1
+				/**
+				 * javac在JDK < 9中的错误:注释数组排除了内部类的封闭实例参数，因此访问它时实际参数索引降低1
+				 */
 				index = this.parameterIndex - 1;
 			}
 			paramAnns = (index >= 0 && index < annotationArray.length ?
@@ -794,6 +801,8 @@ public class MethodParameter {
 	/**
 	 * Return {@code true} if the parameter has at least one annotation,
 	 * {@code false} if it has none.
+	 * 如果参数至少有一个注释，则返回{@code true}，如果没有则返回{@code false}。
+	 *
 	 * @see #getParameterAnnotations()
 	 */
 	public boolean hasParameterAnnotations() {

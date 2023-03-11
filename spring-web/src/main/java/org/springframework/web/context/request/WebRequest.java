@@ -28,6 +28,8 @@ import org.springframework.lang.Nullable;
  * request interceptors, giving them access to general request metadata,
  * not for actual handling of the request.
  *
+ * web请求的通用接口。主要用于一般的web请求拦截器，使它们能够访问一般的请求元数据，而不是用于实际处理请求。
+ *
  * @author Juergen Hoeller
  * @author Brian Clozel
  * @since 2.0
@@ -37,7 +39,11 @@ public interface WebRequest extends RequestAttributes {
 
 	/**
 	 * Return the request header of the given name, or {@code null} if none.
+	 * 返回给定名称的请求头，如果没有则返回{@code null}。
+	 *
 	 * <p>Retrieves the first header value in case of a multi-value header.
+	 * <p>在多值报头的情况下检索第一个报头值。
+	 *
 	 * @since 3.0
 	 * @see jakarta.servlet.http.HttpServletRequest#getHeader(String)
 	 */
@@ -47,7 +53,11 @@ public interface WebRequest extends RequestAttributes {
 	/**
 	 * Return the request header values for the given header name,
 	 * or {@code null} if none.
+	 * 返回给定头名称的请求头值，如果没有则返回{@code null}。
+	 *
 	 * <p>A single-value header will be exposed as an array with a single element.
+	 * 单值标头将显示为具有单个元素的数组。
+	 *
 	 * @since 3.0
 	 * @see jakarta.servlet.http.HttpServletRequest#getHeaders(String)
 	 */
@@ -64,6 +74,8 @@ public interface WebRequest extends RequestAttributes {
 	/**
 	 * Return the request parameter of the given name, or {@code null} if none.
 	 * <p>Retrieves the first parameter value in case of a multi-value parameter.
+	 * 返回给定名称的请求参数，如果没有则返回{@code null}。<p>在多值参数的情况下检索第一个参数值。
+	 *
 	 * @see jakarta.servlet.http.HttpServletRequest#getParameter(String)
 	 */
 	@Nullable
@@ -210,30 +222,43 @@ public interface WebRequest extends RequestAttributes {
 	boolean checkNotModified(String etag);
 
 	/**
+	 * 检查请求的资源是否已被修改。
+	 *
 	 * Check whether the requested resource has been modified given the
 	 * supplied {@code ETag} (entity tag) and last-modified timestamp,
 	 * as determined by the application.
+	 * 根据提供的{@code ETag}(实体标记)和最后一次修改的时间戳(由应用程序决定)，检查请求的资源是否已被修改。
+	 *
 	 * <p>This will also transparently set the "ETag" and "Last-Modified"
 	 * response headers, and HTTP status when applicable.
+	 * 这也将透明地设置“ETag”和“Last-Modified”响应头，以及适用时的HTTP状态。
+	 *
 	 * <p>Typical usage:
+	 * < p >典型的用法:
 	 * <pre class="code">
 	 * public String myHandleMethod(WebRequest request, Model model) {
-	 *   String eTag = // application-specific calculation
+	 *   String eTag = // application-specific calculation 特定于应用程序的计算
 	 *   long lastModified = // application-specific calculation
 	 *   if (request.checkNotModified(eTag, lastModified)) {
 	 *     // shortcut exit - no further processing necessary
+	 *     // 快捷退出-无需进一步处理
 	 *     return null;
 	 *   }
 	 *   // further request processing, actually building content
+	 *   // 进一步的请求处理，实际构建内容
 	 *   model.addAttribute(...);
 	 *   return "myViewName";
 	 * }</pre>
 	 * <p>This method works with conditional GET/HEAD requests, but
 	 * also with conditional POST/PUT/DELETE requests.
+	 * 这个方法适用于条件GET/HEAD请求，也适用于条件POST/PUT/DELETE请求。
+	 *
 	 * <p><strong>Note:</strong> The HTTP specification recommends
 	 * setting both ETag and Last-Modified values, but you can also
 	 * use {@code #checkNotModified(String)} or
 	 * {@link #checkNotModified(long)}.
+	 * HTTP规范建议同时设置ETag和Last-Modified值，但也可以使用{@code #checkNotModified(String)}或{@link #checkNotModified(long)}。
+	 *
 	 * @param etag the entity tag that the application determined
 	 * for the underlying resource. This parameter will be padded
 	 * with quotes (") if necessary.

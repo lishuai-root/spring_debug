@@ -16,14 +16,8 @@
 
 package org.springframework.web.reactive.result.method.annotation;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Function;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import reactor.core.publisher.Mono;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -42,11 +36,18 @@ import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.HandlerResult;
 import org.springframework.web.reactive.result.method.InvocableHandlerMethod;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * Supports the invocation of
  * {@link org.springframework.web.bind.annotation.RequestMapping @RequestMapping}
  * handler methods.
+ *
+ * 支持调用{@link org.springframework.web.bind.annotation.RequestMapping @RequestMapping}处理程序方法。
  *
  * @author Rossen Stoyanchev
  * @since 5.0

@@ -16,10 +16,6 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.CompletionStage;
-import java.util.function.BiFunction;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -30,15 +26,27 @@ import org.springframework.web.context.request.async.WebAsyncUtils;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.CompletionStage;
+import java.util.function.BiFunction;
+
 /**
  * Handler for return values of type {@link DeferredResult},
  * {@link ListenableFuture}, and {@link CompletionStage}.
+ *
+ * {@link DeferredResult}， {@link ListenableFuture}和{@link CompletionStage}类型的返回值的处理程序。
  *
  * @author Rossen Stoyanchev
  * @since 3.2
  */
 public class DeferredResultMethodReturnValueHandler implements HandlerMethodReturnValueHandler {
 
+	/**
+	 * 处理类型为{@link DeferredResult}, {@link ListenableFuture}或者{@link CompletionStage}的返回值
+	 *
+	 * @param returnType the method return type to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
 		Class<?> type = returnType.getParameterType();
@@ -47,6 +55,17 @@ public class DeferredResultMethodReturnValueHandler implements HandlerMethodRetu
 				CompletionStage.class.isAssignableFrom(type));
 	}
 
+	/**
+	 * 用于异步结果值的处理
+	 *
+	 * @param returnValue the value returned from the handler method
+	 * @param returnType the type of the return value. This type must have
+	 * previously been passed to {@link #supportsReturnType} which must
+	 * have returned {@code true}.
+	 * @param mavContainer the ModelAndViewContainer for the current request
+	 * @param webRequest the current request
+	 * @throws Exception
+	 */
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
@@ -72,9 +91,18 @@ public class DeferredResultMethodReturnValueHandler implements HandlerMethodRetu
 			throw new IllegalStateException("Unexpected return value type: " + returnValue);
 		}
 
+		/**
+		 * 设置对异步处理程序结果值处理的回调(包括正常结束，错误结束的处理)
+		 */
 		WebAsyncUtils.getAsyncManager(webRequest).startDeferredResultProcessing(result, mavContainer);
 	}
 
+	/**
+	 * 为异步任务创建一个结果获取器
+	 *
+	 * @param future
+	 * @return
+	 */
 	private DeferredResult<Object> adaptListenableFuture(ListenableFuture<?> future) {
 		DeferredResult<Object> result = new DeferredResult<>();
 		future.addCallback(new ListenableFutureCallback<Object>() {
@@ -90,6 +118,12 @@ public class DeferredResultMethodReturnValueHandler implements HandlerMethodRetu
 		return result;
 	}
 
+	/**
+	 * 为异步任务创建一个结果获取器
+	 *
+	 * @param future
+	 * @return
+	 */
 	private DeferredResult<Object> adaptCompletionStage(CompletionStage<?> future) {
 		DeferredResult<Object> result = new DeferredResult<>();
 		future.handle((BiFunction<Object, Throwable, Object>) (value, ex) -> {

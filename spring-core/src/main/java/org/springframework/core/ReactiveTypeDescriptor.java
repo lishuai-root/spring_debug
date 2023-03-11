@@ -16,14 +16,16 @@
 
 package org.springframework.core;
 
-import java.util.function.Supplier;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+
+import java.util.function.Supplier;
 
 /**
  * Describes the semantics of a reactive type including boolean checks for
  * {@link #isMultiValue()}, {@link #isNoValue()}, and {@link #supportsEmpty()}.
+ *
+ * 描述响应式类型的语义，包括对{@link #isMultiValue()}、{@link #isNoValue()}和{@link #supportsEmpty()}进行布尔检查。
  *
  * @author Rossen Stoyanchev
  * @since 5.0
@@ -70,8 +72,11 @@ public final class ReactiveTypeDescriptor {
 	/**
 	 * Return {@code true} if the reactive type can produce more than 1 value
 	 * can be produced and is therefore a good fit to adapt to {@code Flux}.
+	 * 如果响应式类型可以产生超过1个值，则返回{@code true}，因此很适合适应{@code Flux}。
+	 *
 	 * A {@code false} return value implies the reactive type can produce 1
 	 * value at most and is therefore a good fit to adapt to {@code Mono}.
+	 * {@code false}返回值意味着响应式类型最多可以产生一个值，因此很适合适应{@code Mono}。
 	 */
 	public boolean isMultiValue() {
 		return this.multiValue;

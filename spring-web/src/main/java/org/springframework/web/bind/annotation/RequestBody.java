@@ -49,9 +49,14 @@ public @interface RequestBody {
 
 	/**
 	 * Whether body content is required.
+	 * 是否需要正文内容。
+	 *
 	 * <p>Default is {@code true}, leading to an exception thrown in case
 	 * there is no body content. Switch this to {@code false} if you prefer
 	 * {@code null} to be passed when the body content is {@code null}.
+	 * <p>默认值是{@code true}，在没有正文内容的情况下导致抛出异常。
+	 * 如果您希望在正文内容为{@code null}时传递{@code null}，则将此切换为{@code false}。
+	 *
 	 * @since 3.2
 	 */
 	boolean required() default true;

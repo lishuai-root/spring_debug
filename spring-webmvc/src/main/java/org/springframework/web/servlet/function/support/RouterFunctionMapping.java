@@ -71,9 +71,15 @@ public class RouterFunctionMapping extends AbstractHandlerMapping implements Ini
 	private static final boolean shouldIgnoreXml = SpringProperties.getFlag("spring.xml.ignore");
 
 
+	/**
+	 * 缓存所有实现了{@link RouterFunction}的请求处理程序
+	 */
 	@Nullable
 	private RouterFunction<?> routerFunction;
 
+	/**
+	 * 缓存消息转换器
+	 */
 	private List<HttpMessageConverter<?>> messageConverters = Collections.emptyList();
 
 	private boolean detectHandlerFunctionsInAncestorContexts = false;
@@ -140,9 +146,15 @@ public class RouterFunctionMapping extends AbstractHandlerMapping implements Ini
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		/**
+		 * 初始化所有实现了{@link RouterFunction}的请求处理程序
+		 */
 		if (this.routerFunction == null) {
 			initRouterFunction();
 		}
+		/**
+		 * 初始化消息转换器，用于将请求体或者响应体读写成指定类型
+		 */
 		if (CollectionUtils.isEmpty(this.messageConverters)) {
 			initMessageConverters();
 		}
@@ -217,6 +229,7 @@ public class RouterFunctionMapping extends AbstractHandlerMapping implements Ini
 			}
 			catch (Error err) {
 				// Ignore when no TransformerFactory implementation is available
+				// 当没有TransformerFactory实现可用时忽略
 			}
 		}
 		messageConverters.add(new AllEncompassingFormHttpMessageConverter());

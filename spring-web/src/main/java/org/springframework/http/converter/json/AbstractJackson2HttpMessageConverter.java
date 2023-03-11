@@ -66,8 +66,10 @@ import org.springframework.util.TypeUtils;
 /**
  * Abstract base class for Jackson based and content type independent
  * {@link HttpMessageConverter} implementations.
+ * 基于Jackson和内容类型独立的{@link HttpMessageConverter实现的抽象基类。
  *
  * <p>Compatible with Jackson 2.9 to 2.12, as of Spring 5.3.
+ * 从Spring 5.3开始，兼容Jackson 2.9到2.12。
  *
  * @author Arjen Poutsma
  * @author Keith Donald

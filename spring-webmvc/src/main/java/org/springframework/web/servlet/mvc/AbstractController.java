@@ -29,6 +29,7 @@ import org.springframework.web.util.WebUtils;
 /**
  * Convenient superclass for controller implementations, using the Template Method
  * design pattern.
+ * 方便的超类控制器实现，使用模板方法设计模式。
  *
  * <p><b>Workflow
  * (<a href="Controller.html#workflow">and that defined by interface</a>):</b><br>
@@ -179,7 +180,11 @@ public abstract class AbstractController extends WebContentGenerator implements 
 
 	/**
 	 * Template method. Subclasses must implement this.
+	 * 模板方法。子类必须实现这一点。
+	 *
 	 * The contract is the same as for {@code handleRequest}.
+	 * 该契约与{@code handleRequest}相同。
+	 *
 	 * @see #handleRequest
 	 */
 	@Nullable

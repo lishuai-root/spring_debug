@@ -289,6 +289,9 @@ public final class WebAsyncManager {
 	 * Use the given {@link WebAsyncTask} to configure the task executor as well as
 	 * the timeout value of the {@code AsyncWebRequest} before delegating to
 	 * {@link #startCallableProcessing(Callable, Object...)}.
+	 * 在委托给{@link #startCallableProcessing(Callable, Object...)}之前，
+	 * 使用给定的{@link WebAsyncTask}来配置任务执行器以及{@code AsyncWebRequest}的超时值。
+	 *
 	 * @param webAsyncTask a WebAsyncTask containing the target {@code Callable}
 	 * @param processingContext additional context to save that can be accessed
 	 * via {@link #getConcurrentResultContext()}
@@ -426,6 +429,11 @@ public final class WebAsyncManager {
 	 * result. The {@code AsyncWebRequest} is also updated with a completion
 	 * handler that expires the {@code DeferredResult} and a timeout handler
 	 * assuming the {@code DeferredResult} has a default timeout result.
+	 *
+	 * 启动并发请求处理并初始化给定的{@link deferredresulsult}，使用{@link DeferredResultHandler}保存结果并分派请求以恢复对该结果的处理。
+	 * {@code AsyncWebRequest}还使用一个完成处理程序更新{@code DeferredResult}和一个超时处理程序，
+	 * 假设{@code DeferredResult}有一个默认的超时结果。
+	 *
 	 * @param deferredResult the DeferredResult instance to initialize
 	 * @param processingContext additional context to save that can be accessed
 	 * via {@link #getConcurrentResultContext()}

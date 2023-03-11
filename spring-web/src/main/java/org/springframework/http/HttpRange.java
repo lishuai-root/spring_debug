@@ -16,13 +16,6 @@
 
 package org.springframework.http;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.StringJoiner;
-
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
@@ -31,6 +24,9 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Represents an HTTP (byte) range for use with the HTTP {@code "Range"} header.
@@ -51,8 +47,12 @@ public abstract class HttpRange {
 
 
 	/**
+	 * 使用给定资源创建{@link ResourceRegion}实例
+	 *
 	 * Turn a {@code Resource} into a {@link ResourceRegion} using the range
 	 * information contained in the current {@code HttpRange}.
+	 * 使用当前{@code HttpRange}中包含的范围信息将{@code Resource}转换为{@link ResourceRegion}。
+	 *
 	 * @param resource the {@code Resource} to select the region from
 	 * @return the selected region of the given {@code Resource}
 	 * @since 4.3
@@ -60,17 +60,26 @@ public abstract class HttpRange {
 	public ResourceRegion toResourceRegion(Resource resource) {
 		// Don't try to determine contentLength on InputStreamResource - cannot be read afterwards...
 		// Note: custom InputStreamResource subclasses could provide a pre-calculated content length!
+		/**
+		 * 不要尝试在InputStreamResource上确定contentLength -之后不能读取…
+		 * 注意:自定义InputStreamResource子类可以提供预先计算的内容长度!
+		 */
 		Assert.isTrue(resource.getClass() != InputStreamResource.class,
 				"Cannot convert an InputStreamResource to a ResourceRegion");
 		long contentLength = getLengthFor(resource);
 		long start = getRangeStart(contentLength);
 		long end = getRangeEnd(contentLength);
 		Assert.isTrue(start < contentLength, "'position' exceeds the resource length " + contentLength);
+		/**
+		 * 使用资源和读取的开始位置和长度创建{@link ResourceRegion}实例
+		 */
 		return new ResourceRegion(resource, start, end - start + 1);
 	}
 
 	/**
 	 * Return the start of the range given the total length of a representation.
+	 * 给定表示的总长度，返回范围的开始。
+	 *
 	 * @param length the length of the representation
 	 * @return the start of this range for the representation
 	 */
@@ -78,6 +87,8 @@ public abstract class HttpRange {
 
 	/**
 	 * Return the end of the range (inclusive) given the total length of a representation.
+	 * 给定表示的总长度，返回范围的结束(包括)。
+	 *
 	 * @param length the length of the representation
 	 * @return the end of the range for the representation
 	 */
@@ -117,7 +128,11 @@ public abstract class HttpRange {
 
 	/**
 	 * Parse the given, comma-separated string into a list of {@code HttpRange} objects.
+	 * 将给定的逗号分隔的字符串解析为{@code HttpRange}对象列表。
+	 *
 	 * <p>This method can be used to parse an {@code Range} header.
+	 * 此方法可用于解析{@code Range}标头。
+	 *
 	 * @param ranges the string to parse
 	 * @return the list of ranges
 	 * @throws IllegalArgumentException if the string cannot be parsed
@@ -130,8 +145,14 @@ public abstract class HttpRange {
 		if (!ranges.startsWith(BYTE_RANGE_PREFIX)) {
 			throw new IllegalArgumentException("Range '" + ranges + "' does not start with 'bytes='");
 		}
+		/**
+		 * 去除"bytes="前缀
+		 */
 		ranges = ranges.substring(BYTE_RANGE_PREFIX.length());
 
+		/**
+		 * 多个范围按","分割
+		 */
 		String[] tokens = StringUtils.tokenizeToStringArray(ranges, ",");
 		if (tokens.length > MAX_RANGES) {
 			throw new IllegalArgumentException("Too many ranges: " + tokens.length);
@@ -143,19 +164,37 @@ public abstract class HttpRange {
 		return result;
 	}
 
+	/**
+	 * 解析单个{@link HttpHeaders#RANGE}范围
+	 *
+	 * @param range
+	 * @return
+	 */
 	private static HttpRange parseRange(String range) {
 		Assert.hasLength(range, "Range String must not be empty");
 		int dashIdx = range.indexOf('-');
 		if (dashIdx > 0) {
+			/**
+			 * 获取bytes范围的第一个范围值
+			 */
 			long firstPos = Long.parseLong(range.substring(0, dashIdx));
+			/**
+			 * 获取bytes范围的第二个范围值
+			 */
 			if (dashIdx < range.length() - 1) {
 				Long lastPos = Long.parseLong(range.substring(dashIdx + 1));
 				return new ByteRange(firstPos, lastPos);
 			}
 			else {
+				/**
+				 * 最后一个值可选
+				 */
 				return new ByteRange(firstPos, null);
 			}
 		}
+		/**
+		 * 创建后缀字节范围
+		 */
 		else if (dashIdx == 0) {
 			long suffixLength = Long.parseLong(range.substring(1));
 			return new SuffixByteRange(suffixLength);
@@ -168,6 +207,8 @@ public abstract class HttpRange {
 	/**
 	 * Convert each {@code HttpRange} into a {@code ResourceRegion}, selecting the
 	 * appropriate segment of the given {@code Resource} using HTTP Range information.
+	 * 将每个{@code HttpRange}转换为一个{@code ResourceRegion}，使用HTTP范围信息选择给定{@code Resource}的适当段。
+	 *
 	 * @param ranges the list of ranges
 	 * @param resource the resource to select the regions from
 	 * @return the list of regions for the given resource
@@ -179,9 +220,15 @@ public abstract class HttpRange {
 			return Collections.emptyList();
 		}
 		List<ResourceRegion> regions = new ArrayList<>(ranges.size());
+		/**
+		 * 根据range范围创建{@link ResourceRegion}实例
+		 */
 		for (HttpRange range : ranges) {
 			regions.add(range.toResourceRegion(resource));
 		}
+		/**
+		 * 检查请求获取的资源大小不能超过资源本省的大小，否则抛出异常
+		 */
 		if (ranges.size() > 1) {
 			long length = getLengthFor(resource);
 			long total = 0;
@@ -225,6 +272,8 @@ public abstract class HttpRange {
 
 	/**
 	 * Represents an HTTP/1.1 byte range, with a first and optional last position.
+	 * 表示HTTP1.1字节范围，包含第一个和可选的最后一个位置。
+	 *
 	 * @see <a href="https://tools.ietf.org/html/rfc7233#section-2.1">Byte Ranges</a>
 	 * @see HttpRange#createByteRange(long)
 	 * @see HttpRange#createByteRange(long, long)
@@ -301,6 +350,8 @@ public abstract class HttpRange {
 
 	/**
 	 * Represents an HTTP/1.1 suffix byte range, with a number of suffix bytes.
+	 * 表示HTTP1.1后缀字节范围，包含若干后缀字节。
+	 *
 	 * @see <a href="https://tools.ietf.org/html/rfc7233#section-2.1">Byte Ranges</a>
 	 * @see HttpRange#createSuffixRange(long)
 	 */

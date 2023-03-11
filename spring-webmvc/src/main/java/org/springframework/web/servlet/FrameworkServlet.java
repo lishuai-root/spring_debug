@@ -1280,6 +1280,9 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 				requestAttributes.requestCompleted();
 			}
 			logResult(request, response, failureCause, asyncManager);
+			/**
+			 * 不管请求是否处理成功，发布一个事件
+			 */
 			publishRequestHandledEvent(request, response, startTime, failureCause);
 		}
 	}
@@ -1413,11 +1416,23 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 	}
 
+	/**
+	 * 发布请求处理事件，不管请求是否处理成功，发布一个事件
+	 * 默认没有处理{@link ServletRequestHandledEvent}事件的监听器
+	 *
+	 * @param request
+	 * @param response
+	 * @param startTime
+	 * @param failureCause
+	 */
 	private void publishRequestHandledEvent(HttpServletRequest request, HttpServletResponse response,
 			long startTime, @Nullable Throwable failureCause) {
 
 		if (this.publishEvents && this.webApplicationContext != null) {
 			// Whether or not we succeeded, publish an event.
+			/**
+			 * 不管我们是否成功，发布一个事件。
+			 */
 			long processingTime = System.currentTimeMillis() - startTime;
 			this.webApplicationContext.publishEvent(
 					new ServletRequestHandledEvent(this,

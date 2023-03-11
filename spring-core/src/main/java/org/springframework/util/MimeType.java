@@ -271,6 +271,8 @@ public class MimeType implements Comparable<MimeType>, Serializable {
 	/**
 	 * Indicates whether this MIME Type is concrete, i.e. whether neither the type
 	 * nor the subtype is a wildcard character <code>&#42;</code>.
+	 * 指示此MIME类型是否是具体的，即类型和子类型是否都不是通配符<code>&#42;<code>。
+	 *
 	 * @return whether this MIME Type is concrete
 	 */
 	public boolean isConcrete() {
@@ -378,9 +380,14 @@ public class MimeType implements Comparable<MimeType>, Serializable {
 
 	/**
 	 * Indicate whether this MIME Type is compatible with the given MIME Type.
+	 * 指示此MIME类型是否与给定的MIME类型兼容。
+	 *
 	 * <p>For instance, {@code text/*} is compatible with {@code text/plain},
 	 * {@code text/html}, and vice versa. In effect, this method is similar to
 	 * {@link #includes}, except that it <b>is</b> symmetric.
+	 * <p>例如，{@code text}兼容{@code text/plain}， {@code text/html}，反之亦然。
+	 * 实际上，这个方法类似于{@link #includes}，只是它<b>是<b>对称的。
+	 *
 	 * @param other the reference MIME Type with which to compare
 	 * @return {@code true} if this MIME Type is compatible with the given MIME Type;
 	 * {@code false} otherwise
@@ -431,6 +438,8 @@ public class MimeType implements Comparable<MimeType>, Serializable {
 	 * Unlike {@link Collection#contains(Object)} which relies on
 	 * {@link MimeType#equals(Object)}, this method only checks the type and the
 	 * subtype, but otherwise ignores parameters.
+	 * 与依赖于{@link Collection#contains(Object)}的{@link MimeType#equals(Object)}不同，该方法只检查类型和子类型，而忽略其他参数。
+	 *
 	 * @param mimeTypes the list of mime types to perform the check against
 	 * @return whether the list contains the given mime type
 	 * @since 5.1.4

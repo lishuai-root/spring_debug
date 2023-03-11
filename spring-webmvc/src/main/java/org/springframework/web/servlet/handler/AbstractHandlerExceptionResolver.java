@@ -16,25 +16,28 @@
 
 package org.springframework.web.servlet.handler;
 
-import java.util.Set;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.Ordered;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Set;
+
 /**
  * Abstract base class for {@link HandlerExceptionResolver} implementations.
+ * {@link HandlerExceptionResolver}实现的抽象基类。
  *
  * <p>Supports mapped {@linkplain #setMappedHandlers handlers} and
  * {@linkplain #setMappedHandlerClasses handler classes} that the resolver
  * should be applied to and implements the {@link Ordered} interface.
+ * <p>支持映射的{@linkplain #setMappedHandlers handlers}和{@linkplain #setMappedHandlerClasses handler classes}，
+ * 解析器应该应用到这些处理程序并实现{@link Ordered}接口。
+ *
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
@@ -129,6 +132,10 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 	 * matches any of the configured {@linkplain #setMappedHandlers handlers} or
 	 * {@linkplain #setMappedHandlerClasses handler classes}), and then delegate
 	 * to the {@link #doResolveException} template method.
+	 *
+	 * 检查这个解析器是否应该应用(即，如果提供的处理程序匹配任何配置的{@linkplain #setMappedHandlers 处理程序}
+	 * 或{@linkplain #setMappedHandlerClasses 处理程序类})，然后委托给{@link #doResolveException}模板方法。
+	 *
 	 */
 	@Override
 	@Nullable
@@ -155,9 +162,13 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 
 	/**
 	 * Check whether this resolver is supposed to apply to the given handler.
+	 * 检查这个解析器是否应该应用于给定的处理程序。
+	 *
 	 * <p>The default implementation checks against the configured
 	 * {@linkplain #setMappedHandlers handlers} and
 	 * {@linkplain #setMappedHandlerClasses handler classes}, if any.
+	 * 默认实现检查配置的{@linkplain #setMappedHandlers 处理程序}和{@linkplain #setMappedHandlerClasses 处理程序类}，如果有的话。
+	 *
 	 * @param request current HTTP request
 	 * @param handler the executed handler, or {@code null} if none chosen
 	 * at the time of the exception (for example, if multipart resolution failed)
@@ -219,9 +230,13 @@ public abstract class AbstractHandlerExceptionResolver implements HandlerExcepti
 
 	/**
 	 * Prepare the response for the exceptional case.
+	 * 为特殊情况准备响应。
+	 *
 	 * <p>The default implementation prevents the response from being cached,
 	 * if the {@link #setPreventResponseCaching "preventResponseCaching"} property
 	 * has been set to "true".
+	 * 如果{@link #setPreventResponseCaching "preventResponseCaching"}属性被设置为"true"，默认实现将阻止响应被缓存。
+	 *
 	 * @param ex the exception that got thrown during handler execution
 	 * @param response current HTTP response
 	 * @see #preventCaching

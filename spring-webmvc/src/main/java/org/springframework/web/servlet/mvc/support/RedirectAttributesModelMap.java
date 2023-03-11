@@ -16,18 +16,21 @@
 
 package org.springframework.web.servlet.mvc.support;
 
-import java.util.Collection;
-import java.util.Map;
-
 import org.springframework.lang.Nullable;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.DataBinder;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * A {@link ModelMap} implementation of {@link RedirectAttributes} that formats
  * values as Strings using a {@link DataBinder}. Also provides a place to store
  * flash attributes so they can survive a redirect without the need to be
  * embedded in the redirect URL.
+ * 一个{@link ModelMap}实现的{@link RedirectAttributes}，它使用{@link DataBinder}将值格式化为字符串。
+ * 还提供了一个存储flash属性的地方，以便它们可以在重定向中存活，而不需要嵌入到重定向URL中。
+ *
  *
  * @author Rossen Stoyanchev
  * @since 3.1
@@ -60,6 +63,8 @@ public class RedirectAttributesModelMap extends ModelMap implements RedirectAttr
 
 	/**
 	 * Return the attributes candidate for flash storage or an empty Map.
+	 *
+	 * 返回用于闪存或空Map的候选属性。
 	 */
 	@Override
 	public Map<String, ?> getFlashAttributes() {

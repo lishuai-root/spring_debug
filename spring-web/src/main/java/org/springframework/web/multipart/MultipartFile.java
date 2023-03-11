@@ -71,6 +71,8 @@ public interface MultipartFile extends InputStreamSource {
 
 	/**
 	 * Return the content type of the file.
+	 * 返回文件的内容类型。
+	 *
 	 * @return the content type, or {@code null} if not defined
 	 * (or no file has been chosen in the multipart form)
 	 */

@@ -16,12 +16,11 @@
 
 package org.springframework.core;
 
-import java.util.function.Function;
-
 import org.reactivestreams.Publisher;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+
+import java.util.function.Function;
 
 /**
  * Adapter for a Reactive Streams {@link Publisher} to and from an async/reactive
@@ -64,6 +63,7 @@ public class ReactiveAdapter {
 
 	/**
 	 * Return the descriptor of the reactive type for the adapter.
+	 * 返回适配器的响应式类型的描述符。
 	 */
 	public ReactiveTypeDescriptor getDescriptor() {
 		return this.descriptor;

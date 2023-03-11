@@ -382,6 +382,8 @@ public abstract class CollectionUtils {
 	/**
 	 * Retrieve the last element of the given Set, using {@link SortedSet#last()}
 	 * or otherwise iterating over all elements (assuming a linked set).
+	 * 检索给定集合的最后一个元素，使用{@link SortedSet#last()}或以其他方式遍历所有元素(假设有一个链接集)。
+	 *
 	 * @param set the Set to check (may be {@code null} or empty)
 	 * @return the last element, or {@code null} if none
 	 * @since 5.0.3
@@ -398,7 +400,7 @@ public abstract class CollectionUtils {
 			return ((SortedSet<T>) set).last();
 		}
 
-		// Full iteration necessary...
+		// Full iteration necessary... 完全迭代是必要的……
 		Iterator<T> it = set.iterator();
 		T last = null;
 		while (it.hasNext()) {

@@ -132,6 +132,9 @@ public interface MultipartResolver {
 	 * {@link org.springframework.web.multipart.MultipartHttpServletRequest}
 	 * object that provides access to file descriptors and makes contained
 	 * parameters accessible via the standard ServletRequest methods.
+	 * 将给定的HTTP请求解析为多部分文件和参数，并将请求包装在一个{@link org.springframework.web.multipart.MultipartHttpServletRequest}对象，
+	 * 该对象提供对文件描述符的访问，并通过标准ServletRequest方法访问所包含的参数。
+	 *
 	 * @param request the servlet request to wrap (must be of a multipart content type)
 	 * @return the wrapped servlet request
 	 * @throws MultipartException if the servlet request is not multipart, or if

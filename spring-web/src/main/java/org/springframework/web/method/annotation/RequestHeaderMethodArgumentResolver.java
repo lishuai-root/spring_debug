@@ -32,13 +32,19 @@ import org.springframework.web.context.request.NativeWebRequest;
  * Resolves method arguments annotated with {@code @RequestHeader} except for
  * {@link Map} arguments. See {@link RequestHeaderMapMethodArgumentResolver} for
  * details on {@link Map} arguments annotated with {@code @RequestHeader}.
+ * 解析带有{@code @RequestHeader}注释的方法参数，{@link Map}参数除外。
+ * 有关{@code @RequestHeader}注释的{@link Map}参数的详细信息，请参见{@link RequestHeaderMapMethodArgumentResolver}。
+ *
  *
  * <p>An {@code @RequestHeader} is a named value resolved from a request header.
  * It has a required flag and a default value to fall back on when the request
  * header does not exist.
+ * {@code @RequestHeader}是从请求头解析出来的命名值。当请求头不存在时，它有一个必需的标志和一个默认值。
+ *
  *
  * <p>A {@link WebDataBinder} is invoked to apply type conversion to resolved
  * request header values that don't yet match the method parameter type.
+ * <p>调用一个{@link WebDataBinder}来对解析后的不匹配方法参数类型的请求头值应用类型转换。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -57,6 +63,12 @@ public class RequestHeaderMethodArgumentResolver extends AbstractNamedValueMetho
 	}
 
 
+	/**
+	 * 解析带有{@link RequestHeader}注解，且参数类型不是{@link Map}的方法参数
+	 *
+	 * @param parameter the method parameter to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		return (parameter.hasParameterAnnotation(RequestHeader.class) &&
@@ -70,9 +82,22 @@ public class RequestHeaderMethodArgumentResolver extends AbstractNamedValueMetho
 		return new RequestHeaderNamedValueInfo(ann);
 	}
 
+	/**
+	 * 通过参数名称获取指定请求头
+	 *
+	 * @param name the name of the value being resolved
+	 * @param parameter the method parameter to resolve to an argument value
+	 * (pre-nested in case of a {@link java.util.Optional} declaration)
+	 * @param request the current request
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	@Nullable
 	protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request) throws Exception {
+		/**
+		 * 获取指定名称的请求头
+		 */
 		String[] headerValues = request.getHeaderValues(name);
 		if (headerValues != null) {
 			return (headerValues.length == 1 ? headerValues[0] : headerValues);

@@ -29,6 +29,9 @@ import org.springframework.web.context.request.NativeWebRequest;
  * {@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers}.
  * Previously resolved return types are cached for faster lookups.
  *
+ * 通过将方法返回值委托给已注册的{@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers}的列表来处理方法返回值。
+ * 为了更快地查找，以前解析的返回类型被缓存。
+ *
  * @author Rossen Stoyanchev
  * @since 3.1
  */
@@ -45,8 +48,12 @@ public class HandlerMethodReturnValueHandlerComposite implements HandlerMethodRe
 	}
 
 	/**
+	 * 在已注册的返回值处理器中查找适用于给定返回值的处理器
+	 *
 	 * Whether the given {@linkplain MethodParameter method return type} is supported by any registered
 	 * {@link HandlerMethodReturnValueHandler}.
+	 *
+	 * 任何已注册的{@link HandlerMethodReturnValueHandler}是否支持给定的{@linkplain MethodParameter方法返回类型}。
 	 */
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
@@ -64,8 +71,14 @@ public class HandlerMethodReturnValueHandlerComposite implements HandlerMethodRe
 	}
 
 	/**
+	 * 委托给合适的返回值处理器处理
+	 *
 	 * Iterate over registered {@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers} and invoke the one that supports it.
 	 * @throws IllegalStateException if no suitable {@link HandlerMethodReturnValueHandler} is found.
+	 *
+	 * 遍历已注册的{@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers}并调用支持它的处理器。
+	 * 如果没有找到合适的{@link HandlerMethodReturnValueHandler}，则会抛出IllegalStateException。
+	 *
 	 */
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
@@ -112,6 +125,7 @@ public class HandlerMethodReturnValueHandlerComposite implements HandlerMethodRe
 
 	/**
 	 * Add the given {@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers}.
+	 * 添加给定的{@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers}。
 	 */
 	public HandlerMethodReturnValueHandlerComposite addHandlers(
 			@Nullable List<? extends HandlerMethodReturnValueHandler> handlers) {

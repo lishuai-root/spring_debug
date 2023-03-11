@@ -264,6 +264,10 @@ public abstract class BeanUtils {
 	 * Return a resolvable constructor for the provided class, either a primary constructor
 	 * or single public constructor or simply a default constructor. Callers have to be
 	 * prepared to resolve arguments for the returned constructor's parameters, if any.
+	 *
+	 * 为所提供的类返回一个可解析的构造函数，可以是主构造函数或单个公共构造函数，也可以只是一个默认构造函数。
+	 * 调用者必须准备为返回的构造函数的形参解析实参(如果有的话)。
+	 *
 	 * @param clazz the class to check
 	 * @since 5.3
 	 * @see #findPrimaryConstructor
@@ -650,9 +654,13 @@ public abstract class BeanUtils {
 	}
 
 	/**
+	 * 解析构造函数的参数名
+	 *
 	 * Determine required parameter names for the given constructor,
 	 * considering the JavaBeans {@link ConstructorProperties} annotation
 	 * as well as Spring's {@link DefaultParameterNameDiscoverer}.
+	 * 考虑JavaBeans {@link ConstructorProperties}注释和Spring的{@link DefaultParameterNameDiscoverer}，为给定的构造函数确定所需的参数名。
+	 *
 	 * @param ctor the constructor to find parameter names for
 	 * @return the parameter names (matching the constructor's parameter count)
 	 * @throws IllegalStateException if the parameter names are not resolvable

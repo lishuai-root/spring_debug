@@ -86,6 +86,8 @@ public class FacesRequestAttributes implements RequestAttributes {
 
 	/**
 	 * Return the JSF attribute Map for the specified scope.
+	 * 返回指定范围的JSF属性Map。
+	 *
 	 * @param scope constant indicating request or session scope
 	 * @return the Map representation of the attributes in the specified scope
 	 * @see #SCOPE_REQUEST

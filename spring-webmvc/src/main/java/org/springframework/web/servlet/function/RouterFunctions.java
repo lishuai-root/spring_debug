@@ -71,6 +71,8 @@ public abstract class RouterFunctions {
 
 	/**
 	 * Offers a discoverable way to create router functions through a builder-style interface.
+	 * 提供一种可发现的方式来通过构建器风格的接口创建路由器功能。
+	 *
 	 * @return a router function builder
 	 */
 	public static Builder route() {
@@ -327,8 +329,12 @@ public abstract class RouterFunctions {
 		/**
 		 * Adds a route to the given handler function that handles all HTTP {@code POST} requests
 		 * that match the given pattern and predicate.
+		 * 向给定的处理程序函数添加路由，该函数处理与给定模式和谓词匹配的所有HTTP {@code POST}请求。
+		 *
 		 * <p>For instance, the following example routes POST requests for "/user" that contain JSON
 		 * to the {@code addUser} method in {@code userController}:
+		 * 例如，下面的例子将包含JSON的“/user”的POST请求路由到{@code userController}中的{@code addUser}方法:
+		 *
 		 * <pre class="code">
 		 * RouterFunction&lt;ServerResponse&gt; route =
 		 *   RouterFunctions.route()

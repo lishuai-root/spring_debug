@@ -111,7 +111,7 @@ public final class MultipartResolutionDelegate {
 	 *
 	 * 当返回null时：
 	 * 		1. 参数类型是{@link MultipartFile}或者{@link Part}类型，但是请求不是上传请求
-	 * 		2. 	参数类型是{@link MultipartFile}或者{@link Part}类型，请求是上传请求，但是没有指定名称的表单项
+	 * 		2. 参数类型是{@link MultipartFile}或者{@link Part}类型，请求是上传请求，但是没有指定名称的表单项
 	 * 当返回{@link #UNRESOLVABLE}时：
 	 * 		1. 参数类型不是{@link MultipartFile}和{@link Part}类型
 	 *

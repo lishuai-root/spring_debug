@@ -33,11 +33,15 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 /**
  * A Servlet 3.0 implementation of {@link AsyncWebRequest}.
+ * {@link AsyncWebRequest}的Servlet 3.0实现。
  *
  * <p>The servlet and all filters involved in an async request must have async
  * support enabled using the Servlet API or by adding an
  * <code>&lt;async-supported&gt;true&lt;/async-supported&gt;</code> element to servlet and filter
  * declarations in {@code web.xml}.
+ * 异步请求中涉及的servlet和所有过滤器必须使用servlet API或通过在servlet和过滤器声明{@code web.xml}中添加<code>&lt;
+ * async-supported&gt;true&lt;async-supported&gt;<code>元素来启用异步支持。
+ *
  *
  * @author Rossen Stoyanchev
  * @since 3.2

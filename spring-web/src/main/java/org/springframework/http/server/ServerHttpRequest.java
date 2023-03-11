@@ -25,6 +25,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * Represents a server-side HTTP request.
+ * 表示服务器端HTTP请求。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -35,24 +36,31 @@ public interface ServerHttpRequest extends HttpRequest, HttpInputMessage {
 	/**
 	 * Return a {@link java.security.Principal} instance containing the name of the
 	 * authenticated user.
+	 * 返回一个{@link java.security。实例，其中包含经过身份验证的用户的名称。
+	 *
 	 * <p>If the user has not been authenticated, the method returns <code>null</code>.
+	 * <p>如果用户没有被验证，该方法返回<code>null<code>。
 	 */
 	@Nullable
 	Principal getPrincipal();
 
 	/**
 	 * Return the address on which the request was received.
+	 * 返回接收请求的地址。
 	 */
 	InetSocketAddress getLocalAddress();
 
 	/**
 	 * Return the address of the remote client.
+	 * 返回远程客户端的地址。
 	 */
 	InetSocketAddress getRemoteAddress();
 
 	/**
 	 * Return a control that allows putting the request in asynchronous mode so the
 	 * response remains open until closed explicitly from the current or another thread.
+	 *
+	 * 返回一个控件，该控件允许将请求置于异步模式，以便响应保持打开状态，直到从当前线程或另一个线程显式关闭。
 	 */
 	ServerHttpAsyncRequestControl getAsyncRequestControl(ServerHttpResponse response);
 

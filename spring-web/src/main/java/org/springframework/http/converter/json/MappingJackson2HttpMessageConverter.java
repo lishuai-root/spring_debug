@@ -28,15 +28,23 @@ import org.springframework.lang.Nullable;
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} that can read and
  * write JSON using <a href="https://github.com/FasterXML/jackson">Jackson 2.x's</a> {@link ObjectMapper}.
  *
+ * 实现{@link org.springframework.http.converter.HttpMessageConverter}可以读写JSON使用<a href="https:github.comFasterXMLjackson">杰克逊x的<a>{@link ObjectMapper}。
+ *
  * <p>This converter can be used to bind to typed beans, or untyped {@code HashMap} instances.
+ * 此转换器可用于绑定类型化bean或非类型化{@code HashMap}实例。
  *
  * <p>By default, this converter supports {@code application/json} and {@code application/*+json}
  * with {@code UTF-8} character set. This can be overridden by setting the
  * {@link #setSupportedMediaTypes supportedMediaTypes} property.
+ * 默认情况下，这个转换器支持{@code applicationjson}和{@code application+json}带有{@code UTF-8}字符集。
+ * 这可以通过设置{@link setSupportedMediaTypes supportedMediaTypes}属性来覆盖。
+ *
  *
  * <p>The default constructor uses the default configuration provided by {@link Jackson2ObjectMapperBuilder}.
+ * 默认构造函数使用{@link Jackson2ObjectMapperBuilder}提供的默认配置。
  *
  * <p>Compatible with Jackson 2.9 to 2.12, as of Spring 5.3.
+ * 从Spring 5.3开始，兼容Jackson 2.9到2.12。
  *
  * @author Arjen Poutsma
  * @author Keith Donald

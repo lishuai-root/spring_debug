@@ -18,6 +18,7 @@ package org.springframework.validation;
 
 /**
  * A validator for application-specific objects.
+ * 应用程序特定对象的验证器。
  *
  * <p>This interface is totally divorced from any infrastructure
  * or context; that is to say it is not coupled to validating
@@ -26,12 +27,19 @@ package org.springframework.validation;
  * of an application, and supports the encapsulation of validation
  * logic as a first-class citizen in its own right.
  *
+ * 这个接口完全脱离了任何基础设施或上下文;也就是说，它不与只验证web层、数据访问层或任何层中的对象耦合。
+ * 因此，它适合在应用程序的任何层中使用，并支持将验证逻辑封装为其本身的一级公民。
+ *
+ *
  * <p>Find below a simple but complete {@code Validator}
  * implementation, which validates that the various {@link String}
  * properties of a {@code UserLogin} instance are not empty
  * (that is they are not {@code null} and do not consist
  * wholly of whitespace), and that any password that is present is
  * at least {@code 'MINIMUM_PASSWORD_LENGTH'} characters in length.
+ * 在下面找到一个简单但完整的{@code Validator}实现，它验证了{@code UserLogin}实例的各种{@link String}属性不是空的(即它们不是{@code null}并且不完全由空白组成)，
+ * 并且任何存在的密码长度至少是{@code 'MINIMUM_PASSWORD_LENGTH'}字符。
+ *
  *
  * <pre class="code"> public class UserLoginValidator implements Validator {
  *
@@ -57,6 +65,8 @@ package org.springframework.validation;
  * <p>See also the Spring reference manual for a fuller discussion of
  * the {@code Validator} interface and its role in an enterprise
  * application.
+ * 关于{@code Validator}接口及其在企业应用程序中的角色的更全面的讨论，请参见Spring参考手册。
+ *
  *
  * @author Rod Johnson
  * @see SmartValidator

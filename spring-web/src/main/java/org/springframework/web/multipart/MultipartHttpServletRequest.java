@@ -64,9 +64,12 @@ public interface MultipartHttpServletRequest extends HttpServletRequest, Multipa
 
 	/**
 	 * Return the headers for the specified part of the multipart request.
+	 * 返回多部分请求的指定部分的标头。
+	 *
 	 * <p>If the underlying implementation supports access to part headers,
 	 * then all headers are returned. Otherwise, e.g. for a file upload, the
 	 * returned headers may expose a 'Content-Type' if available.
+	 * <p>如果底层实现支持访问部分标头，则返回所有标头。否则，例如，对于一个文件上传，返回的头可能会暴露一个'Content-Type'(如果可用的话)。
 	 */
 	@Nullable
 	HttpHeaders getMultipartHeaders(String paramOrFileName);

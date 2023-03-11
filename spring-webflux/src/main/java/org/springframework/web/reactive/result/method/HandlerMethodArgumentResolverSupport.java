@@ -16,21 +16,22 @@
 
 package org.springframework.web.reactive.result.method;
 
-import java.lang.annotation.Annotation;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ReactiveAdapter;
 import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.util.Assert;
 
+import java.lang.annotation.Annotation;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+
 /**
  * Base class for {@link HandlerMethodArgumentResolver} implementations with access to a
  * {@code ReactiveAdapterRegistry} and methods to check for method parameter support.
+ *
+ * {@link HandlerMethodArgumentResolver}实现的基类，可以访问{@code ReactiveAdapterRegistry}和检查方法参数支持的方法。
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller

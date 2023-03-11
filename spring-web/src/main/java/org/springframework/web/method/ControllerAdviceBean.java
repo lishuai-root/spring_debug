@@ -230,9 +230,12 @@ public class ControllerAdviceBean implements Ordered {
 	/**
 	 * Get the bean instance for this {@code ControllerAdviceBean}, if necessary
 	 * resolving the bean name through the {@link BeanFactory}.
+	 * 获取这个{@code controlleradvisebean}的bean实例，如果需要，可以通过{@link BeanFactory}解析bean名称。
+	 *
 	 * <p>As of Spring Framework 5.2, once the bean instance has been resolved it
 	 * will be cached if it is a singleton, thereby avoiding repeated lookups in
 	 * the {@code BeanFactory}.
+	 * 从Spring Framework 5.2开始，一旦bean实例被解析，如果它是一个单例，它将被缓存，从而避免在{@code BeanFactory}中重复查找。
 	 */
 	public Object resolveBean() {
 		if (this.resolvedBean == null) {
@@ -256,6 +259,8 @@ public class ControllerAdviceBean implements Ordered {
 	/**
 	 * Check whether the given bean type should be advised by this
 	 * {@code ControllerAdviceBean}.
+	 * 检查给定的bean类型是否应该由这个{@code ControllerAdviceBean}来建议。
+	 *
 	 * @param beanType the type of the bean to check
 	 * @since 4.0
 	 * @see ControllerAdvice

@@ -45,6 +45,7 @@
 <!--			<location>E:\\All_workspace\\IDEA_workspace\\spring-framework-main\\spring_webmvc_debug\\src\\main\\resources\\uploadFiles</location>-->
 <!--			<max-file-size>10485760</max-file-size>-->
 		</multipart-config>
+		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>webmvc_debug</servlet-name>

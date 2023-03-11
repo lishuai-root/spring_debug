@@ -16,21 +16,9 @@
 
 package org.springframework.web.servlet.view;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringTokenizer;
-
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
@@ -41,6 +29,10 @@ import org.springframework.web.context.support.ContextExposingHttpServletRequest
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.support.RequestContext;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Abstract base class for {@link org.springframework.web.servlet.View}
@@ -298,7 +290,11 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	/**
 	 * Prepares the view given the specified model, merging it with static
 	 * attributes and a RequestContext attribute, if necessary.
+	 * 准备给定模型的视图，必要时将其与静态属性和RequestContext属性合并。
+	 *
 	 * Delegates to renderMergedOutputModel for the actual rendering.
+	 * 委托renderMergedOutputModel进行实际渲染。
+	 *
 	 * @see #renderMergedOutputModel
 	 */
 	@Override
@@ -319,6 +315,8 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 	/**
 	 * Creates a combined output Map (never {@code null}) that includes dynamic values and static attributes.
 	 * Dynamic values take precedence over static attributes.
+	 *
+	 * 创建包含动态值和静态属性的组合输出Map (never {@code null})。动态值优先于静态属性。
 	 */
 	protected Map<String, Object> createMergedOutputModel(@Nullable Map<String, ?> model,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -368,8 +366,12 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 
 	/**
 	 * Prepare the given response for rendering.
+	 * 为渲染准备给定的响应。
+	 *
 	 * <p>The default implementation applies a workaround for an IE bug
 	 * when sending download content via HTTPS.
+	 * 当通过HTTPS发送下载内容时，默认实现应用了一个解决IE错误的方法。
+	 *
 	 * @param request current HTTP request
 	 * @param response current HTTP response
 	 */
@@ -415,10 +417,16 @@ public abstract class AbstractView extends WebApplicationObjectSupport implement
 
 	/**
 	 * Subclasses must implement this method to actually render the view.
+	 * 子类必须实现此方法才能实际呈现视图。
+	 *
 	 * <p>The first step will be preparing the request: In the JSP case,
 	 * this would mean setting model objects as request attributes.
+	 * 第一步是准备请求:在JSP案例中，这意味着将模型对象设置为请求属性。
+	 *
 	 * The second step will be the actual rendering of the view,
 	 * for example including the JSP via a RequestDispatcher.
+	 * 第二步是视图的实际呈现，例如通过RequestDispatcher包含JSP。
+	 *
 	 * @param model combined output Map (never {@code null}),
 	 * with dynamic values taking precedence over static attributes
 	 * @param request current HTTP request

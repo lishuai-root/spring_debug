@@ -16,15 +16,11 @@
 
 package org.springframework.util;
 
+import org.springframework.lang.Nullable;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-
-import org.springframework.lang.Nullable;
+import java.net.*;
 
 /**
  * Utility methods for resolving resource locations to files in the
@@ -59,7 +55,9 @@ public abstract class ResourceUtils {
 	/** URL prefix for loading from a war file on Tomcat: "war:". */
 	public static final String WAR_URL_PREFIX = "war:";
 
-	/** URL protocol for a file in the file system: "file". */
+	/** URL protocol for a file in the file system: "file".
+	 * 文件系统中文件的URL协议:"file"。
+	 * */
 	public static final String URL_PROTOCOL_FILE = "file";
 
 	/** URL protocol for an entry from a jar file: "jar". */

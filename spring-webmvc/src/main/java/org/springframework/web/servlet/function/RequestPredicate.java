@@ -22,6 +22,7 @@ import java.util.Optional;
  * Represents a function that evaluates on a given {@link ServerRequest}.
  * Instances of this function that evaluate on common request properties
  * can be found in {@link RequestPredicates}.
+ * 表示在给定{@link ServerRequest}上求值的函数。这个函数的实例可以在{@link RequestPredicates}中找到。
  *
  * @author Arjen Poutsma
  * @since 5.2

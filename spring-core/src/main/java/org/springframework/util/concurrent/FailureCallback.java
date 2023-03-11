@@ -18,6 +18,7 @@ package org.springframework.util.concurrent;
 
 /**
  * Failure callback for a {@link ListenableFuture}.
+ * {@link ListenableFuture}的失败回调。
  *
  * @author Sebastien Deleuze
  * @since 4.1
@@ -28,6 +29,8 @@ public interface FailureCallback {
 	/**
 	 * Called when the {@link ListenableFuture} completes with failure.
 	 * <p>Note that Exceptions raised by this method are ignored.
+	 * 当{@link ListenableFuture}失败时调用。<p>注意由此方法引发的异常将被忽略。
+	 *
 	 * @param ex the failure
 	 */
 	void onFailure(Throwable ex);

@@ -16,18 +16,14 @@
 
 package org.springframework.core;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ConcurrentReferenceHashMap;
+
+import java.lang.reflect.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Helper class for resolving generic types against type variables.
@@ -146,6 +142,8 @@ public final class GenericTypeResolver {
 	/**
 	 * Resolve the given generic type against the given context class,
 	 * substituting type variables as far as possible.
+	 * 根据给定的上下文类解析给定的泛型类型，尽可能替换类型变量。
+	 *
 	 * @param genericType the (potentially) generic type
 	 * @param contextClass a context class for the target type, for example a class
 	 * in which the target type appears in a method signature (can be {@code null})

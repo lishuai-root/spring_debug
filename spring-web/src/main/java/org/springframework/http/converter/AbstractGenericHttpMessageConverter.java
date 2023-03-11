@@ -28,6 +28,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * Abstract base class for most {@link GenericHttpMessageConverter} implementations.
+ * 大多数{@link GenericHttpMessageConverter}实现的抽象基类。
  *
  * @author Sebastien Deleuze
  * @author Juergen Hoeller
@@ -79,6 +80,7 @@ public abstract class AbstractGenericHttpMessageConverter<T> extends AbstractHtt
 	/**
 	 * This implementation sets the default headers by calling {@link #addDefaultHeaders},
 	 * and then calls {@link #writeInternal}.
+	 * 这个实现通过调用{@link #addDefaultHeaders}来设置默认头，然后调用{@link #writeInternal}。
 	 */
 	@Override
 	public final void write(final T t, @Nullable final Type type, @Nullable MediaType contentType,
@@ -115,6 +117,8 @@ public abstract class AbstractGenericHttpMessageConverter<T> extends AbstractHtt
 
 	/**
 	 * Abstract template method that writes the actual body. Invoked from {@link #write}.
+	 * 抽象模板方法，用于编写实际的主体。从{@link #write}调用。
+	 *
 	 * @param t the object to write to the output message
 	 * @param type the type of object to write (may be {@code null})
 	 * @param outputMessage the HTTP output message to write to

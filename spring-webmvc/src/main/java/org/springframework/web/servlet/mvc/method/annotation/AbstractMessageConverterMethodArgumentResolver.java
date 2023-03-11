@@ -16,32 +16,13 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.log.LogFormatUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpInputMessage;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.InvalidMediaTypeException;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.http.converter.GenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -56,9 +37,18 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.*;
+
 /**
  * A base class for resolving method argument values by reading from the body of
  * a request with {@link HttpMessageConverter HttpMessageConverters}.
+ *
+ * 一个基类，通过从请求体中读取{@link HttpMessageConverter HttpMessageConverters}来解析方法参数值。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -75,6 +65,13 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	/**
+	 * 当前属性通过构造函数传入，在{@link RequestMappingHandlerAdapter#getDefaultArgumentResolvers()}方法中创建
+	 * {@link RequestResponseBodyMethodProcessor}实例时传入{@link RequestMappingHandlerAdapter#messageConverters}属性
+	 *
+	 * {@link RequestMappingHandlerAdapter#messageConverters}属性在{@link RequestMappingHandlerAdapter#RequestMappingHandlerAdapter()}
+	 * 构造函数中初始化
+	 */
 	protected final List<HttpMessageConverter<?>> messageConverters;
 
 	private final RequestResponseBodyAdviceChain advice;
@@ -104,6 +101,10 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 	 * Return the configured {@link RequestBodyAdvice} and
 	 * {@link RequestBodyAdvice} where each instance may be wrapped as a
 	 * {@link org.springframework.web.method.ControllerAdviceBean ControllerAdviceBean}.
+	 *
+	 * 返回已配置的{@link RequestBodyAdvice}和{@link RequestBodyAdvice}，
+	 * 其中每个实例都可以包装为{@link org.springframework.web.method.ControllerAdviceBean ControllerAdviceBean}。
+	 *
 	 */
 	RequestResponseBodyAdviceChain getAdvice() {
 		return this.advice;
@@ -112,6 +113,8 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 	/**
 	 * Create the method argument value of the expected parameter type by
 	 * reading from the given request.
+	 * 通过读取给定的请求，创建预期参数类型的方法参数值。
+	 *
 	 * @param <T> the expected type of the argument value to be created
 	 * @param webRequest the current request
 	 * @param parameter the method parameter descriptor (may be {@code null})
@@ -129,8 +132,12 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 	}
 
 	/**
+	 * 通过{@link HttpMessageConverter}类型的实例将请求体转换成指定类型的实例
+	 *
 	 * Create the method argument value of the expected parameter type by reading
 	 * from the given HttpInputMessage.
+	 * 通过读取给定的HttpInputMessage创建预期参数类型的方法参数值。
+	 *
 	 * @param <T> the expected type of the argument value to be created
 	 * @param inputMessage the HTTP input message representing the current request
 	 * @param parameter the method parameter descriptor
@@ -148,6 +155,9 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 		MediaType contentType;
 		boolean noContentType = false;
 		try {
+			/**
+			 * 获取请求内容的类型，由请求头的"Content-Type"字段定义
+			 */
 			contentType = inputMessage.getHeaders().getContentType();
 		}
 		catch (InvalidMediaTypeException ex) {
@@ -170,17 +180,29 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 
 		EmptyBodyCheckingHttpInputMessage message;
 		try {
+			/**
+			 * 创建{@link EmptyBodyCheckingHttpInputMessage}实例 ，并检查请求体是否为空
+			 */
 			message = new EmptyBodyCheckingHttpInputMessage(inputMessage);
 
+			/**
+			 * 遍历已经注册的消息转换器，将请求体转换成指定类型参数
+			 */
 			for (HttpMessageConverter<?> converter : this.messageConverters) {
 				Class<HttpMessageConverter<?>> converterType = (Class<HttpMessageConverter<?>>) converter.getClass();
 				GenericHttpMessageConverter<?> genericConverter =
 						(converter instanceof GenericHttpMessageConverter ? (GenericHttpMessageConverter<?>) converter : null);
+				/**
+				 * 判断当前Http消息转换器是否可以将请求内容类型转换成目标类型
+				 */
 				if (genericConverter != null ? genericConverter.canRead(targetType, contextClass, contentType) :
 						(targetClass != null && converter.canRead(targetClass, contentType))) {
 					if (message.hasBody()) {
 						HttpInputMessage msgToUse =
 								getAdvice().beforeBodyRead(message, parameter, targetType, converterType);
+						/**
+						 * 通过合适的Http消息转换器，将请求体转换成目标类型
+						 */
 						body = (genericConverter != null ? genericConverter.read(targetType, contextClass, msgToUse) :
 								((HttpMessageConverter<T>) converter).read(targetClass, msgToUse));
 						body = getAdvice().afterBodyRead(body, msgToUse, parameter, targetType, converterType);
@@ -196,11 +218,20 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 			throw new HttpMessageNotReadableException("I/O error while reading input message", ex, inputMessage);
 		}
 
+		/**
+		 * 上面的循环没有合适的Http消息转换器
+		 */
 		if (body == NO_VALUE) {
+			/**
+			 * 如果当前请求无法解析时返回null
+			 */
 			if (httpMethod == null || !SUPPORTED_METHODS.contains(httpMethod) ||
 					(noContentType && !message.hasBody())) {
 				return null;
 			}
+			/**
+			 * 如果当前请求应该被解析但是没有合适的Http消息转换器，抛出异常
+			 */
 			throw new HttpMediaTypeNotSupportedException(contentType,
 					getSupportedMediaTypes(targetClass != null ? targetClass : Object.class));
 		}
@@ -217,6 +248,8 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 
 	/**
 	 * Create a new {@link HttpInputMessage} from the given {@link NativeWebRequest}.
+	 * 从给定的{@link NativeWebRequest}创建一个新的{@link HttpInputMessage}。
+	 *
 	 * @param webRequest the web request to create an input message from
 	 * @return the input message
 	 */
@@ -228,9 +261,13 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 
 	/**
 	 * Validate the binding target if applicable.
+	 * 如果适用，验证绑定目标。
+	 *
 	 * <p>The default implementation checks for {@code @jakarta.validation.Valid},
 	 * Spring's {@link org.springframework.validation.annotation.Validated},
 	 * and custom annotations whose name starts with "Valid".
+	 * 默认实现检查{@code @jakarta.validation.Valid}， Spring的{@link org.springframework.validation.annotation.Validated}以及名称以“Valid”开头的自定义注释。
+	 *
 	 * @param binder the DataBinder to be used
 	 * @param parameter the method parameter descriptor
 	 * @since 4.1.5
@@ -264,6 +301,9 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 	/**
 	 * Return the media types supported by all provided message converters sorted
 	 * by specificity via {@link MediaType#sortBySpecificity(List)}.
+	 *
+	 * 返回所有提供的消息转换器支持的媒体类型，按特异性排序，通过{@link MediaType#sortBySpecificity(List)}。
+	 *
 	 * @since 5.3.4
 	 */
 	protected List<MediaType> getSupportedMediaTypes(Class<?> clazz) {
@@ -278,6 +318,8 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 
 	/**
 	 * Adapt the given argument against the method parameter, if necessary.
+	 * 如果需要，根据方法参数调整给定的参数。
+	 *
 	 * @param arg the resolved argument
 	 * @param parameter the method parameter descriptor
 	 * @return the adapted argument, or the original resolved argument as-is
@@ -308,6 +350,20 @@ public abstract class AbstractMessageConverterMethodArgumentResolver implements 
 		public EmptyBodyCheckingHttpInputMessage(HttpInputMessage inputMessage) throws IOException {
 			this.headers = inputMessage.getHeaders();
 			InputStream inputStream = inputMessage.getBody();
+			/**
+			 * 通过一字节读取判断请求体是否为空，如果为空，直接赋null
+			 *
+			 *
+			 * 测试此输入流是否支持{@code mark}和{@code reset}方法。
+			 * 是否支持{@code mark}和{@code reset}是特定输入流实例的不变属性。
+			 * {@code InputStream}的{@code markSupported}方法返回{@code false}。
+			 *
+			 * {@link InputStream#mark(int readlimit)} : 标记此输入流中的当前位置。
+			 * 对{@code reset}方法的后续调用在最后标记的位置重新定位该流，以便后续读取重新读取相同的字节。
+			 * {@code readlimit}参数告诉输入流允许在标记位置失效之前读取这么多字节。
+			 *
+			 * {@link InputStream#reset()} : 将此流重新定位到在此输入流上最后一次调用{@code mark}方法时的位置。
+			 */
 			if (inputStream.markSupported()) {
 				inputStream.mark(1);
 				this.body = (inputStream.read() != -1 ? inputStream : null);

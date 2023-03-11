@@ -38,8 +38,11 @@ public class DefaultSessionAttributeStore implements SessionAttributeStore {
 
 	/**
 	 * Specify a prefix to use for the attribute names in the backend session.
+	 * 指定用于后端会话中的属性名称的前缀。
+	 *
 	 * <p>Default is to use no prefix, storing the session attributes with the
 	 * same name as in the model.
+	 * <p>默认是不使用前缀，存储与模型中同名的会话属性。
 	 */
 	public void setAttributeNamePrefix(@Nullable String attributeNamePrefix) {
 		this.attributeNamePrefix = (attributeNamePrefix != null ? attributeNamePrefix : "");
@@ -75,8 +78,12 @@ public class DefaultSessionAttributeStore implements SessionAttributeStore {
 
 	/**
 	 * Calculate the attribute name in the backend session.
+	 * 计算后端会话中的属性名称。
+	 *
 	 * <p>The default implementation simply prepends the configured
 	 * {@link #setAttributeNamePrefix "attributeNamePrefix"}, if any.
+	 * 默认实现只是将配置的{@link #setAttributeNamePrefix "attributeNamePrefix"}作为前缀，如果有的话。
+	 *
 	 * @param request the current request
 	 * @param attributeName the name of the attribute
 	 * @return the attribute name in the backend session

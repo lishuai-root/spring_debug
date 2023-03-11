@@ -23,11 +23,15 @@ import org.springframework.util.Assert;
 /**
  * Exception to be thrown on error conditions that should forward
  * to a specific view with a specific model.
+ * 在错误条件时抛出的异常，该错误条件应转发到具有特定模型的特定视图。
  *
  * <p>Can be thrown at any time during handler processing.
  * This includes any template methods of pre-built controllers.
+ * <p>可以在处理过程中的任何时间抛出。这包括预构建控制器的任何模板方法。
+ *
  * For example, a form controller might abort to a specific error page
  * if certain parameters do not allow to proceed with the normal workflow.
+ * 例如，如果某些参数不允许继续正常的工作流，表单控制器可能会中止到特定的错误页面。
  *
  * @author Juergen Hoeller
  * @since 22.11.2003
@@ -50,6 +54,8 @@ public class ModelAndViewDefiningException extends ServletException {
 
 	/**
 	 * Return the ModelAndView that this exception contains for forwarding to.
+	 *
+	 * 返回此异常包含的用于转发的ModelAndView。
 	 */
 	public ModelAndView getModelAndView() {
 		return this.modelAndView;

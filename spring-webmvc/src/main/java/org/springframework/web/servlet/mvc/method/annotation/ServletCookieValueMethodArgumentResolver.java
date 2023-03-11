@@ -23,14 +23,19 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.annotation.AbstractCookieValueMethodArgumentResolver;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.WebUtils;
 
+import java.nio.charset.Charset;
+
 /**
  * An {@link org.springframework.web.method.annotation.AbstractCookieValueMethodArgumentResolver}
  * that resolves cookie values from an {@link HttpServletRequest}.
+ *
+ * {@link org.springframework.web.method.annotation.AbstractCookieValueMethodArgumentResolver}解析来自{@link HttpServletRequest}的cookie值。
  *
  * @author Rossen Stoyanchev
  * @since 3.1
@@ -50,6 +55,16 @@ public class ServletCookieValueMethodArgumentResolver extends AbstractCookieValu
 	}
 
 
+	/**
+	 * 获取指定名称的cookie，如果参数类型是{@link Cookie}直接返回，如果不是，解码cookie值或者返回null
+	 *
+	 * @param cookieName
+	 * @param parameter the method parameter to resolve to an argument value
+	 * (pre-nested in case of a {@link java.util.Optional} declaration)
+	 * @param webRequest
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	@Nullable
 	protected Object resolveName(String cookieName, MethodParameter parameter,
@@ -58,11 +73,18 @@ public class ServletCookieValueMethodArgumentResolver extends AbstractCookieValu
 		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 		Assert.state(servletRequest != null, "No HttpServletRequest");
 
+		/**
+		 * 检索第一个具有给定名称的cookie。请注意，多个cookie可以具有相同的名称，但路径或域不同。
+		 * 可能返回null
+		 */
 		Cookie cookieValue = WebUtils.getCookie(servletRequest, cookieName);
 		if (Cookie.class.isAssignableFrom(parameter.getNestedParameterType())) {
 			return cookieValue;
 		}
 		else if (cookieValue != null) {
+			/**
+			 * 解码cookie值，解码规则参见{@link StringUtils#uriDecode(String, Charset)}。
+			 */
 			return this.urlPathHelper.decodeRequestString(servletRequest, cookieValue.getValue());
 		}
 		else {

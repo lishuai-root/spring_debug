@@ -16,12 +16,6 @@
 
 package org.springframework.core.task;
 
-import java.io.Serializable;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.ThreadFactory;
-
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ConcurrencyThrottleSupport;
@@ -29,16 +23,25 @@ import org.springframework.util.CustomizableThreadCreator;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureTask;
 
+import java.io.Serializable;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ThreadFactory;
+
 /**
  * {@link TaskExecutor} implementation that fires up a new Thread for each task,
  * executing it asynchronously.
+ * {@link TaskExecutor}实现，为每个任务触发一个新线程，异步执行它。
  *
  * <p>Supports limiting concurrent threads through the "concurrencyLimit"
  * bean property. By default, the number of concurrent threads is unlimited.
+ * <p>支持通过“concurrencyLimit”bean属性限制并发线程。默认情况下，并发线程数是无限的。
  *
  * <p><b>NOTE: This implementation does not reuse threads!</b> Consider a
  * thread-pooling TaskExecutor implementation instead, in particular for
  * executing a large number of short-lived tasks.
+ * <p><b>注意:这个实现不重用线程!考虑使用线程池的TaskExecutor实现，特别是执行大量短期任务时。
  *
  * @author Juergen Hoeller
  * @since 2.0

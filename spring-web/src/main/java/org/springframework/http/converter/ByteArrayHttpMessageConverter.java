@@ -27,10 +27,15 @@ import org.springframework.util.StreamUtils;
 
 /**
  * Implementation of {@link HttpMessageConverter} that can read and write byte arrays.
+ * 实现可以读写字节数组的{@link HttpMessageConverter}。
  *
  * <p>By default, this converter supports all media types (<code>&#42;/&#42;</code>), and
  * writes with a {@code Content-Type} of {@code application/octet-stream}. This can be
  * overridden by setting the {@link #setSupportedMediaTypes supportedMediaTypes} property.
+ *
+ * 默认情况下，该转换器支持所有媒体类型(<code>&42;&42;<code>)，并使用{@code application/octet-stream}的{@code Content-Type}进行写入。
+ * 这可以通过设置{@link #setSupportedMediaTypes supportedMediaTypes}属性来覆盖。
+ *
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller

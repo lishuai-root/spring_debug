@@ -33,8 +33,12 @@ import org.springframework.util.StringUtils;
 /**
  * A {@code Predicate} to match request handling component types if
  * <strong>any</strong> of the following selectors match:
+ * 如果下列选择器中的<strong>或<strong>匹配，则匹配请求处理组件类型的{@code Predicate}:
+ *
  * <ul>
  * <li>Base packages -- for selecting handlers by their package.
+ * <li>基本包——用于根据包选择处理程序。
+ *
  * <li>Assignable types -- for selecting handlers by super type.
  * <li>Annotations -- for selecting handlers annotated in a specific way.
  * </ul>

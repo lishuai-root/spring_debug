@@ -4,6 +4,9 @@ import com.shuai.util.FileUploadUtil;
 import jakarta.servlet.MultipartConfigElement;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * @description:
  * @author: LISHUAI
@@ -11,7 +14,12 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
  * @version: 1.0
  */
 
-public class MyFileUploadConfigDispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class MyFileUploadConfigDispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer
+implements Serializable {
+
+
+	@Serial
+	private static final long serialVersionUID = 1691989087904824019L;
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {

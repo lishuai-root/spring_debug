@@ -129,11 +129,17 @@ public abstract class RequestContextUtils {
 	 * Retrieve the current locale from the given request, using the
 	 * LocaleResolver bound to the request by the DispatcherServlet
 	 * (if available), falling back to the request's accept-header Locale.
+	 * 使用由DispatcherServlet(如果可用)绑定到请求的LocaleResolver，从给定的请求检索当前的语言环境，退回到请求的accept-header语言环境。
+	 *
 	 * <p>This method serves as a straightforward alternative to the standard
 	 * Servlet {@link jakarta.servlet.http.HttpServletRequest#getLocale()} method,
 	 * falling back to the latter if no more specific locale has been found.
+	 * 这个方法是标准Servlet {@link jakarta.servlet.http.HttpServletRequest#getLocale()}方法的直接替代方法，如果没有找到更具体的语言环境，则返回到后者。
+	 *
 	 * <p>Consider using {@link org.springframework.context.i18n.LocaleContextHolder#getLocale()}
 	 * which will normally be populated with the same Locale.
+	 * 考虑使用{@link org.springframework.context.i18n.LocaleContextHolder#getLocale()}，它通常会被相同的Locale填充。
+	 *
 	 * @param request current HTTP request
 	 * @return the current locale for the given request, either from the
 	 * LocaleResolver or from the plain request itself
@@ -217,6 +223,7 @@ public abstract class RequestContextUtils {
 	}
 
 	/**
+	 *
 	 * Return read-only "input" flash attributes from request before redirect.
 	 * 在重定向之前从请求返回只读的“输入”flash属性。
 	 *
@@ -232,6 +239,8 @@ public abstract class RequestContextUtils {
 
 	/**
 	 * Return "output" FlashMap to save attributes for request after redirect.
+	 * 返回"output" FlashMap为重定向后的请求保存属性。
+	 *
 	 * @param request current request
 	 * @return a {@link FlashMap} instance, never {@code null} within a
 	 * {@code DispatcherServlet}-handled request
@@ -257,6 +266,9 @@ public abstract class RequestContextUtils {
 	 * Convenience method that retrieves the {@link #getOutputFlashMap "output"
 	 * FlashMap}, updates it with the path and query params of the target URL,
 	 * and then saves it using the {@link #getFlashMapManager FlashMapManager}.
+	 * 检索{@link #getOutputFlashMap "output" FlashMap}的方便方法，
+	 * 用目标URL的路径和查询参数更新它，然后使用{@link #getFlashMapManager FlashMapManager}保存它。
+	 *
 	 * @param location the target URL for the redirect
 	 * @param request the current request
 	 * @param response the current response

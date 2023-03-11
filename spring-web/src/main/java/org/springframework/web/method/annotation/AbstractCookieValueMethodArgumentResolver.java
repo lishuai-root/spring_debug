@@ -30,12 +30,16 @@ import org.springframework.web.context.request.NativeWebRequest;
  * A base abstract class to resolve method arguments annotated with
  * {@code @CookieValue}. Subclasses extract the cookie value from the request.
  *
+ * 一个基抽象类，用于解析用{@code @CookieValue}注释的方法参数。子类从请求中提取cookie值。
+ *
  * <p>An {@code @CookieValue} is a named value that is resolved from a cookie.
  * It has a required flag and a default value to fall back on when the cookie
  * does not exist.
+ * <p> {@code @CookieValue}是从cookie解析的命名值。当cookie不存在时，它有一个必需的标志和一个默认值。
  *
  * <p>A {@link WebDataBinder} may be invoked to apply type conversion to the
  * resolved cookie value.
+ * 可以调用一个{@link WebDataBinder}对解析的cookie值应用类型转换。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -54,6 +58,12 @@ public abstract class AbstractCookieValueMethodArgumentResolver extends Abstract
 	}
 
 
+	/**
+	 * 解析带有{@link CookieValue}注解的方法参数
+	 *
+	 * @param parameter the method parameter to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		return parameter.hasParameterAnnotation(CookieValue.class);

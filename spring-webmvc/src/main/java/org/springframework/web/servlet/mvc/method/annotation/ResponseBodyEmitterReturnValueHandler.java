@@ -16,15 +16,8 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.core.ResolvableType;
@@ -47,13 +40,22 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 /**
  * Handler for return values of type {@link ResponseBodyEmitter} and sub-classes
  * such as {@link SseEmitter} including the same types wrapped with
  * {@link ResponseEntity}.
  *
+ * {@link ResponseBodyEmitter}类型的返回值的处理程序，以及包括{@link ResponseEntity}包装的相同类型的{@link SseEmitter}等子类。
+ *
  * <p>As of 5.0 also supports reactive return value types for any reactive
  * library with registered adapters in {@link ReactiveAdapterRegistry}.
+ * <p>As 5.0还支持在{@link ReactiveAdapterRegistry}中注册适配器的任何响应式库的响应式返回值类型。
  *
  * @author Rossen Stoyanchev
  * @since 4.2
@@ -106,8 +108,17 @@ public class ResponseBodyEmitterReturnValueHandler implements HandlerMethodRetur
 	}
 
 
+	/**
+	 * 处理{@link ResponseEntity}泛型为{@link ResponseBodyEmitter}类型的返回值
+	 *
+	 * @param returnType the method return type to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
+		/**
+		 * 解析要写入响应体的泛型类型
+		 */
 		Class<?> bodyType = ResponseEntity.class.isAssignableFrom(returnType.getParameterType()) ?
 				ResolvableType.forMethodParameter(returnType).getGeneric().resolve() :
 				returnType.getParameterType();
@@ -136,6 +147,9 @@ public class ResponseBodyEmitterReturnValueHandler implements HandlerMethodRetur
 			outputMessage.getHeaders().putAll(responseEntity.getHeaders());
 			returnValue = responseEntity.getBody();
 			returnType = returnType.nested();
+			/**
+			 * 如果返回值中实际要写入响应体的内容为null，标记请求已处理，并返回
+			 */
 			if (returnValue == null) {
 				mavContainer.setRequestHandled(true);
 				outputMessage.flush();

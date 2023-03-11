@@ -16,11 +16,11 @@
 
 package org.springframework.validation;
 
-import java.beans.PropertyEditor;
-import java.util.Map;
-
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.lang.Nullable;
+
+import java.beans.PropertyEditor;
+import java.util.Map;
 
 /**
  * General interface that represents binding results. Extends the
@@ -28,10 +28,16 @@ import org.springframework.lang.Nullable;
  * allowing for a {@link Validator} to be applied, and adds
  * binding-specific analysis and model building.
  *
+ * 表示绑定结果的通用接口。扩展{@link Errors 接口}的错误注册功能，允许应用{@link Validator}，并添加特定于绑定的分析和模型构建。
+ *
+ *
  * <p>Serves as result holder for a {@link DataBinder}, obtained via
  * the {@link DataBinder#getBindingResult()} method. BindingResult
  * implementations can also be used directly, for example to invoke
  * a {@link Validator} on it (e.g. as part of a unit test).
+ * <p>作为{@link DataBinder}的结果持有者，通过{@link DataBinder#getBindingResult()}方法获得。
+ * BindingResult实现也可以直接使用，例如在它上调用{@link Validator}(例如，作为单元测试的一部分)。
+ *
  *
  * @author Juergen Hoeller
  * @since 2.0
@@ -47,6 +53,8 @@ public interface BindingResult extends Errors {
 	/**
 	 * Prefix for the name of the BindingResult instance in a model,
 	 * followed by the object name.
+	 *
+	 * 模型中BindingResult实例名称的前缀，后跟对象名称。
 	 */
 	String MODEL_KEY_PREFIX = BindingResult.class.getName() + ".";
 
@@ -134,10 +142,16 @@ public interface BindingResult extends Errors {
 
 	/**
 	 * Record the given value for the specified field.
+	 * 记录指定字段的给定值。
+	 *
 	 * <p>To be used when a target object cannot be constructed, making
 	 * the original field values available through {@link #getFieldValue}.
+	 * <p>当目标对象不能被构造时使用，使原始字段值通过{@link #getFieldValue}可用。
+	 *
 	 * In case of a registered error, the rejected value will be exposed
 	 * for each affected field.
+	 * 在注册错误的情况下，将为每个受影响的字段公开拒绝的值。
+	 *
 	 * @param field the field to record the value for
 	 * @param type the type of the field
 	 * @param value the original value

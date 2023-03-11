@@ -58,9 +58,15 @@ public interface View {
 
 	/**
 	 * Name of the {@link HttpServletRequest} attribute that contains a Map with path variables.
+	 * 包含带有路径变量的Map的{@link HttpServletRequest}属性的名称。
+	 *
 	 * The map consists of String-based URI template variable names as keys and their corresponding
 	 * Object-based values -- extracted from segments of the URL and type converted.
+	 * 映射由作为键的基于字符串的URI模板变量名及其对应的基于对象的值组成——从URL段中提取并转换类型。
+	 *
 	 * <p>Note: This attribute is not required to be supported by all View implementations.
+	 * <p>注意:该属性并不要求所有View实现都支持。
+	 *
 	 * @since 3.1
 	 */
 	String PATH_VARIABLES = View.class.getName() + ".pathVariables";
@@ -88,9 +94,14 @@ public interface View {
 
 	/**
 	 * Render the view given the specified model.
+	 * 根据指定的模型呈现视图。
+	 *
 	 * <p>The first step will be preparing the request: In the JSP case, this would mean
 	 * setting model objects as request attributes. The second step will be the actual
 	 * rendering of the view, for example including the JSP via a RequestDispatcher.
+	 * 第一步是准备请求:在JSP案例中，这意味着将模型对象设置为请求属性。
+	 * 第二步是视图的实际呈现，例如通过RequestDispatcher包含JSP。
+	 *
 	 * @param model a Map with name Strings as keys and corresponding model
 	 * objects as values (Map can also be {@code null} in case of empty model)
 	 * @param request current HTTP request

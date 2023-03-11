@@ -27,6 +27,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
  * Handles return values of type {@link WebAsyncTask}.
+ * 处理类型为{@link WebAsyncTask}的返回值。
  *
  * @author Rossen Stoyanchev
  * @since 3.2
@@ -42,11 +43,28 @@ public class AsyncTaskMethodReturnValueHandler implements HandlerMethodReturnVal
 	}
 
 
+	/**
+	 * 处理类型为{@link WebAsyncTask}的返回值。
+	 *
+	 * @param returnType the method return type to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
 		return WebAsyncTask.class.isAssignableFrom(returnType.getParameterType());
 	}
 
+	/**
+	 * 异步指定任务
+	 *
+	 * @param returnValue the value returned from the handler method
+	 * @param returnType the type of the return value. This type must have
+	 * previously been passed to {@link #supportsReturnType} which must
+	 * have returned {@code true}.
+	 * @param mavContainer the ModelAndViewContainer for the current request
+	 * @param webRequest the current request
+	 * @throws Exception
+	 */
 	@Override
 	public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
 			ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {

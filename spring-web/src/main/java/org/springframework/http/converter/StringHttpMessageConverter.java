@@ -142,6 +142,12 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 		return charsets;
 	}
 
+	/**
+	 * 根据请求体类型获取字符集
+	 *
+	 * @param contentType
+	 * @return
+	 */
 	private Charset getContentTypeCharset(@Nullable MediaType contentType) {
 		if (contentType != null) {
 			Charset charset = contentType.getCharset();
@@ -151,6 +157,9 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 			else if (contentType.isCompatibleWith(MediaType.APPLICATION_JSON) ||
 					contentType.isCompatibleWith(APPLICATION_PLUS_JSON)) {
 				// Matching to AbstractJackson2HttpMessageConverter#DEFAULT_CHARSET
+				/**
+				 * 匹配{@link AbstractJackson2HttpMessageConverter#DEFAULT_CHARSET}
+				 */
 				return StandardCharsets.UTF_8;
 			}
 		}

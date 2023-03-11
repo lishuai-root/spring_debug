@@ -16,20 +16,9 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ParameterizedTypeReference;
@@ -38,13 +27,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.core.log.LogFormatUtils;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpOutputMessage;
-import org.springframework.http.HttpRange;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.MediaTypeFactory;
+import org.springframework.http.*;
 import org.springframework.http.converter.GenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -62,9 +45,16 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UrlPathHelper;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.*;
+
 /**
  * Extends {@link AbstractMessageConverterMethodArgumentResolver} with the ability to handle method
  * return values by writing to the response with {@link HttpMessageConverter HttpMessageConverters}.
+ *
+ * 扩展{@link AbstractMessageConverterMethodArgumentResolver}，
+ * 使其能够通过向响应写入{@link HttpMessageConverter HttpMessageConverters}来处理方法返回值。
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
@@ -75,7 +65,10 @@ import org.springframework.web.util.UrlPathHelper;
 public abstract class AbstractMessageConverterMethodProcessor extends AbstractMessageConverterMethodArgumentResolver
 		implements HandlerMethodReturnValueHandler {
 
-	/* Extensions associated with the built-in message converters */
+	/* Extensions associated with the built-in message converters
+	*
+	* 与内置消息转换器关联的扩展
+	* */
 	private static final Set<String> SAFE_EXTENSIONS = new HashSet<>(Arrays.asList(
 			"txt", "text", "yml", "properties", "csv",
 			"json", "xml", "atom", "rss",
@@ -115,6 +108,8 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 	/**
 	 * Constructor with list of converters and ContentNegotiationManager as well
 	 * as request/response body advice instances.
+	 *
+	 * 构造函数，包含转换器列表和ContentNegotiationManager以及request/response体建议实例。
 	 */
 	protected AbstractMessageConverterMethodProcessor(List<HttpMessageConverter<?>> converters,
 			@Nullable ContentNegotiationManager manager, @Nullable List<Object> requestResponseBodyAdvice) {
@@ -129,6 +124,8 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 
 	/**
 	 * Creates a new {@link HttpOutputMessage} from the given {@link NativeWebRequest}.
+	 * 从给定的{@link NativeWebRequest}创建一个新的{@link HttpOutputMessage}。
+	 *
 	 * @param webRequest the web request to create an output message from
 	 * @return the output message
 	 */
@@ -141,6 +138,9 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 	/**
 	 * Writes the given return value to the given web request. Delegates to
 	 * {@link #writeWithMessageConverters(Object, MethodParameter, ServletServerHttpRequest, ServletServerHttpResponse)}
+	 *
+	 * 将给定的返回值写入给定的web请求。委托{@link #writeWithMessageConverters(Object, MethodParameter, ServletServerHttpRequest, ServletServerHttpResponse)}
+	 *
 	 */
 	protected <T> void writeWithMessageConverters(T value, MethodParameter returnType, NativeWebRequest webRequest)
 			throws IOException, HttpMediaTypeNotAcceptableException, HttpMessageNotWritableException {
@@ -152,6 +152,8 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 
 	/**
 	 * Writes the given return type to the given output message.
+	 * 将给定的返回类型写入给定的输出消息。
+	 *
 	 * @param value the value to write to the output message
 	 * @param returnType the type of the value
 	 * @param inputMessage the input messages. Used to inspect the {@code Accept} header.
@@ -179,23 +181,57 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 		}
 		else {
 			body = value;
+			/**
+			* 获取实际返回值的泛型类型
+			*/
 			valueType = getReturnValueType(body, returnType);
+			/**
+			 * 获取参数定义的泛型类型
+			 */
 			targetType = GenericTypeResolver.resolveType(getGenericType(returnType), returnType.getContainingClass());
 		}
 
+		/**
+		 * 处理资源类型返回值
+		 * 1. 设置响应头的Accept-Ranges: bytes属性
+		 * 2. 请求资源存在，请求头设置了{@link HttpHeaders#RANGE}头字段，且当前请求的响应码是200
+		 * 3. 解析请求头中设置的{@link HttpHeaders#RANGE}属性，并封装成{@link HttpRange}类型的对象，每个{@link HttpRange}对象表示一个请求范围
+		 * 4. 设置响应状态为206，表示已经处理部分GET请求
+		 * 5. 将每个{@link HttpRange}对象封装成对应的{@link ResourceRegion}对象，{@link ResourceRegion}中封装了请求的资源，当前请求范围的开始位置和长度
+		 *
+		 */
 		if (isResourceType(value, returnType)) {
+			/**
+			 * Accept-Ranges: bytes 表示界定范围的单位是 bytes
+			 */
 			outputMessage.getHeaders().set(HttpHeaders.ACCEPT_RANGES, "bytes");
+			/**
+			 * Range:unit=first byte pos-[last byte pos]
+			 * 例如: 单位（如bytes）= 开始字节位置-结束字节位置。
+			 * Range: bytes=0-1199 (请求前2000个字节)
+			 *
+			 * 请求的资源不为空，且请求设置了{@link HttpHeaders#RANGE}头字段，且响应码是200
+			 */
 			if (value != null && inputMessage.getHeaders().getFirst(HttpHeaders.RANGE) != null &&
 					outputMessage.getServletResponse().getStatus() == 200) {
 				Resource resource = (Resource) value;
 				try {
 					List<HttpRange> httpRanges = inputMessage.getHeaders().getRange();
+					/**
+					 * 206 Partial Content表示该服务器已经成功处理了部分 GET 请求。
+					 */
 					outputMessage.getServletResponse().setStatus(HttpStatus.PARTIAL_CONTENT.value());
 					body = HttpRange.toResourceRegions(httpRanges, resource);
 					valueType = body.getClass();
 					targetType = RESOURCE_REGION_LIST_TYPE;
 				}
 				catch (IllegalArgumentException ex) {
+					/**
+					 * 服务端响应在header中添加Range信息
+					 * Content-Range: unit first byte pos-[last byte pos]/[entity length]
+					 * 例如：Content-Range：字节 开始字节位置-结束字节位置／文件大小。
+					 * Content-Range: bytes 0-1199/5000 (5000是文件的总大小，不是当前请求请求的范围大小)
+					 */
 					outputMessage.getHeaders().set(HttpHeaders.CONTENT_RANGE, "bytes */" + resource.contentLength());
 					outputMessage.getServletResponse().setStatus(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE.value());
 				}
@@ -285,8 +321,14 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 						Object theBody = body;
 						LogFormatUtils.traceDebug(logger, traceOn ->
 								"Writing [" + LogFormatUtils.formatValue(theBody, !traceOn) + "]");
+						/**
+						 * 检查资源扩展名，防止RFD漏洞
+						 */
 						addContentDispositionHeader(inputMessage, outputMessage);
 						if (genericConverter != null) {
+							/**
+							 * 将返回值写入响应体
+							 */
 							genericConverter.write(body, targetType, selectedMediaType, outputMessage);
 						}
 						else {
@@ -321,6 +363,10 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 	 * a simple check via getClass on the value but if the value is null, then the
 	 * return type needs to be examined possibly including generic type determination
 	 * (e.g. {@code ResponseEntity<T>}).
+	 *
+	 * 返回要写入响应的值的类型。
+	 * 通常这是通过getClass对值进行简单的检查，但如果值为空，则需要检查返回类型，可能包括泛型类型确定(例如{@code ResponseEntity<T>})。
+	 *
 	 */
 	protected Class<?> getReturnValueType(@Nullable Object value, MethodParameter returnType) {
 		return (value != null ? value.getClass() : returnType.getParameterType());
@@ -328,6 +374,7 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 
 	/**
 	 * Return whether the returned value or the declared return type extends {@link Resource}.
+	 * 返回返回值或声明的返回类型是否扩展{@link Resource}。
 	 */
 	protected boolean isResourceType(@Nullable Object value, MethodParameter returnType) {
 		Class<?> clazz = getReturnValueType(value, returnType);
@@ -358,10 +405,14 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 
 	/**
 	 * Returns the media types that can be produced. The resulting media types are:
+	 * 返回可以生成的媒体类型。生成的媒体类型是:
+	 *
 	 * <ul>
 	 * <li>The producible media types specified in the request mappings, or
 	 * <li>Media types of configured converters that can write the specific return value, or
 	 * <li>{@link MediaType#ALL}
+	 * 请求映射中指定的可生产的媒体类型，或<li>已配置转换器的媒体类型，可以写入特定的返回值，或<li>{@link MediaType#ALL}
+	 *
 	 * </ul>
 	 * @since 4.2
 	 */
@@ -407,9 +458,13 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 	 * Check if the path has a file extension and whether the extension is either
 	 * on the list of {@link #SAFE_EXTENSIONS safe extensions} or explicitly
 	 * {@link ContentNegotiationManager#getAllFileExtensions() registered}.
+	 * 检查路径是否有文件扩展名，以及该扩展名是否在{@link #SAFE_EXTENSIONS 安全扩展}列表中或显式地{@link ContentNegotiationManager#getAllFileExtensions() 已注册}。
+	 *
 	 * If not, and the status is in the 2xx range, a 'Content-Disposition'
 	 * header with a safe attachment file name ("f.txt") is added to prevent
 	 * RFD exploits.
+	 * 如果不是，并且状态在2xx范围内，则添加带有安全附件文件名(“f.txt”)的“Content-Disposition”头，以防止RFD漏洞。
+	 *
 	 */
 	private void addContentDispositionHeader(ServletServerHttpRequest request, ServletServerHttpResponse response) {
 		HttpHeaders headers = response.getHeaders();
@@ -440,12 +495,18 @@ public abstract class AbstractMessageConverterMethodProcessor extends AbstractMe
 			filename = filename.substring(0, index);
 		}
 
+		/**
+		 * 获取资源后缀
+		 */
 		filename = UrlPathHelper.defaultInstance.decodeRequestString(servletRequest, filename);
 		String ext = StringUtils.getFilenameExtension(filename);
 
 		pathParams = UrlPathHelper.defaultInstance.decodeRequestString(servletRequest, pathParams);
 		String extInPathParams = StringUtils.getFilenameExtension(pathParams);
 
+		/**
+		 * 如果请求的资源名称，不是安全名称，在响应头添加{@link HttpHeaders#CONTENT_DISPOSITION}属性
+		 */
 		if (!safeExtension(servletRequest, ext) || !safeExtension(servletRequest, extInPathParams)) {
 			headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=f.txt");
 		}

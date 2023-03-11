@@ -25,6 +25,8 @@ import org.springframework.validation.ObjectError;
  * Exception to be thrown when validation on an argument annotated with {@code @Valid} fails.
  * Extends {@link BindException} as of 5.3.
  *
+ * 当对带有{@code @Valid}注释的参数进行验证失败时引发的异常。从5.3扩展{@link BindException}。
+ *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
  * @since 3.1

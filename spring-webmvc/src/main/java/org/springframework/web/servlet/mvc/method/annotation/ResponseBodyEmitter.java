@@ -16,34 +16,38 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.function.Consumer;
-
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
+import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Consumer;
+
 /**
  * A controller method return value type for asynchronous request processing
  * where one or more objects are written to the response.
+ * 用于异步请求处理的控制器方法返回值类型，其中将一个或多个对象写入响应。
  *
  * <p>While {@link org.springframework.web.context.request.async.DeferredResult}
  * is used to produce a single result, a {@code ResponseBodyEmitter} can be used
  * to send multiple objects where each object is written with a compatible
  * {@link org.springframework.http.converter.HttpMessageConverter}.
+ * {@link org.springframework.web.context.request.async.DeferredResult}用于生成单个结果，
+ * 一个{@code ResponseBodyEmitter}可以用来发送多个对象，其中每个对象都使用兼容的{@link org.springframework.http.converter.HttpMessageConverter}编写。
  *
  * <p>Supported as a return type on its own as well as within a
  * {@link org.springframework.http.ResponseEntity}.
+ *<p>支持作为一个返回类型单独或在一个{@link org.springframework.http.ResponseEntity}。
  *
  * <pre>
  * &#064;RequestMapping(value="/stream", method=RequestMethod.GET)
  * public ResponseBodyEmitter handle() {
  * 	   ResponseBodyEmitter emitter = new ResponseBodyEmitter();
- * 	   // Pass the emitter to another component...
+ * 	   // Pass the emitter to another component... 将发射器传递给另一个组件……
  * 	   return emitter;
  * }
  *
@@ -162,20 +166,30 @@ public class ResponseBodyEmitter {
 	 * Invoked after the response is updated with the status code and headers,
 	 * if the ResponseBodyEmitter is wrapped in a ResponseEntity, but before the
 	 * response is committed, i.e. before the response body has been written to.
+	 * 如果ResponseBodyEmitter被包装在ResponseEntity中，则在使用状态代码和报头更新响应之后调用，但在提交响应之前，即在向响应体写入之前。
+	 *
 	 * <p>The default implementation is empty.
+	 * 默认实现为空。
 	 */
 	protected void extendResponse(ServerHttpResponse outputMessage) {
 	}
 
 	/**
 	 * Write the given object to the response.
+	 * 将给定对象写入响应。
+	 *
 	 * <p>If any exception occurs a dispatch is made back to the app server where
 	 * Spring MVC will pass the exception through its exception handling mechanism.
+	 * 如果发生任何异常，则会将异常分派回应用服务器，Spring MVC将通过其异常处理机制将异常传递给服务器。
+	 *
 	 * <p><strong>Note:</strong> if the send fails with an IOException, you do
 	 * not need to call {@link #completeWithError(Throwable)} in order to clean
 	 * up. Instead the Servlet container creates a notification that results in a
 	 * dispatch where Spring MVC invokes exception resolvers and completes
 	 * processing.
+	 * 注意:<strong>如果发送IOException失败，你不需要调用{@link #completeWithError(Throwable)}来清理。
+	 * 相反，Servlet容器创建一个通知，导致Spring MVC调用异常解析器并完成处理的分派。
+	 *
 	 * @param object the object to write
 	 * @throws IOException raised when an I/O error occurs
 	 * @throws java.lang.IllegalStateException wraps any other errors

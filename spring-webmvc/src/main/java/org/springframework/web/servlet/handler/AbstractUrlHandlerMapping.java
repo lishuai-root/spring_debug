@@ -39,6 +39,7 @@ import java.util.*;
 
 /**
  * Abstract base class for URL-mapped {@link HandlerMapping} implementations.
+ * url映射{@link HandlerMapping}实现的抽象基类。
  *
  * <p>Supports literal matches and pattern matches such as "/test/*", "/test/**",
  * and others. For details on pattern syntax refer to {@link PathPattern} when
@@ -47,9 +48,16 @@ import java.util.*;
  * {@code PathPattern} syntax is more tailored for web applications, and its
  * implementation is more efficient.
  *
+ * <p>支持文字匹配和模式匹配，如"/test/*", "/test/**",和其他。
+ * 有关模式语法的详细信息，请参阅{@link PathPattern}，如果解析的模式是{@link #usesPathPatterns() 启用}，
+ * 否则请参阅{@link AntPathMatcher}。语法在很大程度上是相同的，但{@code PathPattern}语法更适合web应用程序，并且它的实现更有效。
+ *
+ *
  * <p>All path patterns are checked in order to find the most exact match for the
  * current request path where the "most exact" is the longest path pattern that
  * matches the current request path.
+ * <p>将检查所有路径模式，以便为当前请求路径找到最精确的匹配，其中“最精确”是与当前请求路径匹配的最长路径模式。
+ *
  *
  * @author Juergen Hoeller
  * @author Arjen Poutsma

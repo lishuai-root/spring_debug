@@ -259,6 +259,8 @@ public class RequestParamMethodArgumentResolver extends AbstractNamedValueMethod
 			 */
 			Object mpArg = MultipartResolutionDelegate.resolveMultipartArgument(name, parameter, servletRequest);
 			/**
+			 * 当返回值为null时，说明请求不是上传请求
+			 *
 			 * 当返回值是{@link MultipartResolutionDelegate.UNRESOLVABLE}时，说明方法参数类型不是{@link MultipartFile}和{@link Part}类型
 			 */
 			if (mpArg != MultipartResolutionDelegate.UNRESOLVABLE) {

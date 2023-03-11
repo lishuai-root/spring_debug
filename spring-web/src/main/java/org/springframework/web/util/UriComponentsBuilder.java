@@ -45,6 +45,7 @@ import org.springframework.web.util.UriComponents.UriTemplateVariables;
 
 /**
  * Builder for {@link UriComponents}.
+ * {@link UriComponents}的构建器。
  *
  * <p>Typical usage involves:
  * <ol>

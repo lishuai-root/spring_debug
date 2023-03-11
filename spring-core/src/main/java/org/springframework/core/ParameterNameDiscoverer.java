@@ -57,9 +57,14 @@ public interface ParameterNameDiscoverer {
 
 	/**
 	 * Return parameter names for a constructor, or {@code null} if they cannot be determined.
+	 * 返回构造函数的参数名，如果不能确定则返回{@code null}。
+	 *
 	 * <p>Individual entries in the array may be {@code null} if parameter names are only
 	 * available for some parameters of the given constructor but not for others. However,
 	 * it is recommended to use stub parameter names instead wherever feasible.
+	 * 如果参数名仅对给定构造函数的某些参数可用，而对其他参数无效，则数组中的单个项可能是{@code null}。
+	 * 但是，建议在可行的情况下使用存根参数名。
+	 *
 	 * @param ctor the constructor to find parameter names for
 	 * @return an array of parameter names if the names can be resolved,
 	 * or {@code null} if they cannot

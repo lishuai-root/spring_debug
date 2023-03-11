@@ -165,6 +165,10 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 		 * 1. 首先尝试在表单项中解析指定名称的表单项
 		 * 2. 如果是上传请求，获取指定名称的上传文件
 		 * 3. 获取指定名称的请求参数
+		 *
+		 * *************************************************************************************************************
+		 * 上述三点是解析{@link RequestParam}注解的流程，
+		 * 不同的解析器会有不同的实现
 		 */
 		Object arg = resolveName(resolvedName.toString(), nestedParameter, webRequest);
 		if (arg == null) {

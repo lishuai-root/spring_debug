@@ -16,14 +16,10 @@
 
 package org.springframework.util;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.springframework.lang.Nullable;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Adapts a given {@link Map} to the {@link MultiValueMap} contract.
@@ -92,6 +88,10 @@ public class MultiValueMapAdapter<K, V> implements MultiValueMap<K, V>, Serializ
 		values.forEach(this::set);
 	}
 
+	/**
+	 * 将一个多值映射表转换成一个单值映射表，每个key取对应的第一个值，如果key对应的值列表为空，则不取该key
+	 * @return
+	 */
 	@Override
 	public Map<K, V> toSingleValueMap() {
 		Map<K, V> singleValueMap = CollectionUtils.newLinkedHashMap(this.targetMap.size());

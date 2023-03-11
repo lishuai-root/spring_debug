@@ -48,6 +48,8 @@ import org.springframework.web.util.UrlPathHelper;
  * Extract values from "Forwarded" and "X-Forwarded-*" headers, wrap the request
  * and response, and make they reflect the client-originated protocol and
  * address in the following methods:
+ * 从“Forwarded”和“X-Forwarded-*”头中提取值，包装请求和响应，并用以下方法使它们反映客户端起源的协议和地址:
+ *
  * <ul>
  * <li>{@link HttpServletRequest#getServerName() getServerName()}
  * <li>{@link HttpServletRequest#getServerPort() getServerPort()}

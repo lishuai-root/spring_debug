@@ -16,12 +16,8 @@
 
 package org.springframework.web.servlet.mvc.method.annotation;
 
-import java.io.OutputStream;
-import java.util.concurrent.Callable;
-
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.http.ResponseEntity;
@@ -35,16 +31,30 @@ import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.io.OutputStream;
+import java.util.concurrent.Callable;
+
 /**
  * Supports return values of type
  * {@link org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody}
  * and also {@code ResponseEntity<StreamingResponseBody>}.
+ *
+ * 支持返回值类型为{@link org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody}
+ * 和{@code ResponseEntity<StreamingResponseBody>}。
+ *
  *
  * @author Rossen Stoyanchev
  * @since 4.2
  */
 public class StreamingResponseBodyReturnValueHandler implements HandlerMethodReturnValueHandler {
 
+	/**
+	 * 处理类型为{@link org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody}或者
+	 * {@code ResponseEntity<StreamingResponseBody>}的返回值
+	 *
+	 * @param returnType the method return type to check
+	 * @return
+	 */
 	@Override
 	public boolean supportsReturnType(MethodParameter returnType) {
 		if (StreamingResponseBody.class.isAssignableFrom(returnType.getParameterType())) {

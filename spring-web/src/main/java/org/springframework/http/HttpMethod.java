@@ -46,6 +46,8 @@ public enum HttpMethod {
 
 	/**
 	 * Resolve the given method value to an {@code HttpMethod}.
+	 * 将给定的方法值解析为{@code HttpMethod}。
+	 *
 	 * @param method the method value as a String
 	 * @return the corresponding {@code HttpMethod}, or {@code null} if not found
 	 * @since 4.2.4

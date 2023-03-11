@@ -83,6 +83,8 @@ public abstract class WebAsyncUtils {
 	/**
 	 * Create an AsyncWebRequest instance. By default, an instance of
 	 * {@link StandardServletAsyncWebRequest} gets created.
+	 * 创建AsyncWebRequest实例。默认情况下，会创建一个{@link StandardServletAsyncWebRequest}实例。
+	 *
 	 * @param request the current request
 	 * @param response the current response
 	 * @return an AsyncWebRequest instance (never {@code null})

@@ -601,6 +601,8 @@ public class PathPattern implements Comparable<PathPattern> {
 		/**
 		 * Return maps of matrix variables per path segment, keyed off by URI
 		 * variable name.
+		 *
+		 * 返回每个路径段的矩阵变量映射，由URI变量名标识。
 		 */
 		public Map<String, MultiValueMap<String, String>> getMatrixVariables() {
 			return this.matrixVariables;

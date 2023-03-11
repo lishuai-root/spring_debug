@@ -41,16 +41,24 @@ import java.util.stream.Collectors;
 /**
  * A data structure representing HTTP request or response headers, mapping String header names
  * to a list of String values, also offering accessors for common application-level data types.
+ * 表示HTTP请求或响应标头的数据结构，将String标头名称映射到String值列表，还提供了通用应用程序级数据类型的访问器。
  *
  * <p>In addition to the regular methods defined by {@link Map}, this class offers many common
  * convenience methods, for example:
+ * 除了{@link Map}定义的常规方法外，这个类还提供了许多常见的方便方法，例如:
  * <ul>
  * <li>{@link #getFirst(String)} returns the first value associated with a given header name</li>
+ * {@link #getFirst(String)}返回与给定头名称<li>相关的第一个值
+ *
  * <li>{@link #add(String, String)} adds a header value to the list of values for a header name</li>
+ * {@link #add(String, String)}为标题名称<li>的值列表添加一个标题值
+ *
  * <li>{@link #set(String, String)} sets the header value to a single string value</li>
+ * {@link #set(String, String)}将标题值设置为单个字符串值<li>
  * </ul>
  *
  * <p>Note that {@code HttpHeaders} generally treats header names in a case-insensitive manner.
+ * 注意{@code HttpHeaders}通常以不区分大小写的方式对待头名称。
  *
  * @author Arjen Poutsma
  * @author Sebastien Deleuze
@@ -93,6 +101,8 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	public static final String ACCEPT_PATCH = "Accept-Patch";
 	/**
 	 * The HTTP {@code Accept-Ranges} header field name.
+	 * HTTP {@code Accept-Ranges}报头字段名。
+	 *
 	 * @see <a href="https://tools.ietf.org/html/rfc7233#section-2.3">Section 5.3.5 of RFC 7233</a>
 	 */
 	public static final String ACCEPT_RANGES = "Accept-Ranges";
@@ -213,6 +223,8 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	public static final String DATE = "Date";
 	/**
 	 * The HTTP {@code ETag} header field name.
+	 * HTTP {@code ETag}报头字段名。
+	 *
 	 * @see <a href="https://tools.ietf.org/html/rfc7232#section-2.3">Section 2.3 of RFC 7232</a>
 	 */
 	public static final String ETAG = "ETag";
@@ -979,7 +991,10 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	/**
 	 * Return the {@linkplain MediaType media type} of the body, as specified
 	 * by the {@code Content-Type} header.
+	 * 返回正文的{@linkplain MediaType媒体类型}，由{@code Content-Type}头指定。
+	 *
 	 * <p>Returns {@code null} when the content-type is unknown.
+	 * <p>当内容类型未知时返回{@code null}。
 	 */
 	@Nullable
 	public MediaType getContentType() {
@@ -1043,6 +1058,7 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 
 	/**
 	 * Return the entity tag of the body, as specified by the {@code ETag} header.
+	 * 返回正文的实体标记，由{@code ETag}标头指定。
 	 */
 	@Nullable
 	public String getETag() {
@@ -1365,6 +1381,7 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	/**
 	 * Return the value of the {@code Range} header.
 	 * <p>Returns an empty list when the range is unknown.
+	 * 返回{@code Range}标头的值。<p>当范围未知时返回一个空列表。
 	 */
 	public List<HttpRange> getRange() {
 		String value = getFirst(RANGE);
@@ -1399,6 +1416,8 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 
 	/**
 	 * Return the request header names subject to content negotiation.
+	 * 根据内容协商返回请求头名称。
+	 *
 	 * @since 4.3
 	 */
 	public List<String> getVary() {
@@ -1527,6 +1546,8 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 	/**
 	 * Return all values of a given header name,
 	 * even if this header is set multiple times.
+	 * 返回给定报头名称的所有值，即使该报头已设置多次。
+	 *
 	 * @param headerName the header name
 	 * @return all associated values
 	 * @since 4.3
@@ -1640,6 +1661,8 @@ public class HttpHeaders implements MultiValueMap<String, String>, Serializable 
 
 	/**
 	 * Return the first header value for the given header name, if any.
+	 * 返回给定头名称的第一个头值(如果有的话)。
+	 *
 	 * @param headerName the header name
 	 * @return the first header value, or {@code null} if none
 	 */

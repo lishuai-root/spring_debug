@@ -360,7 +360,11 @@ public abstract class UriUtils {
 
 	/**
 	 * Decode the given encoded URI component.
+	 * 解码给定的已编码URI组件。
+	 *
 	 * <p>See {@link StringUtils#uriDecode(String, Charset)} for the decoding rules.
+	 * <p>解码规则参见{@link StringUtils#uriDecode(String, Charset)}。
+	 *
 	 * @param source the encoded String
 	 * @param encoding the character encoding to use
 	 * @return the decoded value

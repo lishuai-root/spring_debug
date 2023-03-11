@@ -35,12 +35,20 @@ import org.springframework.web.context.request.WebRequest;
  * Manages controller-specific session attributes declared via
  * {@link SessionAttributes @SessionAttributes}. Actual storage is
  * delegated to a {@link SessionAttributeStore} instance.
+ * 管理通过{@link SessionAttributes @SessionAttributes}声明的控制器特定的会话属性。
+ * 实际存储委托给一个{@link SessionAttributeStore}实例。
+ *
  *
  * <p>When a controller annotated with {@code @SessionAttributes} adds
  * attributes to its model, those attributes are checked against names and
  * types specified via {@code @SessionAttributes}. Matching model attributes
  * are saved in the HTTP session and remain there until the controller calls
  * {@link SessionStatus#setComplete()}.
+ *
+ * 当一个带有{@code @SessionAttributes}注释的控制器将属性添加到它的模型中时，
+ * 这些属性将根据{@code @SessionAttributes}指定的名称和类型进行检查。
+ * 匹配的模型属性保存在HTTP会话中，直到控制器调用{@link SessionStatus#setComplete()}。
+ *
  *
  * @author Rossen Stoyanchev
  * @author Juergen Hoeller
@@ -61,6 +69,8 @@ public class SessionAttributesHandler {
 	 * Create a new session attributes handler. Session attribute names and types
 	 * are extracted from the {@code @SessionAttributes} annotation, if present,
 	 * on the given type.
+	 * 创建一个新的会话属性处理程序。会话属性名称和类型从给定类型的{@code @SessionAttributes}注释(如果存在)中提取。
+	 *
 	 * @param handlerType the controller type
 	 * @param sessionAttributeStore used for session access
 	 */
@@ -80,6 +90,8 @@ public class SessionAttributesHandler {
 	/**
 	 * Whether the controller represented by this instance has declared any
 	 * session attributes through an {@link SessionAttributes} annotation.
+	 *
+	 * 由该实例表示的控制器是否通过{@link SessionAttributes}注释声明了任何会话属性。
 	 */
 	public boolean hasSessionAttributes() {
 		return (!this.attributeNames.isEmpty() || !this.attributeTypes.isEmpty());
@@ -88,9 +100,13 @@ public class SessionAttributesHandler {
 	/**
 	 * Whether the attribute name or type match the names and types specified
 	 * via {@code @SessionAttributes} on the underlying controller.
+	 * 属性名或类型是否与底层控制器上通过{@code @SessionAttributes}指定的名称和类型匹配。
+	 *
 	 * <p>Attributes successfully resolved through this method are "remembered"
 	 * and subsequently used in {@link #retrieveAttributes(WebRequest)} and
 	 * {@link #cleanupAttributes(WebRequest)}.
+	 * <p>通过该方法成功解析的属性被“记住”，并随后用于{@link #retrieveAttributes(WebRequest)}和{@link #cleanupAttributes(WebRequest)}。
+	 *
 	 * @param attributeName the attribute name to check
 	 * @param attributeType the type for the attribute
 	 */
@@ -108,6 +124,8 @@ public class SessionAttributesHandler {
 	/**
 	 * Store a subset of the given attributes in the session. Attributes not
 	 * declared as session attributes via {@code @SessionAttributes} are ignored.
+	 * 在会话中存储给定属性的子集。未通过{@code @SessionAttributes}声明为会话属性的属性将被忽略。
+	 *
 	 * @param request the current request
 	 * @param attributes candidate attributes for session storage
 	 */
@@ -120,15 +138,22 @@ public class SessionAttributesHandler {
 	}
 
 	/**
+	 * 从请求中获取{@link SessionAttributes}注解指定的所有属性名称值
+	 *
 	 * Retrieve "known" attributes from the session, i.e. attributes listed
 	 * by name in {@code @SessionAttributes} or attributes previously stored
 	 * in the model that matched by type.
+	 * 从会话中检索“已知的”属性，即在{@code @SessionAttributes}中按名称列出的属性或先前存储在模型中按类型匹配的属性。
+	 *
 	 * @param request the current request
 	 * @return a map with handler session attributes, possibly empty
 	 */
 	public Map<String, Object> retrieveAttributes(WebRequest request) {
 		Map<String, Object> attributes = new HashMap<>();
 		for (String name : this.knownAttributeNames) {
+			/**
+			 * 从请求中获取{@link SessionAttributes}注解指定的属性名称值
+			 */
 			Object value = this.sessionAttributeStore.retrieveAttribute(request, name);
 			if (value != null) {
 				attributes.put(name, value);
@@ -141,6 +166,8 @@ public class SessionAttributesHandler {
 	 * Remove "known" attributes from the session, i.e. attributes listed
 	 * by name in {@code @SessionAttributes} or attributes previously stored
 	 * in the model that matched by type.
+	 * 从会话中删除“已知的”属性，即在{@code @SessionAttributes}中按名称列出的属性或先前存储在模型中按类型匹配的属性。
+	 *
 	 * @param request the current request
 	 */
 	public void cleanupAttributes(WebRequest request) {
@@ -151,6 +178,8 @@ public class SessionAttributesHandler {
 
 	/**
 	 * A pass-through call to the underlying {@link SessionAttributeStore}.
+	 * 对底层{@link SessionAttributeStore}的传递调用。
+	 *
 	 * @param request the current request
 	 * @param attributeName the name of the attribute of interest
 	 * @return the attribute value, or {@code null} if none

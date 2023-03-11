@@ -16,20 +16,23 @@
 
 package org.springframework.ui;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.springframework.core.Conventions;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Implementation of {@link java.util.Map} for use when building model data for use
  * with UI tools. Supports chained calls and generation of model attribute names.
  *
+ * {@link java.util.Map}用于构建与UI工具一起使用的模型数据。支持链式调用和生成模型属性名。
+ *
  * <p>This class serves as generic model holder for Servlet MVC but is not tied to it.
  * Check out the {@link Model} interface for an interface variant.
+ * 这个类作为Servlet MVC的通用模型持有者，但不绑定到它。查看{@link Model}接口的接口变体。
  *
  * @author Rob Harrop
  * @author Juergen Hoeller
@@ -110,6 +113,8 @@ public class ModelMap extends LinkedHashMap<String, Object> {
 
 	/**
 	 * Copy all attributes in the supplied {@code Map} into this {@code Map}.
+	 * 将提供的{@code Map}中的所有属性复制到这个{@code Map}中。
+	 *
 	 * @see #addAttribute(String, Object)
 	 */
 	public ModelMap addAllAttributes(@Nullable Map<String, ?> attributes) {
@@ -123,6 +128,7 @@ public class ModelMap extends LinkedHashMap<String, Object> {
 	 * Copy all attributes in the supplied {@code Map} into this {@code Map},
 	 * with existing objects of the same name taking precedence (i.e. not getting
 	 * replaced).
+	 * 将提供的{@code Map}中的所有属性复制到这个{@code Map}中，现有的同名对象优先(即不被替换)。
 	 */
 	public ModelMap mergeAttributes(@Nullable Map<String, ?> attributes) {
 		if (attributes != null) {

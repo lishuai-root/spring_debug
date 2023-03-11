@@ -1,10 +1,10 @@
 package com.shuai.config.interceptorConfig;
 
-import com.shuai.interceptor.AnnotationInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.util.UrlPathHelper;
 
 /**
  * @description:
@@ -17,10 +17,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //@EnableWebMvc
 public class InterceptorConfig implements WebMvcConfigurer {
 
-	public InterceptorConfig(){}
+//	public InterceptorConfig(){}
+//
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		InterceptorRegistration interceptor = registry.addInterceptor(new AnnotationInterceptor());
+//	}
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		InterceptorRegistration interceptor = registry.addInterceptor(new AnnotationInterceptor());
+	@Bean
+	public WebMvcConfigurer webMvcConfigurer(){
+		return new WebMvcConfigurer() {
+			@Override
+			public void configurePathMatch(PathMatchConfigurer configurer) {
+				UrlPathHelper urlPathHelper = new UrlPathHelper();
+				// 设置不移除分号 ；后面的内容。矩阵变量功能就可以生效
+				urlPathHelper.setRemoveSemicolonContent(false);
+				configurer.setUrlPathHelper(urlPathHelper);
+			}
+		};
 	}
 }

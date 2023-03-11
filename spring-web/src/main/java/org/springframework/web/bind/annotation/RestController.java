@@ -52,6 +52,8 @@ public @interface RestController {
 	/**
 	 * The value may indicate a suggestion for a logical component name,
 	 * to be turned into a Spring bean in case of an autodetected component.
+	 * 该值可以指示一个逻辑组件名称的建议，在自动检测组件的情况下将其转换为Spring bean。
+	 *
 	 * @return the suggested component name, if any (or empty String otherwise)
 	 * @since 4.0.1
 	 */

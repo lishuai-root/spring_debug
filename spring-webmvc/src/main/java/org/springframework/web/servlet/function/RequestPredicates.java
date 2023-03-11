@@ -16,25 +16,6 @@
 
 package org.springframework.web.servlet.function;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.security.Principal;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +23,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -60,9 +40,20 @@ import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.security.Principal;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 /**
  * Implementations of {@link RequestPredicate} that implement various useful
  * request matching operations, such as matching based on path, HTTP method, etc.
+ * 实现{@link RequestPredicate}，实现各种有用的请求匹配操作，例如基于路径的匹配，HTTP方法等。
  *
  * @author Arjen Poutsma
  * @since 5.2
@@ -153,6 +144,9 @@ public abstract class RequestPredicates {
 	 * Return a {@code RequestPredicate} that tests if the request's
 	 * {@linkplain ServerRequest.Headers#accept() accept} header is
 	 * {@linkplain MediaType#isCompatibleWith(MediaType) compatible} with any of the given media types.
+	 * 返回一个{@code RequestPredicate}，用于测试请求的{@linkplain ServerRequest.Headers#accept() accept}头
+	 * 是否与任何给定的媒体类型兼容{@linkplain MediaType#isCompatibleWith(MediaType)。
+	 *
 	 * @param mediaTypes the media types to match the request's accept header against
 	 * @return a predicate that tests the request's accept header against the given media types
 	 */

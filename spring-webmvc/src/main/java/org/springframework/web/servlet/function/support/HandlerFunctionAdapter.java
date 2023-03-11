@@ -16,14 +16,11 @@
 
 package org.springframework.web.servlet.function.support;
 
-import java.util.List;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.core.Ordered;
 import org.springframework.core.log.LogFormatUtils;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -39,8 +36,11 @@ import org.springframework.web.servlet.function.RouterFunctions;
 import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.function.ServerResponse;
 
+import java.util.List;
+
 /**
  * {@code HandlerAdapter} implementation that supports {@link HandlerFunction}s.
+ * {@code HandlerAdapter}实现，支持{@link HandlerFunction}s。
  *
  * @author Arjen Poutsma
  * @since 5.2
@@ -73,8 +73,12 @@ public class HandlerFunctionAdapter implements HandlerAdapter, Ordered {
 	 * should time out. In Servlet 3, the timeout begins after the main request
 	 * processing thread has exited and ends when the request is dispatched again
 	 * for further processing of the concurrently produced result.
+	 * 指定并发处理超时前的时间量(以毫秒为单位)。在Servlet 3中，超时在主请求处理线程退出后开始，在再次分派请求以进一步处理并发产生的结果时结束。
+	 *
 	 * <p>If this value is not set, the default timeout of the underlying
 	 * implementation is used.
+	 * <p>如果未设置此值，则使用底层实现的默认超时。
+	 *
 	 * @param timeout the timeout value in milliseconds
 	 */
 	public void setAsyncRequestTimeout(long timeout) {

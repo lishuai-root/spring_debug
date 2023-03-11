@@ -60,6 +60,8 @@ public interface NativeWebRequest extends WebRequest {
 
 	/**
 	 * Return the underlying native response object, if available.
+	 * 返回底层本机响应对象(如果可用)。
+	 *
 	 * @param requiredType the desired type of response object
 	 * @return the matching response object, or {@code null} if none
 	 * of that type is available
